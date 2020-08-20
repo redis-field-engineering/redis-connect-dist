@@ -1,0 +1,36 @@
+= rediscdc-mssql-connector
+// Settings
+:idprefix:
+:idseparator: -
+ifdef::env-github,env-browser[:outfilesuffix: .adoc]
+ifndef::env-github[:icons: font]
+// URIs
+:project-repo: RedisLabs-Field-Engineering/RedisCDC
+:repo-url: https://github.com/{project-repo}
+// GitHub customization
+ifdef::env-github[]
+:badges:
+:tag: master
+:!toc-title:
+:tip-caption: :bulb:
+:note-caption: :paperclip:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: images
+
+// Badges
+ifdef::badges[]
+
+endif::[]
+
+rediscdc-mssql-connector is a connector framework for capturing changes(INSERT, UPDATE and DELETE) from MS SQL Server source and write them to Redis Enterprise Multi-Model database.
+
+== Getting Started
+
+=== Download and Run
+
+Download the {repo-url}/releases/latest[latest release] and unzip the archive.
+
+
