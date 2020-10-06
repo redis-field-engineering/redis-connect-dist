@@ -46,3 +46,7 @@ SELECT s.name AS Schema_Name, tb.name AS Table_Name
 FROM sys.tables tb
 INNER JOIN sys.schemas s on s.schema_id = tb.schema_id
 WHERE tb.is_tracked_by_cdc = 1
+
+-- Or use this Stored prod 
+USE RedisLabsCDC;
+EXEC sys.sp_cdc_help_change_data_capture;
