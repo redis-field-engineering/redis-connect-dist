@@ -48,7 +48,7 @@ This includes snapshots: if the snapshot was not completed when the connector is
 [[setting-up-sqlserver]]
 == Setting up SQL Server (Source)
 
-Before using the SQL Server connector (rediscdc-mssql-connector) to monitor the changes committed on SQL Server, first enable _CDC_ on a monitored database.
+Before using the SQL Server connector (rediscdc-mssql-connector) to monitor the changes committed on SQL Server, first https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017[enable] _CDC_ on a monitored database.
 Please see an example, {repo-url}/blob/master/Connectors/mssql/demo/mssql_cdc.sql[SQL Statements] under {repo-url}/blob/master/Connectors/mssql/demo/[Demo].
 
 [[setting-up-redb]]
