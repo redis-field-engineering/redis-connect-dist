@@ -25,12 +25,41 @@ ifdef::badges[]
 
 endif::[]
 
-rediscdc-mssql-connector is a connector framework for capturing changes(INSERT, UPDATE and DELETE) from MS SQL Server source and write them to Redis Enterprise Multi-Model database.
+rediscdc-mssql-connector is a connector framework for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server source and write them to Redis Enterprise  database.
 
-== Getting Started
+The first time rediscdc-mssql-connector connects to a SQL Server database/cluster, it reads a consistent snapshot of all of the schemas.
+When that snapshot is complete, the connector continuously streams the changes that were committed to SQL Server and generates corresponding insert, update and delete events.
+All of the events for each table are recorded in a separate Redis data structure or modules of your choice, where they can be easily consumed by applications and services.
+
+[[sqlserver-overview]]
+== Overview
+
+The functionality of the connector is based upon https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/about-change-data-capture-sql-server?view=sql-server-2017[change data capture] feature provided by SQL Server Standard (https://blogs.msdn.microsoft.com/sqlreleaseservices/sql-server-2016-service-pack-1-sp1-released/[since SQL Server 2016 SP1]) or Enterprise edition.
+Using this mechanism, a SQL Server capture process monitors all databases and tables the user is interested in and stores the changes into specifically created _CDC_ tables that have stored procedure facade.
+
+The database operator must https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017[enable] _CDC_ for the table(s) that should be captured by the connector.
+The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as https://redis.io/topics/data-types#hashes[Hashes].
+
+The connector is also tolerant of failures.
+As the connector reads changes and produces events, it records the position in the database log (_LSN / Log Sequence Number_), that is associated with _CDC_ record, with each event.
+If the connector stops for any reason (including communication failures, network problems, or crashes), upon restart it simply continues reading the _CDC_ tables where it last left off.
+This includes snapshots: if the snapshot was not completed when the connector is stopped, upon restart it begins a new snapshot.
+
+[[setting-up-sqlserver]]
+== Setting up SQL Server (Source)
+
+Before using the SQL Server connector (rediscdc-mssql-connector) to monitor the changes committed on SQL Server, first enable _CDC_ on a monitored database.
+Please see an example, {repo-url}/blob/master/Connectors/mssql/demo/mssql_cdc.sql[SQL Statements] under {repo-url}/blob/master/Connectors/mssql/demo/[Demo].
+
+[[setting-up-redb]]
+== Setting up Redis Enterprise Databases (Target)
+
+Before using the SQL Server connector (rediscdc-mssql-connector) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisCDC by creating a database with https://redislabs.com/modules/redis-timeseries/[RedisTimeSeries] module enabled, https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database[Create Redis Enterprise Database]. Then, create (or use an existing) https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database[Create Redis Enterprise Database] a database to store the changes coming from SQL Server. Additionally, you can enable https://redislabs.com/blog/introducing-redisearch-2-0/[RediSearch 2.0] module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then https://oss.redislabs.com/redisearch/Commands/[create an index, and start querying] the document in hashes.
 
 === Download and Run
 
 Download the {repo-url}/releases/latest[latest release] and unzip the archive.
+
+
 
 
