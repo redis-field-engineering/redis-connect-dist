@@ -47,6 +47,6 @@ FROM sys.tables tb
 INNER JOIN sys.schemas s on s.schema_id = tb.schema_id
 WHERE tb.is_tracked_by_cdc = 1
 
--- Or use this Stored prod 
+-- Or use this Stored proc to return the change data capture configuration for each table enabled for change data capture in the current database.
 USE RedisLabsCDC;
 EXEC sys.sp_cdc_help_change_data_capture;
