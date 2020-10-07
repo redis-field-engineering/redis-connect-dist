@@ -41,7 +41,7 @@ The database operator must https://docs.microsoft.com/en-us/sql/relational-datab
 The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as https://redis.io/topics/data-types#hashes[Hashes].
 
 The connector is also tolerant of failures.
-As the connector reads changes and produces events, it records the position in the database log (_LSN / Log Sequence Number_), that is associated with _CDC_ record, with each event.
+As the connector reads changes and produces events, it records the position i.e. https://docs.microsoft.com/en-us/sql/relational-databases/sql-server-transaction-log-architecture-and-management-guide?view=sql-server-ver15#Logical_Arch[(_LSN / Log Sequence Number_)] in the target Redis database, that is associated with _CDC_ record, with each event.
 If the connector stops for any reason (including communication failures, network problems, or crashes), upon restart it simply continues reading the _CDC_ tables where it last left off.
 This includes snapshots: if the snapshot was not completed when the connector is stopped, upon restart it begins a new snapshot.
 
