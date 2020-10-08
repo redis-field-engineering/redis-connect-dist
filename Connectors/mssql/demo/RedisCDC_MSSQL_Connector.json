@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [
     {
       "icon": "external link",
@@ -37,7 +37,7 @@
         "y": 0
       },
       "id": 66,
-      "title": "CDC - Redis Enterprise TimeSeries Database",
+      "title": "RedisCDC Job Management",
       "type": "row"
     },
     {
@@ -45,7 +45,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-Metrics",
+      "datasource": "RedisCDC-JobConfig-Metrics-db",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -88,8 +88,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -161,7 +164,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-Metrics",
+      "datasource": "RedisCDC-JobConfig-Metrics-db",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -190,8 +193,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -254,7 +260,7 @@
       }
     },
     {
-      "datasource": "RedisCDC-Metrics",
+      "datasource": "RedisCDC-JobConfig-Metrics-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -294,7 +300,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -329,7 +335,7 @@
       "type": "stat"
     },
     {
-      "datasource": "RedisCDC-Metrics",
+      "datasource": "RedisCDC-JobConfig-Metrics-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -370,7 +376,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -414,7 +420,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-Metrics",
+      "datasource": "RedisCDC-JobConfig-Metrics-db",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -443,8 +449,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -511,7 +520,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-Metrics",
+      "datasource": "RedisCDC-JobConfig-Metrics-db",
       "description": "Overall",
       "fieldConfig": {
         "defaults": {
@@ -557,8 +566,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -640,11 +652,11 @@
           "value": "Redis"
         }
       },
-      "title": "Target - Redis Enterprise Database",
+      "title": "RedisCDC Target",
       "type": "row"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -694,7 +706,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -729,7 +741,7 @@
       "type": "stat"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -779,7 +791,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -826,7 +838,7 @@
       "type": "gauge"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -927,7 +939,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -986,7 +998,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1028,7 +1040,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1063,7 +1075,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Redis-CDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -1103,7 +1115,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1138,7 +1150,7 @@
       "type": "stat"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1179,7 +1191,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1200,7 +1212,7 @@
       "type": "stat"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1241,7 +1253,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1288,7 +1300,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1329,7 +1341,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1398,12 +1410,13 @@
       "type": "row"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
             "align": null,
-            "displayMode": "color-text"
+            "displayMode": "color-text",
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -1487,7 +1500,7 @@
           }
         ]
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1538,12 +1551,13 @@
       "type": "table"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
             "align": null,
-            "displayMode": "color-text"
+            "displayMode": "color-text",
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -1651,7 +1665,7 @@
           }
         ]
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1689,12 +1703,13 @@
       "type": "table"
     },
     {
-      "datasource": "RedisCDC-Target",
+      "datasource": "RedisCDC-Target-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
             "align": null,
-            "displayMode": "color-text"
+            "displayMode": "color-text",
+            "filterable": false
           },
           "mappings": [
             {
@@ -1782,7 +1797,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "7.2.0",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1857,5 +1872,5 @@
   "timezone": "",
   "title": "RedisCDC_MSSQL_Connector",
   "uid": "vIn375OGk",
-  "version": 1
+  "version": 2
 }
