@@ -8,7 +8,7 @@ All of the events for each table are recorded in a separate Redis data structure
 
 ## Overview
 
-The functionality of the connector is based upon [change data capture](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/about-change-data-capture-sql-server?view=sql-server-2017) feature provided by SQL Server Standard since[SQL Server 2016 SP1](https://blogs.msdn.microsoft.com/sqlreleaseservices/sql-server-2016-service-pack-1-sp1-released/) or Enterprise edition.
+The functionality of the connector is based upon [change data capture](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/about-change-data-capture-sql-server?view=sql-server-2017) feature provided by SQL Server Standard since [SQL Server 2016 SP1](https://blogs.msdn.microsoft.com/sqlreleaseservices/sql-server-2016-service-pack-1-sp1-released/) or Enterprise edition.
 Using this mechanism, a SQL Server capture process monitors all databases and tables the user is interested in and stores the changes into specifically created _CDC_ tables that have a stored procedure facade.
 
 The database operator must [enable](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017) _CDC_ for the table(s) that should be captured by the connector.
@@ -22,7 +22,7 @@ This includes snapshots; if the snapshot was not completed when the connector is
 ## Architecture
 
 ![RedisCDC high-level Architecture](/docs/images/RedisCDC_Architecture.png)
-Diagram – RedisCDC high-level Architecture
+RedisCDC high-level Architecture Diagram
 
 RedisCDC has a cloud-native shared-nothing architecture which allows any cluster node (RedisCDC Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing RedisCDC instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of RedisCDC will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
 <p>
