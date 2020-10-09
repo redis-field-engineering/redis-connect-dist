@@ -61,8 +61,13 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 Before using the SQL Server connector (rediscdc-mssql-connector) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisCDC by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database). Then, create (or use an existing) [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) a database to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
 
 ## Download and Setup
+---
+**NOTE**
 
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) and untar the archive.
+The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v0.1/rediscdc-mssql-connector.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 (OpenJRE or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+
+---
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) and untar the rediscdc-mssql-connector.tar.gz archive.
 
 All the contents would be extracted under rediscdc-mssql-connector
 
