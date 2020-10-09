@@ -62,7 +62,7 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 
 ## Download and Setup
 
-Download the [latest release](/releases) and untar the archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) and untar the archive.
 
 All the contents would be extracted under rediscdc-mssql-connector
 
