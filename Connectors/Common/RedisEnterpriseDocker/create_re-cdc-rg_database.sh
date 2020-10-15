@@ -9,7 +9,7 @@ echo "Recreating database $db with RedisGears Module."
 tee -a create_demodb.sh <<EOF
 curl -X DELETE https://localhost:9443/v1/bdbs/$db -H 'Content-Type: application/json' -u demo@redislabs.com:redislabs -k
 sleep 15
-curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H Content-type:application/json -d '{ "name": "RedisCDC-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "f181a538611833224950c3d157bd89f9", "module_name": "search", "semantic_version": "2.2.0"}, {"module_args": "CreateVenv 1 DownloadDeps 0", "module_id": "984757126a4d53a6779bfee6095564cb", "module_name": "rg", "semantic_version": "1.0.1"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H Content-type:application/json -d '{ "name": "RedisCDC-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "f181a538611833224950c3d157bd89f9", "module_name": "search", "semantic_version": "2.2.0"}, {"module_args": "CreateVenv 1 DownloadDeps 0", "module_id": "0244462f3a972c5c52ae0e4d2c631624", "module_name": "rg", "semantic_version": "1.0.2"} ] }' https://localhost:9443/v1/bdbs
 EOF
 sudo docker cp create_demodb.sh re-node1:/opt/create_demodb.sh
 sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/create_demodb.sh"
