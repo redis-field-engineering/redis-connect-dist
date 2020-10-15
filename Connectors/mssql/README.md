@@ -1,5 +1,3 @@
-<p align="left"><img src="/docs/images/RedisCDC.png" alt="RedisCDC" height="150px"></p>
-
 <h1>rediscdc-mssql-connector</h1>
 
 rediscdc-mssql-connector is a connector framework for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target).
