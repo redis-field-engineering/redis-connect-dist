@@ -1,3 +1,5 @@
+<p align="left"><img src="/docs/images/RedisCDC.png" alt="RedisCDC" height="150px"></p>
+
 # RedisCDC (Redis Enterprise Change Data Capture)
 
 ## Technical Overview
