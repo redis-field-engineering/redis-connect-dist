@@ -1,3 +1,5 @@
+<p align="left"><img src="/docs/images/RedisCDC.png" alt="RedisCDC" height="150px"></p>
+
 <h1>rediscdc-mssql-connector</h1>
 
 rediscdc-mssql-connector is a connector framework for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target).
@@ -22,7 +24,7 @@ This includes snapshots; if the snapshot was not completed when the connector is
 ## Architecture
 
 ![RedisCDC high-level Architecture](/docs/images/RedisCDC_Architecture.png)
-RedisCDC high-level Architecture Diagram
+<b>RedisCDC high-level Architecture Diagram</b>
 
 RedisCDC has a cloud-native shared-nothing architecture which allows any cluster node (RedisCDC Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing RedisCDC instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of RedisCDC will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
 <p>
@@ -65,10 +67,10 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 ---
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v0.1/rediscdc-mssql-connector.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 (OpenJRE or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v0.1/rediscdc-mssql-connector.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) and untar the rediscdc-mssql-connector.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) and untar (tar -xvf rediscdc-mssql-connector.tar.gz) the rediscdc-mssql-connector.tar.gz archive.
 
 All the contents would be extracted under rediscdc-mssql-connector
 
@@ -283,6 +285,34 @@ pipelineConfig:
 </p>
 </details>
 
+<details><summary>Configure mapper.xml</summary>
+<p>
+
+#### mapper configuration file.
+### Sample mapper.xml
+
+```xml
+<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo">
+<Tables>
+        <Table name="emp">
+            <Mapper id="Test" processorID="Test" publishBefore="false">
+                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/>
+                <Column src="fname" target="FName"/>
+                <Column src="lname" target="LName"/>
+                <Column src="job" target="Job"/>
+                <Column src="mgr" target="Manager" type="INT"/>
+                <Column src="hiredate" target="HireDate" type="DATE_TIME"/>
+                <Column src="sal" target="Salary" type="DOUBLE"/>
+                <Column src="comm" target="Commission"/>
+                <Column src="dept" target="Department"/>
+            </Mapper>
+        </Table>
+    </Tables>
+</Schema>
+```
+
+</p>
+</details>
 
 <h4>Seed Config Data</h4>
 <p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
