@@ -9,12 +9,12 @@ sudo docker exec --user root -it re-node2 bash -c "apt-get install -y wget"
 sudo docker exec --user root -it re-node3 bash -c "apt-get install -y wget"
 rm install_gears.sh
 tee -a install_gears.sh <<EOF
-wget http://redismodules.s3.amazonaws.com/redisgears/redisgears.linux-bionic-x64.1.0.1.zip
-wget http://redismodules.s3.amazonaws.com/redisgears/redisgears-dependencies.linux-bionic-x64.1.0.1.tgz
+wget http://redismodules.s3.amazonaws.com/redisgears/redisgears.linux-bionic-x64.1.0.2.zip
+wget http://redismodules.s3.amazonaws.com/redisgears/redisgears-dependencies.linux-bionic-x64.1.0.2.tgz
 wget http://redismodules.s3.amazonaws.com/rgsync/rgsync-1.0.1.linux-bionic-x64.zip
 
-mkdir -p /var/opt/redislabs/modules/rg/10001/deps/
-tar -xvf redisgears-dependencies.linux-bionic-x64.1.0.1.tgz -C /var/opt/redislabs/modules/rg/10001/deps
+mkdir -p /var/opt/redislabs/modules/rg/10002/deps/
+tar -xvf redisgears-dependencies.linux-bionic-x64.1.0.2.tgz -C /var/opt/redislabs/modules/rg/10002/deps
 chown -R redislabs /var/opt/redislabs/modules/rg
 EOF
 sudo docker cp install_gears.sh re-node1:/opt/install_gears.sh
@@ -30,7 +30,7 @@ sudo docker exec --user root -it re-node3 bash -c "/opt/install_gears.sh"
 echo "Uploading RedisGears module..."
 rm upload_rg.sh
 tee -a upload_rg.sh <<EOF
-curl -v -k -u demo@redislabs.com:redislabs -F "module=@./redisgears.linux-bionic-x64.1.0.1.zip" https://localhost:9443/v1/modules
+curl -v -k -u demo@redislabs.com:redislabs -F "module=@./redisgears.linux-bionic-x64.1.0.2.zip" https://localhost:9443/v1/modules
 EOF
 sudo docker cp upload_rg.sh re-node1:/opt/upload_rg.sh
 sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/upload_rg.sh"
