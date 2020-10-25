@@ -68,7 +68,7 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v0.1/rediscdc-mssql-connector.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) and untar (tar -xvf rediscdc-mssql-connector.tar.gz) the rediscdc-mssql-connector.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v0.1/rediscdc-mssql-connector.tar.gz``` and untar (tar -xvf rediscdc-mssql-connector.tar.gz) the rediscdc-mssql-connector.tar.gz archive.
 
 All the contents would be extracted under rediscdc-mssql-connector
 
@@ -132,6 +132,9 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <p>
 
 #### Environment configuration file with source and target connection informations.
+
+Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
+
 ### Sample env.yml
 ```yml
 connections:
