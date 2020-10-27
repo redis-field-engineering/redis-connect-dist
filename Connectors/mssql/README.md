@@ -88,7 +88,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <p>
 
 #### logging configuration file.
-### Sample logback.xml
+### Sample logback.xml under rediscdc-mssql-connector/config folder
 ```xml
 <configuration debug="true" scan="true" scanPeriod="30 seconds">
     <property name="LOG_PATH" value="logs/cdc-1.log"/>
@@ -135,7 +135,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml
+### Sample env.yml under rediscdc-mssql-connector/config/sample folder
 ```yml
 connections:
   jobConfigConnection:
@@ -168,7 +168,7 @@ connections:
 <p>
 
 #### Environment level configurations.
-### Sample Setup.yml
+### Sample Setup.yml under rediscdc-mssql-connector/config/sample folder
 ```yml
 connectionId: jobConfigConnection
 job:
@@ -217,10 +217,10 @@ job:
 <p>
 
 #### Configuration for Job Reaper and Job Claimer processes.
-### Sample JobManager.yml
+### Sample JobManager.yml under rediscdc-mssql-connector/config/sample folder
 ```yml
 connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
-jobTypeId: jobType1
+jobTypeId: jobType1 #Variable
 jobStream: jobStream
 jobConfigSet: jobConfigs
 initialDelay: 10000
@@ -250,14 +250,14 @@ jobClaimerConfig:
 <p>
 
 #### Job level details.
-### Sample JobConfig.yml
+### Sample JobConfig.yml under rediscdc-mssql-connector/config/sample folder
 ```yml
 jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
 producerConfig:
   producerId: RDB_EVENT_PRODUCER
   connectionId: testdb-msSQLServerConnection #Name of the Redis connection id specified in env.yml
   tables:
-    - dbo.emp
+    - dbo.emp #Name of the table with SCHEMA.TABLE format
   pollingInterval: 5
   metricsKey: testdb-emp
   metricsEnabled: false
@@ -290,14 +290,14 @@ pipelineConfig:
 <p>
 
 #### mapper configuration file.
-### Sample mapper.xml
+### Sample mapper.xml under rediscdc-mssql-connector/config/sample/mappers folder
 
 ```xml
 <Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo">
 <Tables>
         <Table name="emp">
             <Mapper id="Test" processorID="Test" publishBefore="false">
-                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/>
+                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table-->
                 <Column src="fname" target="FName"/>
                 <Column src="lname" target="LName"/>
                 <Column src="job" target="Job"/>
