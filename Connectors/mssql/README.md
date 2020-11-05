@@ -55,6 +55,11 @@ On their own RedisCDC instances are stateless therefore require Redis to manage 
 ## Setting up SQL Server (Source)
 
 Before using the SQL Server connector (rediscdc-mssql-connector) to monitor the changes committed on SQL Server, first [enable](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017) _CDC_ on a monitored database.
+
+<h5>Note: To support net changes queries, the source table must have a primary key or unique index to uniquely identify rows. If a unique index is used, the name of the index must be specified using the <em>@index_name</em> parameter. The columns defined in the primary key or unique index must be included in the list of source columns to be captured.</h5>
+
+Please see [Enable Change Data Capture for a Table](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-ver15#enable-change-data-capture-for-a-table) for reference.
+
 Please see an example, [SQL Statements](https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/master/Connectors/mssql/demo/mssql_cdc.sql) under [Demo](https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/master/Connectors/mssql/demo/).
 
 ## Setting up Redis Enterprise Databases (Target)
