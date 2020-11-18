@@ -298,7 +298,7 @@ pipelineConfig:
 ### Sample mapper.xml under rediscdc-mssql-connector/config/sample/mappers folder
 
 ```xml
-<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo">
+<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as loong as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml etc.-->
 <Tables>
         <Table name="emp">
             <Mapper id="Test" processorID="Test" publishBefore="false">
