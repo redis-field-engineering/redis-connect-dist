@@ -256,6 +256,7 @@ jobClaimerConfig:
 
 #### Job level details.
 ### Sample JobConfig.yml under rediscdc-mssql-connector/config/sample folder
+You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then RedisCDC will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 ```yml
 jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
 producerConfig:
@@ -263,6 +264,7 @@ producerConfig:
   connectionId: testdb-msSQLServerConnection #Name of the Redis connection id specified in env.yml
   tables:
     - dbo.emp #Name of the table with SCHEMA.TABLE format
+#    - dbo.dept #Name of the table with SCHEMA.TABLE format
   pollingInterval: 5
   metricsKey: testdb-emp
   metricsEnabled: false
@@ -298,9 +300,9 @@ pipelineConfig:
 ### Sample mapper.xml under rediscdc-mssql-connector/config/sample/mappers folder
 
 ```xml
-<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as loong as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml etc.-->
+<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
 <Tables>
-        <Table name="emp">
+        <Table name="emp"> <!-- emp table under dbo schema -->
             <Mapper id="Test" processorID="Test" publishBefore="false">
                 <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table-->
                 <Column src="fname" target="FName"/>
@@ -313,6 +315,15 @@ pipelineConfig:
                 <Column src="dept" target="Department"/>
             </Mapper>
         </Table>
+<!--    
+        <Table name="dept"> # dept table under dbo schema
+            <Mapper id="Test" processorID="Test" publishBefore="false">
+                <Column src="deptno" target="DeptNum" type="INT" publishBefore="false"/> <!-- key column on the source dept table-->
+                <Column src="dname" target="DeptName"/>
+                <Column src="loc" target="Location"/>
+            </Mapper>
+        </Table>
+-->
     </Tables>
 </Schema>
 ```
