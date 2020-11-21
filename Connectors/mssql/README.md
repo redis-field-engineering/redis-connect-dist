@@ -304,7 +304,7 @@ pipelineConfig:
 <Tables>
         <Table name="emp"> <!-- emp table under dbo schema -->
             <Mapper id="Test" processorID="Test" publishBefore="false">
-                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table-->
+                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table -->
                 <Column src="fname" target="FName"/>
                 <Column src="lname" target="LName"/>
                 <Column src="job" target="Job"/>
@@ -318,7 +318,7 @@ pipelineConfig:
 <!--    
         <Table name="dept"> # dept table under dbo schema
             <Mapper id="Test" processorID="Test" publishBefore="false">
-                <Column src="deptno" target="DeptNum" type="INT" publishBefore="false"/> <!-- key column on the source dept table-->
+                <Column src="deptno" target="DeptNum" type="INT" publishBefore="false"/> # key column on the source dept table
                 <Column src="dname" target="DeptName"/>
                 <Column src="loc" target="Location"/>
             </Mapper>
