@@ -335,7 +335,7 @@ pipelineConfig:
 <p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
 
 ```bash
-rediscdc-mssql-connector$./cleansetup.sh
+redislabs-rdb-cdc-connector/bin$./cleansetup.sh
 ../config/samples
 ```
 
@@ -343,8 +343,8 @@ rediscdc-mssql-connector$./cleansetup.sh
 <p>Execute startup.sh script to start a RedisCDC instance. Pass <b>true</b> or <b>false</b> parameter indicating whether the RedisCDC instance should start with Job Management role.</p>
 
 ```bash
-rediscdc-mssql-connector$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
+redislabs-rdb-cdc-connector/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
 ```
 ```bash
-rediscdc-mssql-connector$./startup.sh false (starts RedisCDC Connector with Job Management disabled
+redislabs-rdb-cdc-connector/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
 ```
