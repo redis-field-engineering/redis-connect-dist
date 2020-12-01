@@ -75,7 +75,7 @@ The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/re
 ---
 Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-mssql/redislabs-rdb-cdc-connector-1.0.1.47.tar.gz``` and untar (tar -xvf redislabs-rdb-cdc-connector-1.0.1.47.tar.gz) the redislabs-rdb-cdc-connector-1.0.1.47.tar.gz archive.
 
-All the contents would be extracted under rediscdc-mssql-connector
+All the contents would be extracted under redislabs-rdb-cdc-connector
 
 Contents of rediscdc-mssql-connector
 <br>•	bin – contains script files
