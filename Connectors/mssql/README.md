@@ -77,7 +77,7 @@ Download the [latest release](https://github.com/RedisLabs-Field-Engineering/Red
 
 All the contents would be extracted under redislabs-rdb-cdc-connector
 
-Contents of rediscdc-mssql-connector
+Contents of redislabs-rdb-cdc-connector
 <br>•	bin – contains script files
 <br>•	lib – contains java libraries
 <br>•	config/samples – contains sample config files
