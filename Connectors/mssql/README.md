@@ -303,6 +303,8 @@ pipelineConfig:
 <Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
 <Tables>
         <Table name="emp"> <!-- emp table under dbo schema -->
+            <!-- publishBefore - Global setting, that specifies if before values have to be published for all columns
+ *                 - This setting could be overridden at each column level -->
             <Mapper id="Test" processorID="Test" publishBefore="false">
                 <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table -->
                 <Column src="fname" target="FName"/>
