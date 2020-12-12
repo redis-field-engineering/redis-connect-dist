@@ -47,6 +47,24 @@ On their own RedisCDC instances are stateless therefore require Redis to manage 
 
 Please refer to the installation guide and [Insall and Setup Gemfire](https://gemfire.docs.pivotal.io/910/gemfire/getting_started/installation/install_intro.html).
 
+Here is an example with the included cache config files in the `redislabs-gemfire-connector/config/samples/gemfire2redis` folder.
+
+```bash
+~/pivotal-gemfire-9.10.4/bin$ ./gfsh
+    _________________________     __
+   / _____/ ______/ ______/ /____/ /
+  / /  __/ /___  /_____  / _____  / 
+ / /__/ / ____/  _____/ / /    / /  
+/______/_/      /______/_/    /_/    9.10.4
+
+Monitor and Manage VMware Tanzu GemFire
+gfsh>start locator --name=locator1 --bind-address=127.0.0.1
+
+gfsh>start server --name=server1 --bind-address=127.0.0.1 --cache-xml-file=/home/viragtripathi/redislabs-gemfire-connector/config/samples/gemfire2redis/cache.xml
+
+gfsh>start server --name=server2 --bind-address=127.0.0.1 --cache-xml-file=/home/viragtripathi/redislabs-gemfire-connector/config/samples/gemfire2redis/cache1.xml
+```
+
 ## Setting up Redis Enterprise Databases (Target)
 
 Before using the Gemfire connector to capture the changes committed on Gemfire into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisCDC by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from Gemfire.
