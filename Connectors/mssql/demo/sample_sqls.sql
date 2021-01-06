@@ -36,3 +36,18 @@ SELECT __$start_lsn
        , job
        , hiredate
 FROM cdc.fn_cdc_get_all_changes_cdcauditing_EMP(@begin, @end, N'all update old')
+
+-- Debugging CDC (Audit CDC tables)
+
+DECLARE @begin_time datetime, @end_time datetime, @begin_lsn binary(10), @end_lsn binary(10);
+
+SET @begin_time = '2020-12-01 00:00:00.000';
+
+SET @end_time = '2021-01-06 10:00:00.000';
+
+SELECT @begin_lsn = sys.fn_cdc_map_time_to_lsn('smallest greater than', @begin_time);
+
+SELECT @end_lsn = sys.fn_cdc_map_time_to_lsn('largest less than or equal', @end_time);
+
+select sys.fn_cdc_map_lsn_to_time(__$start_lsn) startlsn, sys.fn_cdc_map_lsn_to_time(__$end_lsn) endlsn,
+empno,fname,lname,job,sal from cdc.cdcauditing_emp_CT order by startlsn desc
