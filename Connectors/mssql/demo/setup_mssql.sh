@@ -3,7 +3,6 @@
 # delete the existing mssql2017 container if it exist
 sudo docker kill mssql2017-$(hostname);sudo docker rm mssql2017-$(hostname);
 
-echo "Using existing rg-net network to communicate with Redis Enterprise docker containers."
 echo "Creating mssql2017-$(hostname) docker container."
 sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Redis@123" -e "MSSQL_AGENT_ENABLED=true" -p 1433:1433 --name mssql2017-$(hostname) -d microsoft/mssql-server-linux:2017-latest
 
