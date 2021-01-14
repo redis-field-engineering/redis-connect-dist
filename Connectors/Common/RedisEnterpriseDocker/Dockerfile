@@ -1,12 +1,20 @@
 FROM openjdk:8-jre-alpine
+MAINTAINER Virag Tripathi <virag@redislabs.com>
+ARG BUILDVERSION
 ARG VERSION
 ARG CONNECTOR
 
 RUN apk update
 RUN apk add unzip wget
 
-RUN wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v${VERSION}/${CONNECTOR}.tar.gz
-RUN tar -xvf ${CONNECTOR}.tar.gz
-WORKDIR /${CONNECTOR}/bin/
+RUN wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v${VERSION}/${CONNECTOR}-${BUILDVERSION}.tar.gz && \
+mkdir -p /opt/redislabs && \
+mv ${CONNECTOR}-${BUILDVERSION}.tar.gz /opt/redislabs
+RUN cd /opt/redislabs/ && \
+tar -xvf ${CONNECTOR}-${BUILDVERSION}.tar.gz && \
+rm ${CONNECTOR}-${BUILDVERSION}.tar.gz
 
-CMD ["sh", "-c", "./cleansetup.sh"]
+WORKDIR /opt/redislabs/${CONNECTOR}/
+RUN pwd
+
+CMD ["echo", "Welcome to RedisCDC!"]
