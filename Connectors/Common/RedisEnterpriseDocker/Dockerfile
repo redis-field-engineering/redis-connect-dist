@@ -14,7 +14,10 @@ RUN cd /opt/redislabs/ && \
 tar -xvf ${CONNECTOR}-${BUILDVERSION}.tar.gz && \
 rm ${CONNECTOR}-${BUILDVERSION}.tar.gz
 
-WORKDIR /opt/redislabs/${CONNECTOR}/
+WORKDIR /opt/redislabs/${CONNECTOR}/bin/
 RUN pwd
 
-CMD ["echo", "Welcome to RedisCDC!"]
+COPY ./entrypoint.sh /opt/redislabs/
+RUN chmod 755 /opt/redislabs/entrypoint.sh
+
+ENTRYPOINT ["/opt/redislabs/entrypoint.sh"]
