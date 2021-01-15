@@ -1,11 +1,11 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8u275-jre
 MAINTAINER Virag Tripathi <virag@redislabs.com>
 ARG BUILDVERSION
 ARG VERSION
 ARG CONNECTOR
 
-RUN apk update
-RUN apk add unzip wget
+RUN apt-get update
+RUN apt-get install -y unzip wget
 
 RUN wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v${VERSION}/${CONNECTOR}-${BUILDVERSION}.tar.gz && \
 mkdir -p /opt/redislabs && \
@@ -17,7 +17,7 @@ rm ${CONNECTOR}-${BUILDVERSION}.tar.gz
 WORKDIR /opt/redislabs/${CONNECTOR}/bin/
 RUN pwd
 
-COPY ./entrypoint.sh /opt/redislabs/
-RUN chmod 755 /opt/redislabs/entrypoint.sh
+COPY ./rlcdc_wrapper.sh /opt/redislabs/${CONNECTOR}/bin/
+RUN chmod 755 /opt/redislabs/${CONNECTOR}/bin/rlcdc_wrapper.sh
 
-ENTRYPOINT ["/opt/redislabs/entrypoint.sh"]
+ENTRYPOINT ["sh", "/opt/redislabs/rl-connector-rdb/bin/rlcdc_wrapper.sh"
