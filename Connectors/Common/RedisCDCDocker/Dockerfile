@@ -20,4 +20,4 @@ RUN pwd
 COPY ./rlcdc_wrapper.sh /opt/redislabs/${CONNECTOR}/bin/
 RUN chmod 755 /opt/redislabs/${CONNECTOR}/bin/rlcdc_wrapper.sh
 
-ENTRYPOINT ["sh", "/opt/redislabs/rl-connector-rdb/bin/rlcdc_wrapper.sh"
+ENTRYPOINT ["sh", "/opt/redislabs/rl-connector-rdb/bin/rlcdc_wrapper.sh"]
