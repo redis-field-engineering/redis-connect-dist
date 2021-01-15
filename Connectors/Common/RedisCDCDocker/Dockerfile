@@ -1,8 +1,9 @@
 FROM openjdk:8u275-jre
-MAINTAINER Virag Tripathi <virag@redislabs.com>
+LABEL maintainer="virag@redislabs.com"
 ARG BUILDVERSION
 ARG VERSION
 ARG CONNECTOR
+ENV CONNECTOR=$CONNECTOR
 
 RUN apt-get update
 RUN apt-get install -y unzip wget
@@ -18,6 +19,10 @@ WORKDIR /opt/redislabs/${CONNECTOR}/bin/
 RUN pwd
 
 COPY ./rlcdc_wrapper.sh /opt/redislabs/${CONNECTOR}/bin/
-RUN chmod 755 /opt/redislabs/${CONNECTOR}/bin/rlcdc_wrapper.sh
+RUN chmod a+x /opt/redislabs/${CONNECTOR}/bin/rlcdc_wrapper.sh
 
-ENTRYPOINT ["sh", "/opt/redislabs/rl-connector-rdb/bin/rlcdc_wrapper.sh"]
+# Create a temp script to pass env to exec
+RUN echo "/opt/redislabs/$CONNECTOR/bin/rlcdc_wrapper.sh \$@" > /run_rlcdc_wrapper.sh
+ENTRYPOINT ["/bin/bash", "/run_rlcdc_wrapper.sh"]
+
+RUN echo "Successfully built RedisCDC ${CONNECTOR} v${VERSION} container."
