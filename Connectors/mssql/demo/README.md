@@ -94,9 +94,9 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 ---
 
 ## Setup RedisInsight
-Open a browser and navigate to http://127.0.0.1:18001/ and [add both job config & metrics and target Redis databbases](https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/) (use redisUrl's from env.yml) to RedisInsight UI.
+Open a web browser and navigate to http://127.0.0.1:18001/ and [add both job config & metrics and target Redis databbases](https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/) (use redisUrl's from env.yml) to RedisInsight UI. Use Redis database endpoints for job management and target databasees, use the `Internal IP` instead of `127.0.0.1` on cloud machines.
 
-## Setup RedisCDC
+## Setup RedisCDC: CDC Steps
 * Update the connection parameters to match with the demo environment. Execute the following commands:
 ```bash
 demo$ sed -i -e '/jobConfigConnection:/{n;s/20504/14001/}' -e '/srcConnection:/{n;s/20505/14000/}' -e '/metricsConnection:/{n;s/20505/14001/}' -e 's/35.185.69.89/127.0.0.1/g' ../config/samples/cdc/env.yml
@@ -235,13 +235,24 @@ demo$ ./delete_mssql.sh
 ```
 Validate the deleted data in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys, matching `delete.sql` data should not be found in the database.
 
-* Start grafana [Optional]
+## Setup RedisCDC: Initial Loader Steps (TBD)
+
+## Setup grafana redis-datasource [Optional]
 1. Start a grafana instance with redis-datasource plugin
 ```bash
-sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-datasource" grafana/grafana
+demo$ sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-datasource" grafana/grafana
 ```
-2. Configure two Redis data sources for job management and target Redis databases. Please see the steps [here](https://redislabs.com/blog/introducing-the-redis-data-source-plug-in-for-grafana/).
+Validate grafana is running as expected:
+```bash
+demo$ docker ps -a | grep grafana
+eb4141d583e1        grafana/grafana                            "/run.sh"                8 days ago          Up 26 hours         0.0.0.0:3000->3000/tcp                                                                                                                                                                                                                                                                                          grafana
+```
 
-3. Import the pre-built [RedisCDC MSSQL Connector Dashboard](RedisCDC_MSSQL_Connector.json).
+2. Configure two Redis data sources for job management and target Redis databases. Please see the steps [here](https://redislabs.com/blog/introducing-the-redis-data-source-plug-in-for-grafana/).
+   <br>a) Open a web browser and navigate to `http://127.0.0.1:3000/` to access the grafana dashboard.</br>
+   <br>b) Go to `Configuration` --> `Data Sources` then click on `Add data source` button.</br>
+   <br>c) Pick `Redis` data source from Others and configure with job management (`Name=RedisCDC-JobManagement-db and redis://127.0.0.1:14001`) and target (`Name=RedisCDC-Target-db, redis://127.0.0.1:14000`) redis database endpoints, use the `Internal IP` instead of `127.0.0.1` on cloud machines.</br>
+
+3. Click on `+` menu and Import then import the pre-built [RedisCDC MSSQL Connector Dashboard JSON](RedisCDC_MSSQL_Connector.json) using `Upload JSON file` method.
 <p align="left"><img src="/docs/images/RedisCDC_MSSQL_Metrics.png" alt="RedisCDC" height="450px"></p>
 
