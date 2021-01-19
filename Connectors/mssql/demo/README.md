@@ -171,7 +171,7 @@ start_loader_true: start initial loader process with job management.
 </p>
 </details>
 
-* Seed Config Data
+* <b>Seed Config Data</b>
 <p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. This step will delete existing configs from Redis job config database and reload them from Setup.yml, see sample rl-connector-rdb/config/samples/cdc/Setup.yml configuration file for reference.</p>
 
 ```bash
@@ -187,7 +187,7 @@ cleansetup_cdc
 ```
 Validate the config & metrics data is stored in the job management database (i.e. jobConfigConnection & metricsConnection from env.yml) by going to RedisInsight (or query using redis-cli) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys. Look for the Hash key `testdb-emp` and Field `jobOwner`, the Value should be `UNASSIGNED`.
 
-* Start RedisCDC 
+* <b>Start RedisCDC</b>
 <p>Execute RedisCDC instance with job management enabled (with start_cdc_true parameter).</p>
 
 ```bash
@@ -208,8 +208,8 @@ root                10410               10408               9                   
 ```
 Validate and make sure the Hash key `testdb-emp` and Field `jobOwner` Value has been updated with `JC-<PID>@<HOSTNAME>`. It can take upto 30 seconds for RedisCDC heartbeat to detect this instance and show up in the databasee.
 
-* Run Tests
-1. Insert Test
+* <b>Run Tests</b>
+<p><b>1.</b> <i>Insert Test</i></p>
 
 ```bash
 demo$ ./insert_mssql.sh
@@ -220,7 +220,7 @@ demo$ ./insert_mssql.sh
 <br>b) Execute RediSearch queries by using RediSearch tab in RedisInsight e.g. `FT.SEARCH "idx:emp" @Job:{PFE|SA}` or use `redis-cli` to execute the [search queries](https://oss.redislabs.com/redisearch/Query_Syntax/).</br>
 <p align="left"><img src="/docs/images/RedisCDC_MSSQL_search.png" alt="RedisCDC" height="450px"></p>
 
-2. Update Test
+<b>2.</b> <i>Update Test</i>
 ```bash
 demo$ ./update_mssql.sh
 ```
@@ -228,7 +228,7 @@ demo$ ./update_mssql.sh
 a) Validate the updated data in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys. Look for the updated values in Hash and String keys and match them with `update.sql`.
 <br>b) Execute RediSearch queries by using RediSearch tab in RedisInsight e.g. `FT.SEARCH "*"` or use redis-cli to execute the [search queries](https://oss.redislabs.com/redisearch/Query_Syntax/).</br>
 
-3. Delete Test
+<b>3.</b> <i>Delete Test</i>
 
 ```bash
 demo$ ./delete_mssql.sh
