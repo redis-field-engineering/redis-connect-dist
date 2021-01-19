@@ -45,7 +45,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-JobConfig-Metrics-db",
+      "datasource": "RedisCDC-JobManagement-db",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -64,7 +64,20 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{op=\"I\", schema=\"dbo\", table=\"emp\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Insert"
+              }
+            ]
+          }
+        ]
       },
       "fill": 1,
       "fillGradient": 0,
@@ -92,7 +105,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -164,12 +177,25 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-JobConfig-Metrics-db",
+      "datasource": "RedisCDC-JobManagement-db",
       "fieldConfig": {
         "defaults": {
           "custom": {}
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{op=\"U\", schema=\"dbo\", table=\"emp\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Update"
+              }
+            ]
+          }
+        ]
       },
       "fill": 1,
       "fillGradient": 0,
@@ -197,7 +223,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -260,7 +286,7 @@
       }
     },
     {
-      "datasource": "RedisCDC-JobConfig-Metrics-db",
+      "datasource": "RedisCDC-JobManagement-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -300,7 +326,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -335,7 +361,7 @@
       "type": "stat"
     },
     {
-      "datasource": "RedisCDC-JobConfig-Metrics-db",
+      "datasource": "RedisCDC-JobManagement-db",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -376,7 +402,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -420,12 +446,25 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-JobConfig-Metrics-db",
+      "datasource": "RedisCDC-JobManagement-db",
       "fieldConfig": {
         "defaults": {
           "custom": {}
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{op=\"D\", schema=\"dbo\", table=\"emp\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Delete"
+              }
+            ]
+          }
+        ]
       },
       "fill": 1,
       "fillGradient": 0,
@@ -453,7 +492,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -520,7 +559,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "RedisCDC-JobConfig-Metrics-db",
+      "datasource": "RedisCDC-JobManagement-db",
       "description": "Overall",
       "fieldConfig": {
         "defaults": {
@@ -570,7 +609,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -706,7 +745,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -791,7 +830,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -939,7 +978,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1040,7 +1079,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1115,7 +1154,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1191,7 +1230,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1253,7 +1292,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1341,7 +1380,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1500,7 +1539,7 @@
           }
         ]
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1665,7 +1704,7 @@
           }
         ]
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
@@ -1797,7 +1836,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.2.0",
+      "pluginVersion": "7.3.6",
       "scopedVars": {
         "redis": {
           "selected": true,
