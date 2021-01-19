@@ -1,6 +1,7 @@
 # Prerequisites
 
 Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and Docker installed.
+<br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 RedisCDC instances deployed on separate hosts.</br>
 <br>Execute the following commands (copy & paste) to download and setup RedisCDC MSSQL Connector and demo scripts.
 i.e.</br>
 ```bash
@@ -80,3 +81,114 @@ db:2           RedisCDC-JobConfig-Metrics-db                          redis:2   
 The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
 ---
+
+## Setup RedisCDC
+
+* Update the connection parameters to match with the demo environment. Execute the following commands:
+```bash
+demo$ sed -i -e '/jobConfigConnection:/{n;s/20504/14001/}' -e '/srcConnection:/{n;s/20505/14000/}' -e '/metricsConnection:/{n;s/20505/14001/}' -e 's/35.185.69.89/127.0.0.1/g' ../config/samples/cdc/env.yml
+
+demo$ cat ../config/samples/cdc/env.yml
+```
+<details><summary>Expected output:</summary>
+<p>
+
+```yml
+connections:
+  jobConfigConnection:
+    redisUrl: redis://127.0.0.1:14001
+  srcConnection:
+    redisUrl: redis://127.0.0.1:14000
+  metricsConnection:
+    redisUrl: redis://127.0.0.1:14001
+  msSQLServerConnection:
+    database:
+      name: testdb #database name
+      db: RedisLabsCDC #database
+      hostname: 127.0.0.1
+      port: 1433
+      username: sa
+      password: Redis@123
+      type: mssqlserver #this value has cannot be changed for mssqlserver
+      jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisLabsCDC"
+      maximumPoolSize: 10
+      minimumIdle: 2
+    include.query: "true"
+    snapshot.mode: initial
+    snapshot.isolation.mode: read_uncommitted
+    schemas.enable: "false"
+    include.schema.changes: "false"
+    decimal.handling.mode: double
+```
+
+</p>
+</details>
+
+* Execute RedisCDC job and see all the options
+
+```bash
+demo$ docker run \
+-it --rm \
+--name rl-connector-rdb \
+-e LOGBACK_CONFIG=/opt/redislabs/rl-connector-rdb/config/logback.xml \
+-e JAVA_OPTIONS="-Xms256m -Xmx512m -Divoyant.cdc.configLocation=/opt/redislabs/rl-connector-rdb/config/samples/cdc" \
+-v $(pwd)/../config:/opt/redislabs/rl-connector-rdb/config \
+--net host \
+virag/rl-connector-rdb
+```
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+-------------------------------
+RedisCDC startup script.
+
+Usage: [-h|-v|cleansetup_cdc|cleansetup_loader|start_cdc|start_cdc_true|start_loader|start_loader_true]
+options:
+-h: Print this help message and exit.
+-v: Print version information and exit.
+cleansetup_cdc: cleanup and seed redis database with cdc job configurations.
+cleansetup_loader: cleanup and seed redis database with initial loader job configurations.
+start_cdc: start cdc connector process without job management.
+start_cdc_true: start cdc connector process with job management.
+start_loader: start initial loader process without job management.
+start_loader_true: start initial loader process with job management.
+-------------------------------
+```
+</p>
+</details>
+
+* Seed Config Data
+<p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. This step will delete existing configs from Redis job config database and reload them from Setup.yml, see sample rl-connector-rdb/config/samples/cdc/Setup.yml configuration file for reference.</p>
+
+```bash
+demo$ docker run \
+-it --rm \
+--name rl-connector-rdb \
+-e LOGBACK_CONFIG=/opt/redislabs/rl-connector-rdb/config/logback.xml \
+-e JAVA_OPTIONS="-Xms256m -Xmx512m -Divoyant.cdc.configLocation=/opt/redislabs/rl-connector-rdb/config/samples/cdc" \
+-v $(pwd)/../config:/opt/redislabs/rl-connector-rdb/config \
+--net host \
+virag/rl-connector-rdb \
+cleansetup_cdc
+```
+
+* Start RedisCDC 
+<p>Execute with start_cdc_true parameter to start a RedisCDC instance with job management enabled.</p>
+
+```bash
+demo$ docker run \
+-d -it --rm \
+--name rl-connector-rdb \
+-e LOGBACK_CONFIG=/opt/redislabs/rl-connector-rdb/config/logback.xml \
+-e JAVA_OPTIONS="-Xms256m -Xmx512m -Divoyant.cdc.configLocation=/opt/redislabs/rl-connector-rdb/config/samples/cdc" \
+-v $(pwd)/../config:/opt/redislabs/rl-connector-rdb/config \
+--net host \
+virag/rl-connector-rdb \
+start_cdc_true
+```
+Validate RedisCDC instance is running as expected:
+```bash
+demo$ docker container top rl-connector-rdb -aef | grep java
+root                10410               10408               9                   01:16               pts/0               00:00:03            java -Xms256m -Xmx512m -Divoyant.cdc.configLocation=/opt/redislabs/rl-connector-rdb/config/samples/cdc -Divoyant.cdc.jobManagement.enabled=true -Dlogback.configurationFile=/opt/redislabs/rl-connector-rdb/config/logback.xml -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:+ExitOnOutOfMemoryError -cp .:/opt/redislabs/rl-connector-rdb/bin/../lib/*:/opt/redislabs/rl-connector-rdb/bin/* com.ivoyant.cdc.CDCMain
+```
