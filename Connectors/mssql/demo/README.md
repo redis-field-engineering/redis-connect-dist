@@ -94,10 +94,9 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 ---
 
 ## Setup RedisInsight
-[Add both job config & metrics and target Redis databbases](https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/) (use redisUrl's from env.yml) to RedisInsight UI.
+Open a browser and navigate to http://127.0.0.1:18001/ and [add both job config & metrics and target Redis databbases](https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/) (use redisUrl's from env.yml) to RedisInsight UI.
 
 ## Setup RedisCDC
-
 * Update the connection parameters to match with the demo environment. Execute the following commands:
 ```bash
 demo$ sed -i -e '/jobConfigConnection:/{n;s/20504/14001/}' -e '/srcConnection:/{n;s/20505/14000/}' -e '/metricsConnection:/{n;s/20505/14001/}' -e 's/35.185.69.89/127.0.0.1/g' ../config/samples/cdc/env.yml
@@ -186,7 +185,7 @@ demo$ docker run \
 virag/rl-connector-rdb \
 cleansetup_cdc
 ```
-Validate the config & metrics data is stored in the job management database by going to RedisInsight (or query using redis-cli) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys. Look for the Hash key `testdb-emp` and Field `jobOwner`, the Value should be `UNASSIGNED`.
+Validate the config & metrics data is stored in the job management database (i.e. jobConfigConnection & metricsConnection from env.yml) by going to RedisInsight (or query using redis-cli) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys. Look for the Hash key `testdb-emp` and Field `jobOwner`, the Value should be `UNASSIGNED`.
 
 * Start RedisCDC 
 <p>Execute RedisCDC instance with job management enabled (with start_cdc_true parameter).</p>
@@ -207,14 +206,41 @@ Validate RedisCDC instance is running as expected:
 demo$ docker container top rl-connector-rdb -aef | grep java
 root                10410               10408               9                   01:16               pts/0               00:00:03            java -Xms256m -Xmx512m -Divoyant.cdc.configLocation=/opt/redislabs/rl-connector-rdb/config/samples/cdc -Divoyant.cdc.jobManagement.enabled=true -Dlogback.configurationFile=/opt/redislabs/rl-connector-rdb/config/logback.xml -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:+ExitOnOutOfMemoryError -cp .:/opt/redislabs/rl-connector-rdb/bin/../lib/*:/opt/redislabs/rl-connector-rdb/bin/* com.ivoyant.cdc.CDCMain
 ```
-Validate and make sure the Hash key `testdb-emp` and Field `jobOwner` Value has been updated with `JC-<PID>@<HOSTNAME>`.
+Validate and make sure the Hash key `testdb-emp` and Field `jobOwner` Value has been updated with `JC-<PID>@<HOSTNAME>`. It can take upto 30 seconds for RedisCDC heartbeat to detect this instance and show up in the databasee.
 
 * Run Tests
+1. Insert Test
 
-* Start grafana with redis-datasource plugin [Optional: To configure and see RedisCDC dashboard with Metrics]
+```bash
+demo$ ./insert_mssql.sh
+```
+
+<br>a) Validate that the data has been inserted in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys.</br>
+<br>Look for the Hash and String keys with all of the 11 emp records e.g. `emp:1` and `1` (Delete the `StringhWriteStage` stage from ../config/samples/cdc/JobConfig.yml if you only want to capture the changes in Hashes. Remember to stop the RedisCDC instance and re-run cleansetup_cdc then start_cdc_true for any configuration changes to take place.) and a Checkpoint key `testdb-emp-testdb` with `event_serial_no`, `commit_lsn` and `change_lsn` Fields and Values.</br>
+<br>b) Execute RediSearch queries by using RediSearch tab in RedisInsight e.g. `FT.SEARCH "idx:emp" @Job:{PFE|SA}` or use `redis-cli` to execute the [search queries](https://oss.redislabs.com/redisearch/Query_Syntax/).</br>
+
+2. Update Test
+```bash
+demo$ ./update_mssql.sh
+```
+
+a) Validate the updated data in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys. Look for the updated values in Hash and String keys and match them with `update.sql`.
+<br>b) Execute RediSearch queries by using RediSearch tab in RedisInsight e.g. `FT.SEARCH "*"` or use redis-cli to execute the [search queries](https://oss.redislabs.com/redisearch/Query_Syntax/).</br>
+
+3. Delete Test
+
+```bash
+demo$ ./delete_mssql.sh
+```
+Validate the deleted data in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys, matching `delete.sql` data should not be found in the database.
+
+* Start grafana [Optional]
+1. Start a grafana instance with redis-datasource plugin
 ```bash
 sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-datasource" grafana/grafana
 ```
+2. Configure two Redis data sources for job management and target Redis databases. Please see the steps [here](https://redislabs.com/blog/introducing-the-redis-data-source-plug-in-for-grafana/).
 
+3. Import the pre-built [RedisCDC MSSQL Connector Dashboard](RedisCDC_MSSQL_Connector.json).
 
 [Generate random emp records based on emp schema](https://www.mockaroo.com/f1faabd0)
