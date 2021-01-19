@@ -26,7 +26,10 @@ bin	config	demo	lib
 rl-connector-rdb$ cd demo
 demo$ ./setup_mssql.sh
 ```
-Validate MS SQL Server database is running as expected:
+
+<details><summary>Validate MS SQL Server database is running as expected:</summary>
+<p>
+
 ```bash
 demo$ docker ps -a | grep mssql
 62de3e1d01c6        microsoft/mssql-server-linux:2017-latest   "/opt/mssql/bin/sqls…"   2 hours ago         Up 2 hours          0.0.0.0:1433->1433/tcp                                                                                                                                                                                                                                                                                          mssql2017-virag-cdc
@@ -37,6 +40,9 @@ source_schema                            source_table                           
 ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------- ---------------- ---------------------- ---------------------- -------------------- ---------------- ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------------------- -------------------------------------------------------------------------------- --------------------------------------------------------------------------------
 dbo                                      emp                                      cdcauditing_emp                           1269579561       1237579447 0x0000002400000B200060 NULL                                      1             NULL NULL                                     PK__emp__AF4C318ADDC5713D                NULL                                     2021-01-18 16:04:09.857 [empno]                                                                          [empno], [fname], [lname], [job], [mgr], [hiredate], [sal], [comm], [dept]
 ```
+</p>
+</details>
+
 ---
 **NOTE**
 
@@ -49,7 +55,9 @@ The above script will start a [MSSQL 2017 docker](https://hub.docker.com/layers/
 ```bash
 demo$ ./setup_re.sh
 ```
-Validate Redis databases and RedisInsight is running as expected:
+<details><summary>Validate Redis databases and RedisInsight is running as expected:</summary>
+<p>
+
 ```bash
 demo$ docker ps -a | grep redislabs
 8c008000ff5c        redislabs/redisinsight:latest              "bash ./docker-entry…"   2 hours ago         Up 2 hours          0.0.0.0:18001->8001/tcp                                                                                                                                                                                                                                                                                         redisinsight
@@ -75,12 +83,18 @@ DB:ID          NAME                                                   ID        
 db:1           RedisCDC-Target-db                                     redis:1       node:1       master       0-16383       7.58MB                OK         
 db:2           RedisCDC-JobConfig-Metrics-db                          redis:2       node:1       master       0-16383       1.93MB                OK
 ```
+</p>
+</details>
+
 ---
 **NOTE**
 
 The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
 ---
+
+## Setup RedisInsight
+[Add both job config & metrics and target Redis databbases](https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/) (use redisUrl's from env.yml) to RedisInsight UI.
 
 ## Setup RedisCDC
 
@@ -172,9 +186,10 @@ demo$ docker run \
 virag/rl-connector-rdb \
 cleansetup_cdc
 ```
+Validate the config & metrics data is stored in the job management database by going to RedisInsight (or query using redis-cli) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys. Look for the Hash key `testdb-emp` and Field `jobOwner`, the Value should be `UNASSIGNED`.
 
 * Start RedisCDC 
-<p>Execute with start_cdc_true parameter to start a RedisCDC instance with job management enabled.</p>
+<p>Execute RedisCDC instance with job management enabled (with start_cdc_true parameter).</p>
 
 ```bash
 demo$ docker run \
@@ -192,3 +207,14 @@ Validate RedisCDC instance is running as expected:
 demo$ docker container top rl-connector-rdb -aef | grep java
 root                10410               10408               9                   01:16               pts/0               00:00:03            java -Xms256m -Xmx512m -Divoyant.cdc.configLocation=/opt/redislabs/rl-connector-rdb/config/samples/cdc -Divoyant.cdc.jobManagement.enabled=true -Dlogback.configurationFile=/opt/redislabs/rl-connector-rdb/config/logback.xml -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:+ExitOnOutOfMemoryError -cp .:/opt/redislabs/rl-connector-rdb/bin/../lib/*:/opt/redislabs/rl-connector-rdb/bin/* com.ivoyant.cdc.CDCMain
 ```
+Validate and make sure the Hash key `testdb-emp` and Field `jobOwner` Value has been updated with `JC-<PID>@<HOSTNAME>`.
+
+* Run Tests
+
+* Start grafana with redis-datasource plugin [Optional: To configure and see RedisCDC dashboard with Metrics]
+```bash
+sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-datasource" grafana/grafana
+```
+
+
+[Generate random emp records based on emp schema](https://www.mockaroo.com/f1faabd0)
