@@ -218,6 +218,7 @@ demo$ ./insert_mssql.sh
 <br>a) Validate that the data has been inserted in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys.</br>
 <br>Look for the Hash and String keys with all of the 11 emp records e.g. `emp:1` and `1` (Delete the `StringhWriteStage` stage from ../config/samples/cdc/JobConfig.yml if you only want to capture the changes in Hashes. Remember to stop the RedisCDC instance and re-run cleansetup_cdc then start_cdc_true for any configuration changes to take place.) and a Checkpoint key `testdb-emp-testdb` with `event_serial_no`, `commit_lsn` and `change_lsn` Fields and Values.</br>
 <br>b) Execute RediSearch queries by using RediSearch tab in RedisInsight e.g. `FT.SEARCH "idx:emp" @Job:{PFE|SA}` or use `redis-cli` to execute the [search queries](https://oss.redislabs.com/redisearch/Query_Syntax/).</br>
+<p align="left"><img src="/docs/images/RedisCDC_MSSQL_search.png" alt="RedisCDC" height="450px"></p>
 
 2. Update Test
 ```bash
@@ -242,5 +243,5 @@ sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-data
 2. Configure two Redis data sources for job management and target Redis databases. Please see the steps [here](https://redislabs.com/blog/introducing-the-redis-data-source-plug-in-for-grafana/).
 
 3. Import the pre-built [RedisCDC MSSQL Connector Dashboard](RedisCDC_MSSQL_Connector.json).
+<p align="left"><img src="/docs/images/RedisCDC_MSSQL_Metrics.png" alt="RedisCDC" height="450px"></p>
 
-[Generate random emp records based on emp schema](https://www.mockaroo.com/f1faabd0)
