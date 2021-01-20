@@ -138,9 +138,9 @@ connections:
 </details>
 
 * Execute RedisCDC job and see all the options
-```html
-Please see https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities if you run into permission issues
-```
+
+> Please see https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities if you run into permission issues.
+
 ```bash
 demo$ docker run \
 -it --rm \
