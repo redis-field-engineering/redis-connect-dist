@@ -1,6 +1,6 @@
 # Prerequisites
 
-Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and Docker installed.
+Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker](https://docs.docker.com/get-docker) installed.
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 RedisCDC instances deployed on separate hosts.</br>
 <br>Execute the following commands (copy & paste) to download and setup RedisCDC MSSQL Connector and demo scripts.
 i.e.</br>
@@ -138,7 +138,9 @@ connections:
 </details>
 
 * Execute RedisCDC job and see all the options
-
+```html
+Please see https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities if you run into permission issues
+```
 ```bash
 demo$ docker run \
 -it --rm \
