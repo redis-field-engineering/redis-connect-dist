@@ -82,6 +82,10 @@ SHARDS:
 DB:ID          NAME                                                   ID            NODE         ROLE         SLOTS         USED_MEMORY           STATUS     
 db:1           RedisCDC-Target-db                                     redis:1       node:1       master       0-16383       7.58MB                OK         
 db:2           RedisCDC-JobConfig-Metrics-db                          redis:2       node:1       master       0-16383       1.93MB                OK
+
+demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT._LIST"
+1) "idx:emp"
+2) "idx:cust"
 ```
 </p>
 </details>
