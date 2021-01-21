@@ -223,6 +223,9 @@ demo$ ./insert_mssql.sh
 
 <br>a) Validate that the data has been inserted in Redis Enterprise target database (i.e. `srcConnection` from `env.yml`) by going to RedisInsight (or query using `redis-cli`) and [browsing](https://docs.redislabs.com/latest/ri/using-redisinsight/browser/) the keys.</br>
 <br>Look for the Hash and String keys with all of the emp records in [insert.sql](insert.sql) e.g. `emp:1` and `1` (Delete the `StringhWriteStage` stage from ../config/samples/cdc/JobConfig.yml if you only want to capture the changes in Hashes. Remember to stop the RedisCDC instance and re-run cleansetup_cdc then start_cdc_true for any configuration changes to take place.) and a Checkpoint key `testdb-emp-testdb` with `event_serial_no`, `commit_lsn` and `change_lsn` Fields and Values.</br>
+
+&#9888;&nbsp;Please [check](https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/master/Connectors/mssql/demo/setup_re.sh#L31) and make sure `idx:emp` index exists in the target Redis database otherwise, [create](https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/master/Connectors/mssql/demo/setup_re.sh#L30) the index.
+
 <br>b) Execute RediSearch queries by using RediSearch tab in RedisInsight e.g. `FT.SEARCH "idx:emp" @Job:{PFE|SA}` or use `redis-cli` to execute the [search queries](https://oss.redislabs.com/redisearch/Query_Syntax/)
 e.g. `demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT.SEARCH idx:emp '@Job:{PFE|SA}'"`
 </br>
