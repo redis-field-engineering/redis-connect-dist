@@ -143,7 +143,7 @@ connections:
 
 * Execute RedisCDC job and see all the options
 
-> Please see https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities if you run into permission issues.
+&#9888;&nbsp;Please see https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities if you run into permission issues.
 
 ```bash
 demo$ docker run \
