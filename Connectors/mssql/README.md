@@ -70,22 +70,22 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 ---
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-mssql/redislabs-rdb-cdc-connector-1.0.1.47.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v1.0.2/rl-connector-rdb-1.0.2.126.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-mssql/redislabs-rdb-cdc-connector-1.0.1.47.tar.gz``` and untar (tar -xvf redislabs-rdb-cdc-connector-1.0.1.47.tar.gz) the redislabs-rdb-cdc-connector-1.0.1.47.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v1.0.2/rl-connector-rdb-1.0.2.126.tar.gz``` and untar (tar -xvf rl-connector-rdb-1.0.2.126.tar.gz) the rl-connector-rdb-1.0.2.126.tar.gz archive.
 
 All the contents would be extracted under redislabs-rdb-cdc-connector
 
-Contents of redislabs-rdb-cdc-connector
+Contents of rl-connector-rdb
 <br>•	bin – contains script files
 <br>•	lib – contains java libraries
-<br>•	config/samples – contains sample config files
+<br>•	config – contains sample config files for cdc and initial loader jobs
 
 
 ## RedisCDC Setup and Job Management Configurations
 
-Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` redislabs-rdb-cdc-connector$ cp -R  config/sample config/<project_name>``` or reuse sample folder as is and edit/update the configuration values according to your setup.
+Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` rl-connector-rdb$ cp -R  config/samples/cdc config/<project_name>``` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
 #### Configuration files
 
@@ -93,7 +93,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <p>
 
 #### logging configuration file.
-### Sample logback.xml under rediscdc-mssql-connector/config folder
+### Sample logback.xml under rl-connector-rdb/config folder
 ```xml
 <configuration debug="true" scan="true" scanPeriod="30 seconds">
     <property name="LOG_PATH" value="logs/cdc-1.log"/>
@@ -140,24 +140,27 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml under rediscdc-mssql-connector/config/sample folder
+### Sample env.yml under rl-connector-rdb/config/samples/cdc folder
 ```yml
 connections:
   jobConfigConnection:
-    redisUrl: redis://127.0.0.1:12011
+    redisUrl: redis://127.0.0.1:14001
   srcConnection:
-      redisUrl: redis://127.0.0.1:14000
+    redisUrl: redis://127.0.0.1:14000
   metricsConnection:
-      redisUrl: redis://127.0.0.1:12011
-  testdb-msSQLServerConnection: #Variable and must match with the value for connectionId in the JobConfig.yml
-    database:
-      name: testdb #Variable and must match with the value for database in the Setup.yml
-      type: mssqlserver
+    redisUrl: redis://127.0.0.1:14001
+  msSQLServerConnection:
+    database: 
+      name: testdb #database name same as database value in Setup.yml
+      db: RedisLabsCDC #database
       hostname: 127.0.0.1
       port: 1433
-      user: sa
+      username: sa
       password: Redis@123
-      db: RedisLabsCDC
+      type: mssqlserver #this value cannot be changed for mssqlserver
+      jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisLabsCDC"
+      maximumPoolSize: 10
+      minimumIdle: 2
     include.query: "true"
     snapshot.mode: initial
     snapshot.isolation.mode: read_uncommitted
@@ -173,7 +176,7 @@ connections:
 <p>
 
 #### Environment level configurations.
-### Sample Setup.yml under rediscdc-mssql-connector/config/sample folder
+### Sample Setup.yml under rl-connector-rdb/config/samples/cdc folder
 ```yml
 connectionId: jobConfigConnection
 job:
@@ -222,7 +225,7 @@ job:
 <p>
 
 #### Configuration for Job Reaper and Job Claimer processes.
-### Sample JobManager.yml under rediscdc-mssql-connector/config/sample folder
+### Sample JobManager.yml under rl-connector-rdb/config/samples/cdc folder
 ```yml
 connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
 jobTypeId: jobType1 #Variable
@@ -255,7 +258,7 @@ jobClaimerConfig:
 <p>
 
 #### Job level details.
-### Sample JobConfig.yml under rediscdc-mssql-connector/config/sample folder
+### Sample JobConfig.yml under rl-connector-rdb/config/samples/cdc folder
 You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then RedisCDC will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 ```yml
 jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
@@ -297,7 +300,7 @@ pipelineConfig:
 <p>
 
 #### mapper configuration file.
-### Sample mapper.xml under rediscdc-mssql-connector/config/sample/mappers folder
+### Sample mapper.xml under rl-connector-rdb/config/samples/cdc/mappers folder
 
 ```xml
 <Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
@@ -337,7 +340,7 @@ pipelineConfig:
 <p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
 
 ```bash
-redislabs-rdb-cdc-connector/bin$./cleansetup.sh
+rl-connector-rdb/bin$./cleansetup.sh
 ../config/samples
 ```
 
@@ -345,8 +348,8 @@ redislabs-rdb-cdc-connector/bin$./cleansetup.sh
 <p>Execute startup.sh script to start a RedisCDC instance. Pass <b>true</b> or <b>false</b> parameter indicating whether the RedisCDC instance should start with Job Management role.</p>
 
 ```bash
-redislabs-rdb-cdc-connector/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
+rl-connector-rdb/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
 ```
 ```bash
-redislabs-rdb-cdc-connector/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
+rl-connector-rdb/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
 ```
