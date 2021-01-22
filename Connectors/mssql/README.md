@@ -75,7 +75,7 @@ The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/re
 ---
 Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v1.0.2/rl-connector-rdb-1.0.2.126.tar.gz``` and untar (tar -xvf rl-connector-rdb-1.0.2.126.tar.gz) the rl-connector-rdb-1.0.2.126.tar.gz archive.
 
-All the contents would be extracted under redislabs-rdb-cdc-connector
+All the contents would be extracted under rl-connector-rdb
 
 Contents of rl-connector-rdb
 <br>•	bin – contains script files
