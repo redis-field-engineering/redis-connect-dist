@@ -18,7 +18,7 @@ sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/rladmin info cluster"
 echo "Creating databases..."
 rm create_demodb.sh
 tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H Content-type:application/json -d '{ "name": "RedisCDC-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "570f91c0792dad21055a0f60585f48c7", "module_name": "search", "semantic_version": "2.0.5"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H Content-type:application/json -d '{ "name": "RedisCDC-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "737bf664f5f59396f64db3afadd111ff", "module_name": "search", "semantic_version": "2.0.6"} ] }' https://localhost:9443/v1/bdbs
 curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisCDC-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_id": "23f3f39a1fdc76cf122f914afdf164cb", "module_name": "timeseries", "semantic_version": "1.4.7"}]}' https://localhost:9443/v1/bdbs
 EOF
 sudo docker cp create_demodb.sh re-node1:/opt/create_demodb.sh
