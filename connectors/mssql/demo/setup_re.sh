@@ -2,7 +2,7 @@
 sudo docker kill re-node1;sudo docker rm re-node1;
 sudo docker kill redisinsight;sudo docker rm redisinsight;
 # Uncomment this to pull the newer version of redislabs/redis docker image in case the latest tag has been upgraded
-sudo docker rmi -f $(docker images | grep redislabs | awk '{print $3}')
+sudo docker rmi -f $(sudo docker images | grep redislabs | awk '{print $3}')
 # Start 1 docker container sincce we can't do HA with vanilla docker instance. Use docker swarm, RE on VM's or RE's K8s operator to achieve HA, clustering etc.
 echo "Starting Redis Enterprise as Docker containers..."
 sudo docker run -d --cap-add sys_resource -h re-node1 --name re-node1 -p 18443:8443 -p 19443:9443 -p 14000-14005:12000-12005 -p 18070:8070 redislabs/redis:latest
