@@ -1,0 +1,55 @@
+{
+	"default_db_config": {
+		"name": "RedisCDC-Target-db",
+		"bigstore": false,
+		"replication": false,
+		"memory_size": 1024000000,
+		"aof_policy": "appendfsync-every-sec",
+		"snapshot_policy": [],
+		"shards_count": 1,
+		"shard_key_regex": [{
+			"regex": ".*\\{(?<tag>.*)\\}.*"
+		}, {
+			"regex": "(?<tag>.*)"
+		}],
+		"module_list": [{
+			"module_id": "737bf664f5f59396f64db3afadd111ff",
+			"module_args": "PARTITIONS AUTO",
+			"module_name": "search",
+			"semantic_version": "2.0.6"
+		}],
+		"port": 12000
+	},
+	"instances": [{
+		"cluster": {
+			"url": "https://cluster1.local:9443",
+			"credentials": {
+				"username": "demo@redislabs.com",
+				"password": "redislabs"
+			},
+			"name": "cluster1.local"
+		},
+		"compression": 6
+	}, {
+		"cluster": {
+			"url": "https://cluster2.local:9443",
+			"credentials": {
+				"username": "demo@redislabs.com",
+				"password": "redislabs"
+			},
+			"name": "cluster2.local"
+		},
+		"compression": 6
+	}, {
+		"cluster": {
+			"url": "https://cluster3.local:9443",
+			"credentials": {
+				"username": "demo@redislabs.com",
+				"password": "redislabs"
+			},
+			"name": "cluster3.local"
+		},
+		"compression": 6
+	}],
+	"name": "RedisCDC-Target-db"
+}
