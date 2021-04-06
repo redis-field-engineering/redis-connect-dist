@@ -1,0 +1,13 @@
+{
+	"name": "RedisCDC-JobConfig-Metrics-db",
+	"type": "redis",
+	"replication": false,
+	"memory_size": 1000000000,
+	"port": 12001,
+	"module_list": [{
+		"module_args": "",
+		"module_id": "23f3f39a1fdc76cf122f914afdf164cb",
+		"module_name": "timeseries",
+		"semantic_version": "1.4.7"
+	}]
+}
