@@ -47,7 +47,7 @@ On their own RedisCDC instances are stateless therefore require Redis to manage 
 
 Please refer to the installation guide and [Insall and Setup Gemfire](https://gemfire.docs.pivotal.io/910/gemfire/getting_started/installation/install_intro.html).
 
-Here is an example with the included cache config files in the `redislabs-gemfire-connector/config/samples/gemfire2redis` folder.
+Here is an example with the included cache config files in the `rl-connector-gemfire/config/samples/gemfire2redis` folder.
 
 ```bash
 ~/pivotal-gemfire-9.10.4/bin$ ./gfsh
@@ -58,11 +58,17 @@ Here is an example with the included cache config files in the `redislabs-gemfir
 /______/_/      /______/_/    /_/    9.10.4
 
 Monitor and Manage VMware Tanzu GemFire
+Start locator
 gfsh>start locator --name=locator1 --bind-address=127.0.0.1
 
-gfsh>start server --name=server1 --bind-address=127.0.0.1 --cache-xml-file=/home/viragtripathi/redislabs-gemfire-connector/config/samples/gemfire2redis/cache.xml
+Start server1
+gfsh>start server --name=server1 --bind-address=127.0.0.1 --cache-xml-file=~/rl-connector-gemfire/config/samples/cdc/gemfire2redis/cache.xml
 
-gfsh>start server --name=server2 --bind-address=127.0.0.1 --cache-xml-file=/home/viragtripathi/redislabs-gemfire-connector/config/samples/gemfire2redis/cache1.xml
+Start server2
+gfsh>start server --name=server2 --bind-address=127.0.0.1 --cache-xml-file=~/rl-connector-gemfire/config/samples/cdc/gemfire2redis/cache1.xml
+
+Deploy jar for the initial loader process
+gfsh>deploy --jar=~/rl-connector-gemfire/lib/connector-gemfire-fn-1.0.2.jar
 ```
 
 ## Setting up Redis Enterprise Databases (Target)
@@ -73,14 +79,14 @@ Before using the Gemfire connector to capture the changes committed on Gemfire i
 ---
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-gemfire/redislabs-gemfire-connector-1.0.1.50.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-gemfire/rl-connector-gemfire-1.0.2.129.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-gemfire/redislabs-gemfire-connector-1.0.1.50.tar.gz``` and untar (tar -xvf redislabs-gemfire-connector-1.0.1.50.tar.gz) the redislabs-gemfire-connector-1.0.1.50.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-gemfire/rl-connector-gemfire-1.0.2.129.tar.gz``` and untar (tar -xvf rl-connector-gemfire-1.0.2.129.tar.gz) the rl-connector-gemfire-1.0.2.129.tar.gz archive.
 
-All the contents would be extracted under redislabs-gemfire-connector
+All the contents would be extracted under rl-connector-gemfire
 
-Contents of redislabs-gemfire-connector
+Contents of rl-connector-gemfire
 <br>•	bin – contains script files
 <br>•	lib – contains java libraries
 <br>•	config/samples/gemfire2redis – contains sample config files
@@ -88,7 +94,7 @@ Contents of redislabs-gemfire-connector
 
 ## RedisCDC Setup and Job Management Configurations
 
-Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` redislabs-gemfire-connector$ cp -R  config/samples/gemfire2redis config/<project_name>/gemfire2redis``` or reuse sample folder as is and edit/update the configuration values according to your setup.
+Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` rl-connector-gemfire$ cp -R  config/samples/gemfire2redis config/<project_name>/gemfire2redis``` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
 #### Configuration files
 
@@ -96,7 +102,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <p>
 
 #### logging configuration file.
-### Sample logback.xml under redislabs-gemfire-connector/config folder
+### Sample logback.xml under rl-connector-gemfire/config folder
 ```xml
 <configuration debug="true" scan="true" scanPeriod="30 seconds">
     <property name="LOG_PATH" value="logs/cdc-1.log"/>
@@ -143,7 +149,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample env.yml under rl-connector-gemfire/config/samples/gemfire2redis folder
 ```yml
 connections:
   jobConfigConnection:
@@ -161,7 +167,7 @@ connections:
 <p>
 
 #### Environment level configurations.
-### Sample Setup.yml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample Setup.yml under rl-connector-gemfire/config/samples/gemfire2redis folder
 ```yml
 connectionId: jobConfigConnection
 job:
@@ -205,7 +211,7 @@ job:
 <p>
 
 #### Configuration for Job Reaper and Job Claimer processes.
-### Sample JobManager.yml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample JobManager.yml under rl-connector-gemfire/config/samples/gemfire2redis folder
 ```yml
 connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
 jobTypeId: jobType1
@@ -238,7 +244,7 @@ jobClaimerConfig:
 <p>
 
 #### Job level details.
-### Sample JobConfig.yml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample JobConfig.yml under rl-connector-gemfire/config/samples/gemfire2redis folder
 You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<region_type>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then RedisCDC will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 ```yml
 jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
@@ -282,7 +288,7 @@ pipelineConfig:
 <p>
 
 #### cache client configuration file.
-### Sample cache-client.xml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample cache-client.xml under rl-connector-gemfire/config/samples/gemfire2redis folder
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -331,7 +337,7 @@ pipelineConfig:
 <p>
 
 #### cache configuration file.
-### Sample cache.xml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample cache.xml under rl-connector-gemfire/config/samples/gemfire2redis folder
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -377,7 +383,7 @@ pipelineConfig:
 <p>
 
 #### cache1 configuration file.
-### Sample cache1.xml under redislabs-gemfire-connector/config/samples/gemfire2redis folder
+### Sample cache1.xml under rl-connector-gemfire/config/samples/gemfire2redis folder
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -416,7 +422,7 @@ pipelineConfig:
 <p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
 
 ```bash
-redislabs-gemfire-connector/bin$./cleansetup.sh
+rl-connector-gemfire/bin$./cleansetup.sh
 ../config/samples/gemfire2redis
 ```
 
@@ -424,8 +430,8 @@ redislabs-gemfire-connector/bin$./cleansetup.sh
 <p>Execute startup.sh script to start a RedisCDC instance. Pass <b>true</b> or <b>false</b> parameter indicating whether the RedisCDC instance should start with Job Management role.</p>
 
 ```bash
-redislabs-gemfire-connector/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
+rl-connector-gemfire/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
 ```
 ```bash
-redislabs-gemfire-connector/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
+rl-connector-gemfire/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
 ```
