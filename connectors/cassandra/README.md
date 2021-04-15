@@ -53,20 +53,20 @@ Before the Cassandra connector can be used to monitor the changes in a Cassandra
 
 ## Setting up Redis Enterprise Databases (Target)
 
-Before using the Cassandra connector (redislabs-cassandra-cdc-connector) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisCDC by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
+Before using the Cassandra connector (rl-connector-cassandra) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisCDC by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
 
 ## Download and Setup
 ---
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-cassandra/redislabs-cassandra-cdc-connector-1.0.1.47.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-cassandra/rl-connector-cassandra-1.0.2.126.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-cassandra/redislabs-cassandra-cdc-connector-1.0.1.47.tar.gz``` and untar (tar -xvf redislabs-cassandra-cdc-connector-1.0.1.47.tar.gz) the redislabs-cassandra-cdc-connector-1.0.1.47.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-cassandra/rl-connector-cassandra-1.0.2.126.tar.gz``` and untar (tar -xvf rl-connector-cassandra-1.0.2.126.tar.gzrl-connector-cassandra-1.0.2.126.tar.gz) the rl-connector-cassandra-1.0.2.126.tar.gz archive.
 
-All the contents would be extracted under redislabs-cassandra-cdc-connector
+All the contents would be extracted under rl-connector-cassandra
 
-Contents of redislabs-cassandra-cdc-connector
+Contents of rl-connector-cassandra
 <br>•	bin – contains script files
 <br>•	lib – contains java libraries
 <br>•	config/samples – contains sample config files
@@ -74,7 +74,7 @@ Contents of redislabs-cassandra-cdc-connector
 
 ## RedisCDC Setup and Job Management Configurations
 
-Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` redislabs-cassandra-cdc-connector$ cp -R  config/sample config/<project_name>``` or reuse sample folder as is and edit/update the configuration values according to your setup.
+Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` rl-connector-cassandra$ cp -R  config/sample config/<project_name>``` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
 #### Configuration files
 
@@ -82,7 +82,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <p>
 
 #### logging configuration file.
-### Sample logback.xml under redislabs-cassandra-cdc-connector/config folder
+### Sample logback.xml under rl-connector-cassandra/config folder
 ```xml
 <configuration debug="true" scan="true" scanPeriod="30 seconds">
     <property name="LOG_PATH" value="logs/cdc-1.log"/>
@@ -129,7 +129,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml under redislabs-cassandra-cdc-connector/config/sample folder
+### Sample env.yml under rl-connector-cassandra/config/sample folder
 ```yml
 connections:
   jobConfigConnection:
@@ -147,7 +147,7 @@ connections:
 <p>
 
 #### Environment level configurations.
-### Sample Setup.yml under redislabs-cassandra-cdc-connector/config/sample folder
+### Sample Setup.yml under rl-connector-cassandra/config/sample folder
 ```yml
 connectionId: jobConfigConnection
 job:
@@ -209,7 +209,7 @@ job:
 <p>
 
 #### Configuration for Job Reaper and Job Claimer processes.
-### Sample JobManager.yml under redislabs-cassandra-cdc-connector/config/sample folder
+### Sample JobManager.yml under rl-connector-cassandra/config/sample folder
 ```yml
 connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
 jobTypeId: jobType1 #Variable
@@ -242,7 +242,7 @@ jobClaimerConfig:
 <p>
 
 #### Job level details.
-### Sample JobConfig.yml under redislabs-cassandra-cdc-connector/config/sample folder
+### Sample JobConfig.yml under rl-connector-cassandra/config/sample folder
 
 ```yml
 jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
@@ -295,7 +295,7 @@ pipelineConfig:
 <p>
 
 #### mapper configuration file.
-### Sample mapper.xml under redislabs-cassandra-cdc-connector/config/sample/mappers folder
+### Sample mapper.xml under rl-connector-cassandra/config/sample/mappers folder
 
 ```xml
 <Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="cdc_test"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
@@ -333,7 +333,7 @@ pipelineConfig:
 <p>Before starting a RedisCDC instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
 
 ```bash
-redislabs-cassandra-cdc-connector/bin$./cleansetup.sh
+rl-connector-cassandra/bin$./cleansetup.sh
 ../config/samples
 ```
 
@@ -341,9 +341,9 @@ redislabs-cassandra-cdc-connector/bin$./cleansetup.sh
 <p>Execute startup.sh script to start a RedisCDC instance. Pass <b>true</b> or <b>false</b> parameter indicating whether the RedisCDC instance should start with Job Management role.</p>
 
 ```bash
-redislabs-cassandra-cdc-connector/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
+rl-connector-cassandra/bin$./startup.sh true (starts RedisCDC Connector with Job Management enabled)
 ```
 ```bash
-redislabs-cassandra-cdc-connector/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
+rl-connector-cassandra/bin$./startup.sh false (starts RedisCDC Connector with Job Management disabled
 ```
 
