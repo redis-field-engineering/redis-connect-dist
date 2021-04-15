@@ -70,10 +70,10 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 ---
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v1.0.2/rl-connector-rdb-1.0.2.126.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-mssql/rl-connector-rdb-1.0.2.126.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisCDC connector is currently only written for [*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v1.0.2/rl-connector-rdb-1.0.2.126.tar.gz``` and untar (tar -xvf rl-connector-rdb-1.0.2.126.tar.gz) the rl-connector-rdb-1.0.2.126.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-mssql/rl-connector-rdb-1.0.2.126.tar.gz``` and untar (tar -xvf rl-connector-rdb-1.0.2.126.tar.gz) the rl-connector-rdb-1.0.2.126.tar.gz archive.
 
 All the contents would be extracted under rl-connector-rdb
 
