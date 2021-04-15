@@ -6,7 +6,7 @@ Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker
 i.e.</br>
 ```bash
 wget -c https://github.com/RedisLabs-Field-Engineering/RedisCDC/archive/master.zip && \
-wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/v1.0.2/rl-connector-rdb-1.0.2.126.tar.gz && \
+wget https://github.com/RedisLabs-Field-Engineering/RedisCDC/releases/download/rediscdc-mssql/rl-connector-rdb-1.0.2.126.tar.gz && \
 tar -xvf rl-connector-rdb-1.0.2.126.tar.gz && \
 unzip -j master.zip "RedisCDC-master/connectors/mssql/demo/*" -d rl-connector-rdb/demo && \
 rm -rf rl-connector-rdb-1.0.2.126.tar.gz master.zip RedisCDC-master && \
