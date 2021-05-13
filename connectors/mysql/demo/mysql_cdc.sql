@@ -22,3 +22,5 @@ CREATE TABLE IF NOT EXISTS emp (
     ENGINE = InnoDB;
 
 desc emp;
+
+SET GLOBAL show_compatibility_56 = ON;
