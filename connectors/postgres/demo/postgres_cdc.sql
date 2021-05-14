@@ -14,3 +14,7 @@ CREATE TABLE IF NOT EXISTS emp (
     );
 
 \d emp;
+
+\du+;
+
+\dt+;
