@@ -7,7 +7,7 @@ version="$1"
 sudo docker kill mysql-$version-$(hostname);sudo docker rm mysql-$version-$(hostname);
 
 echo "Creating mysql-$version-$(hostname) docker container."
-sudo docker run --name mysql-$version-$(hostname) -v $(pwd)/mysql:/etc/mysql/conf.d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Redis@123 -d mysql:$version
+sudo docker run --name mysql-$version-$(hostname) -v $(pwd):/etc/mysql/conf.d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Redis@123 -d mysql:$version
 
 sleep 30s
 
