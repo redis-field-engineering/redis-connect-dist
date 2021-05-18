@@ -13,7 +13,18 @@ CREATE TABLE IF NOT EXISTS emp (
     PRIMARY KEY (empno)
     );
 
+ALTER TABLE emp REPLICA IDENTITY FULL;
+
 \d emp;
+
+SELECT CASE relreplident
+          WHEN 'd' THEN 'default'
+          WHEN 'n' THEN 'nothing'
+          WHEN 'f' THEN 'full'
+          WHEN 'i' THEN 'index'
+       END AS replica_identity
+FROM pg_class
+WHERE oid = 'emp'::regclass;
 
 \du+;
 
