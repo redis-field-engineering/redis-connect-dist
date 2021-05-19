@@ -24,7 +24,7 @@ bin	config	demo	lib
 <br>Execute [setup_mssql.sh](setup_mssql.sh)</br>
 ```bash
 rl-connector-rdb$ cd demo
-demo$ ./setup_mssql.sh
+demo$ ./setup_mssql.sh 2017-latest
 ```
 
 <details><summary>Validate MS SQL Server database is running as expected:</summary>
@@ -32,13 +32,13 @@ demo$ ./setup_mssql.sh
 
 ```bash
 demo$ docker ps -a | grep mssql
-62de3e1d01c6        microsoft/mssql-server-linux:2017-latest   "/opt/mssql/bin/sqls…"   2 hours ago         Up 2 hours          0.0.0.0:1433->1433/tcp                                                                                                                                                                                                                                                                                          mssql2017-virag-cdc
+8734c894f926        mcr.microsoft.com/mssql/server:2017-latest   "/opt/mssql/bin/nonr…"   2 days ago          Up 2 days           0.0.0.0:1433->1433/tcp                                                                                                                                                                                                                                                                                          mssql-2017-latest-virag-cdc
 
-demo$ docker exec -it mssql2017-virag-cdc /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P Redis@123 -y80 -Y 40 -Q 'use RedisLabsCDC;exec sys.sp_cdc_help_change_data_capture;'
+demo$ docker exec -it mssql-2017-latest-virag-cdc /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P Redis@123 -y80 -Y 40 -Q 'use RedisLabsCDC;exec sys.sp_cdc_help_change_data_capture;'
 Changed database context to 'RedisLabsCDC'.
-source_schema                            source_table                             capture_instance                         object_id   source_object_id start_lsn              end_lsn                supports_net_changes has_drop_pending role_name                                index_name                               filegroup_name                           create_date             index_column_list                                                                captured_column_list                                                            
+source_schema                            source_table                             capture_instance                         object_id   source_object_id start_lsn              end_lsn                supports_net_changes has_drop_pending role_name                                index_name                               filegroup_name                           create_date             index_column_list                                                                captured_column_list
 ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------- ---------------- ---------------------- ---------------------- -------------------- ---------------- ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------------------- -------------------------------------------------------------------------------- --------------------------------------------------------------------------------
-dbo                                      emp                                      cdcauditing_emp                           1269579561       1237579447 0x0000002400000B200060 NULL                                      1             NULL NULL                                     PK__emp__AF4C318ADDC5713D                NULL                                     2021-01-18 16:04:09.857 [empno]                                                                          [empno], [fname], [lname], [job], [mgr], [hiredate], [sal], [comm], [dept]
+dbo                                      emp                                      cdcauditing_emp                           1269579561       1237579447 0x0000002400000B100060 NULL                                      1             NULL NULL                                     PK__emp__AF4C318A4ABE3B75                NULL                                     2021-05-17 15:16:27.013 [empno]                                                                          [empno], [fname], [lname], [job], [mgr], [hiredate], [sal], [comm], [dept]
 ```
 </p>
 </details>
