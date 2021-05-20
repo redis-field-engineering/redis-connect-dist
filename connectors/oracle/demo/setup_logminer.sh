@@ -35,7 +35,14 @@ sqlplus sys/Redis123@//localhost:1521/ORCLPDB1 as sysdba <<- EOF
 EOF
 
 sqlplus sys/Redis123@//localhost:1521/ORCLCDB as sysdba <<- EOF
+  CREATE ROLE c##logminer_role;
+  GRANT CREATE SESSION TO c##logminer_role;
+  GRANT execute_catalog_role, select any transaction, select any dictionary, logmining TO c##logminer_role;
+
   CREATE USER c##cdcuser IDENTIFIED BY cdcuser DEFAULT TABLESPACE LOGMINER_TBS QUOTA UNLIMITED ON LOGMINER_TBS CONTAINER=ALL;
+  GRANT c##logminer_role TO c##cdcuser;
+
+  ALTER USER c##cdcuser QUOTA UNLIMITED ON USERS SET container_data=all container=current;
 
   GRANT CREATE SESSION TO c##cdcuser CONTAINER=ALL;
   GRANT SET CONTAINER TO c##cdcuser CONTAINER=ALL;
