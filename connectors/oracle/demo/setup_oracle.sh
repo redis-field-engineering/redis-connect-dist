@@ -18,10 +18,8 @@ sudo docker kill $container_name;sudo docker rm $container_name;
 # create volume and setup necessary permissions
 sudo rm -rf $(pwd)/oradata
 sudo mkdir -p $(pwd)/oradata/recovery_area
-sudo chgrp 54321 $(pwd)/oradata
-sudo chown 54321 $(pwd)/oradata
-sudo chgrp 54321 $(pwd)/oradata/recovery_area
-sudo chown 54321 $(pwd)/oradata/recovery_area
+sudo chgrp -R 54321 $(pwd)/oradata
+sudo chown -R 54321 $(pwd)/oradata
 
 echo "Creating $container_name docker container."
 sudo docker run --name $container_name \
