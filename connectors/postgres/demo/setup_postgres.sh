@@ -1,13 +1,25 @@
 #!/bin/bash
 
 version="$1"
+db_port=5432
+db_name="RedisLabsCDC"
+db_user="rediscdc"
+db_pwd="Redis@123"
 [[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. latest, 12.5"; exit 1; }
 
 # delete the existing postgres:$version container if it exist
 sudo docker kill postgres-$version-$(hostname);sudo docker rm postgres-$version-$(hostname);
 
 echo "Creating postgres-$version-$(hostname) docker container."
-sudo docker run --name postgres-$version-$(hostname) -e POSTGRES_DB=RedisLabsCDC -e POSTGRES_USER=rediscdc -e POSTGRES_PASSWORD=Redis@123 -p 5432:5432 -d postgres:$version -c wal_level=logical -c max_wal_senders=1 -c max_replication_slots=1
+sudo docker run --name postgres-$version-$(hostname) \
+	-e POSTGRES_DB=$db_name \
+	-e POSTGRES_USER=$db_user \
+	-e POSTGRES_PASSWORD=$db_pwd \
+	-p $db_port:5432 \
+	-d postgres:$version \
+	-c wal_level=logical \
+	-c max_wal_senders=1 \
+	-c max_replication_slots=1
 
 sleep 30s
 
