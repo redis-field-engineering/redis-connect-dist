@@ -8,10 +8,11 @@
 
 
 version="$1"
+db_port=1521
+db_pwd=Redis123
 [[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. 12.2.0.1-ee, 19.3.0-ee"; exit 1; }
 
 container_name="oracle-$version-$(hostname)"
-db_port=1521
 # delete the existing container if it exist
 sudo docker kill $container_name;sudo docker rm $container_name;
 
@@ -23,12 +24,11 @@ sudo chown -R 54321 $(pwd)/oradata
 
 echo "Creating $container_name docker container."
 sudo docker run --name $container_name \
-	-d --rm \
 	-p $db_port:1521 \
 	-p 5500:5500 \
-	-e ORACLE_PWD=Redis123 \
+	-e ORACLE_PWD=$db_pwd \
 	-v $(pwd)/oradata:/opt/oracle/oradata \
-        virag/oracle-$version
+        -d virag/oracle-$version
 #	oracle/database:$version
 
 #sudo docker wait $container_name
