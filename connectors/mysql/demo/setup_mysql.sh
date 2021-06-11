@@ -16,7 +16,7 @@ sudo docker run --name mysql-$version-$(hostname) \
 
 sleep 30s
 
-echo "Creating RedisLabsCDC database and emp table."
+echo "Creating RedisConnect database and emp table."
 #run the setup script to create the DB and the table in the DB
 sudo docker cp mysql_cdc.sql mysql-$version-$(hostname):mysql_cdc.sql
 sudo docker exec -it mysql-$version-$(hostname) bash -c 'mysql -h"localhost" -P3306 -uroot -p"$MYSQL_ROOT_PASSWORD" < mysql_cdc.sql'
