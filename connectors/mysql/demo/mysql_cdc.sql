@@ -1,5 +1,5 @@
 select version();
-CREATE SCHEMA IF NOT EXISTS RedisLabsCDC DEFAULT CHARACTER SET utf8;
+CREATE SCHEMA IF NOT EXISTS RedisConnect DEFAULT CHARACTER SET utf8;
 SHOW DATABASES;
 
 
@@ -12,7 +12,7 @@ GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *
 -- check the permissions
 SELECT * from mysql.`user` where user='redisconnectuser';
 
-use RedisLabsCDC;
+use RedisConnect;
 
 CREATE TABLE IF NOT EXISTS emp (
     empno int NOT NULL,
