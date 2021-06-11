@@ -18,7 +18,7 @@ sudo docker run --name mssql-$version-$(hostname) \
 
 sleep 30s
 
-echo "Creating RedisLabsCDC database and emp table."
+echo "Creating RedisConnect database and emp table."
 #run the setup script to create the DB and the table in the DB
 sudo docker cp mssql_cdc.sql mssql-$version-$(hostname):mssql_cdc.sql
 sudo docker exec -it mssql-$version-$(hostname) bash -c '/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -i mssql_cdc.sql'
