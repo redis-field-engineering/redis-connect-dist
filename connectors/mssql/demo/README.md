@@ -34,8 +34,8 @@ demo$ ./setup_mssql.sh 2017-latest
 demo$ docker ps -a | grep mssql
 8734c894f926        mcr.microsoft.com/mssql/server:2017-latest   "/opt/mssql/bin/nonr…"   2 days ago          Up 2 days           0.0.0.0:1433->1433/tcp                                                                                                                                                                                                                                                                                          mssql-2017-latest-virag-cdc
 
-demo$ docker exec -it mssql-2017-latest-virag-cdc /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P Redis@123 -y80 -Y 40 -Q 'use RedisLabsCDC;exec sys.sp_cdc_help_change_data_capture;'
-Changed database context to 'RedisLabsCDC'.
+demo$ docker exec -it mssql-2017-latest-virag-cdc /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P Redis@123 -y80 -Y 40 -Q 'use RedisConnect;exec sys.sp_cdc_help_change_data_capture;'
+Changed database context to 'RedisConnect'.
 source_schema                            source_table                             capture_instance                         object_id   source_object_id start_lsn              end_lsn                supports_net_changes has_drop_pending role_name                                index_name                               filegroup_name                           create_date             index_column_list                                                                captured_column_list
 ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------- ---------------- ---------------------- ---------------------- -------------------- ---------------- ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------------------- -------------------------------------------------------------------------------- --------------------------------------------------------------------------------
 dbo                                      emp                                      cdcauditing_emp                           1269579561       1237579447 0x0000002400000B100060 NULL                                      1             NULL NULL                                     PK__emp__AF4C318A4ABE3B75                NULL                                     2021-05-17 15:16:27.013 [empno]                                                                          [empno], [fname], [lname], [job], [mgr], [hiredate], [sal], [comm], [dept]
@@ -46,7 +46,7 @@ dbo                                      emp                                    
 ---
 **NOTE**
 
-The above script will start a [MSSQL 2017 docker](https://hub.docker.com/layers/microsoft/mssql-server-linux/2017-latest/images/sha256-314918ddaedfedc0345d3191546d800bd7f28bae180541c9b8b45776d322c8c2?context=explore) instance, create RedisLabsCDC database, enable cdc on the database, create emp table and enable cdc on the table.
+The above script will start a [MSSQL 2017 docker](https://hub.docker.com/layers/microsoft/mssql-server-linux/2017-latest/images/sha256-314918ddaedfedc0345d3191546d800bd7f28bae180541c9b8b45776d322c8c2?context=explore) instance, create RedisConnect database, enable cdc on the database, create emp table and enable cdc on the table.
 
 ---
 
@@ -121,13 +121,13 @@ connections:
   msSQLServerConnection:
     database:
       name: testdb #database name
-      db: RedisLabsCDC #database
+      db: RedisConnect #database
       hostname: 127.0.0.1
       port: 1433
       username: sa
       password: Redis@123
       type: mssqlserver #this value has cannot be changed for mssqlserver
-      jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisLabsCDC"
+      jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect"
       maximumPoolSize: 10
       minimumIdle: 2
     include.query: "true"
