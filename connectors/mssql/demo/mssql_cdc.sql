@@ -13,7 +13,7 @@ SELECT is_cdc_enabled
 FROM sys.databases
 WHERE name = 'RedisConnect'
 
-use RedisLabsCDC
+use RedisConnect
 EXEC sys.sp_cdc_enable_db
 
 SELECT is_cdc_enabled
