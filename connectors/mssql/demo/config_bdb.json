@@ -6,8 +6,8 @@
 	"port": 12001,
 	"module_list": [{
 		"module_args": "",
-		"module_id": "23f3f39a1fdc76cf122f914afdf164cb",
+		"module_id": "db0925a9d032ce983bbc83557b4f5a04",
 		"module_name": "timeseries",
-		"semantic_version": "1.4.7"
+		"semantic_version": "1.4.8"
 	}]
 }
