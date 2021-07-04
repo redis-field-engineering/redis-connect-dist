@@ -13,10 +13,10 @@
 			"regex": "(?<tag>.*)"
 		}],
 		"module_list": [{
-			"module_id": "737bf664f5f59396f64db3afadd111ff",
+			"module_id": "f3f9ffbad97841b0ecb0d8175c601ebb",
 			"module_args": "PARTITIONS AUTO",
 			"module_name": "search",
-			"semantic_version": "2.0.6"
+			"semantic_version": "2.0.9"
 		}],
 		"port": 12000
 	},
