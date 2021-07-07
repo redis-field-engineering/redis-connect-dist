@@ -13,6 +13,7 @@ sudo docker run --name mssql-$version-$(hostname) \
 	-e "ACCEPT_EULA=Y" \
 	-e SA_PASSWORD=$db_pwd \
 	-e "MSSQL_AGENT_ENABLED=true" \
+	-e "MSSQL_MEMORY_LIMIT_MB=2GB" \
 	-p $db_port:1433 \
 	-d mcr.microsoft.com/mssql/server:$version
 

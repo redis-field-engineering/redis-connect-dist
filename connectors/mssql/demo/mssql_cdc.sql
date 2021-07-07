@@ -33,11 +33,22 @@ CREATE TABLE [RedisConnect].[dbo].[emp] (
     [dept] int,
     PRIMARY KEY ([empno])
 );
+-- create non privileged user for redis connect
+CREATE LOGIN redisconnectuser WITH PASSWORD = 'Redisconnectpassword1';
+CREATE USER redisconnectuser FOR LOGIN redisconnectuser;  
+
+-- create a role for tables with CDC
+if not exists(select * from sys.sysusers where name = 'cdc_reader' and issqlrole=1)
+	create role cdc_reader;
+
+grant select on SCHEMA:: cdc to cdc_reader;
+grant select on SCHEMA:: dbo to cdc_reader;
+ALTER ROLE cdc_reader ADD MEMBER redisconnectuser;
 
 -- Enable emp table for CDC
 EXEC sys.sp_cdc_enable_table @source_schema = 'dbo'
        , @source_name = 'emp'
-       , @role_name = NULL
+       , @role_name = cdc_reader
        , @capture_instance = 'cdcauditing_emp'
 
 -- Query and check the CDC setup
