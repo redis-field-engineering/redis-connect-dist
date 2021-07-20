@@ -4,7 +4,7 @@ TBD
 ## Setup PostgreSQL 10+ database (Source)
 
 <b>_PostgreSQL on Docker_</b>
-<br>Execute [setup_postgres.sh](demo/setup_postgres.sh)</br>
+<br>Execute [setup_postgres.sh](setup_postgres.sh)</br>
 ```bash
 $ ./setup_postgres.sh 12.5 (or latest or any supported 10+ version)
 ```
