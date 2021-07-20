@@ -2,8 +2,8 @@
 
 version="$1"
 db_port=5432
-db_name="RedisLabsCDC"
-db_user="rediscdc"
+db_name="RedisConnect"
+db_user="redisconnect"
 db_pwd="Redis@123"
 [[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. latest, 12.5"; exit 1; }
 
@@ -23,7 +23,7 @@ sudo docker run --name postgres-$version-$(hostname) \
 
 sleep 30s
 
-echo "Creating RedisLabsCDC database and emp table."
+echo "Creating RedisConnect database and emp table."
 #run the setup script to create the DB and the table in the DB
 sudo docker cp postgres_cdc.sql postgres-$version-$(hostname):postgres_cdc.sql
 sudo docker exec -it postgres-$version-$(hostname) bash -c 'psql -U"$POSTGRES_USER" -d"$POSTGRES_DB" < postgres_cdc.sql'
