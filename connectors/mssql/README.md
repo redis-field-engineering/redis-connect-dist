@@ -1,9 +1,9 @@
-<h1>rediscdc-mssql-connector</h1>
+<h1>redis-connect-sqlserver</h1>
 
-rediscdc-mssql-connector is a connector framework for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target).
+redis-connect-sqlserver is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target).
 
 <p>
-The first time rediscdc-mssql-connector connects to a SQL Server database/cluster, it reads a consistent snapshot of all of the schemas.
+The first time redis-connect-sqlserver connects to a SQL Server database/cluster, it reads a consistent snapshot of all of the schemas.
 When that snapshot is complete, the connector continuously streams the changes that were committed to SQL Server and generates a corresponding insert, update or delete event.
 All of the events for each table are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
 
@@ -22,18 +22,18 @@ This includes snapshots; if the snapshot was not completed when the connector is
 
 ## Architecture
 
-![RedisCDC high-level Architecture](/docs/images/RedisCDC_Architecture.png)
-<b>RedisConnect high-level Architecture Diagram</b>
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_Arch.png)
+<b>Redis Connect high-level Architecture Diagram</b>
 
 RedisConnect has a cloud-native shared-nothing architecture which allows any cluster node (RedisConnect Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing RedisConnect instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of RedisConnect will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
 
 <p>
 On their own RedisConnect instances are stateless therefore require Redis to manage Job Management and Job Execution state - such as checkpoints, claims, optional intermediary data storage, etc. With this design, RedisConnect instances can fail/failover without risking data loss, duplication, and/or order. As long as another RedisConnect instance is actively available to claim responsibility for Job Execution, or can be recovered, it will pick up from the last recorded checkpoint.
 
-<h5>RedisConnect Components</h5>
+<h5>Redis Connect Components</h5>
 
-<h6>RedisConnect Instance</h6>
-<p>A RedisConnect instance is a single JVM that executes one or more pipelines.
+<h6>Redis Connect Instance</h6>
+<p>A Redis Connect instance is a single JVM that executes one or more pipelines.
 
 <h6>Pipeline</h6>
 <p>A Pipeline moves, transforms and orchestrates data transfer from one data structure in source data store to another data structure in target data source.
@@ -55,7 +55,7 @@ On their own RedisConnect instances are stateless therefore require Redis to man
 
 ## Setting up SQL Server (Source)
 
-Before using the SQL Server connector (rediscdc-mssql-connector) to monitor the changes committed on SQL Server, first [enable](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017) _CDC_ on a monitored database.
+Before using the SQL Server connector (redis-connect-sqlserver) to monitor the changes committed on SQL Server, first [enable](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017) _CDC_ on a monitored database.
 
 <h5>Note: To support net changes queries, the source table must have a primary key or unique index to uniquely identify rows. If a unique index is used, the name of the index must be specified using the <em>@index_name</em> parameter. The columns defined in the primary key or unique index must be included in the list of source columns to be captured.</h5>
 
@@ -65,7 +65,7 @@ Please see an example, [SQL Statements](https://github.com/RedisLabs-Field-Engin
 
 ## Setting up Redis Enterprise Databases (Target)
 
-Before using the SQL Server connector (rediscdc-mssql-connector) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisConnect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
+Before using the SQL Server connector (redis-connect-sqlserver) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisConnect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
 
 ## Download and Setup
 
@@ -73,22 +73,22 @@ Before using the SQL Server connector (rediscdc-mssql-connector) to capture the 
 
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases/download/rediscdc-mssql/rl-connector-rdb-1.0.2.126.tar.gz) has been built with JDK1.8 and tested with JRE1.8. Please have JRE1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) installed prior to running this connector. The scripts below to seed Job config data and start RedisConnect connector is currently only written for [\*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 1.8 and tested with JRE 1.8 and above. Please have JRE 1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) or above installed prior to running this connector. The scripts below to seed Job config data and start RedisConnect connector is currently only written for [\*nix platform](https://en.wikipedia.org/wiki/Unix-like).
 
 ---
 
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) e.g. `wget https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases/download/rediscdc-mssql/rl-connector-rdb-1.0.2.126.tar.gz` and untar (tar -xvf rl-connector-rdb-1.0.2.126.tar.gz) the rl-connector-rdb-1.0.2.126.tar.gz archive.
+Download the [latest release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) and untar redis-connect-sqlserver-`<version>.<build>`.tar.gz archive.
 
-All the contents would be extracted under rl-connector-rdb
+All the contents would be extracted under redis-connect-sqlserver
 
-Contents of rl-connector-rdb
+Contents of redis-connect-sqlserver
 <br>• bin – contains script files
 <br>• lib – contains java libraries
 <br>• config – contains sample config files for cdc and initial loader jobs
 
 ## RedisConnect Setup and Job Management Configurations
 
-Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ` rl-connector-rdb$ cp -R config/samples/cdc config/<project_name>` or reuse sample folder as is and edit/update the configuration values according to your setup.
+Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ` redis-connect-sqlserver$ cp -R config/samples/sqlserver config/<project_name>` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
 #### Configuration files
 
@@ -97,12 +97,31 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 #### logging configuration file.
 
-### Sample logback.xml under rl-connector-rdb/config folder
+### Sample logback.xml under redis-connect-sqlserver/config folder
 
 ```xml
 <configuration debug="true" scan="true" scanPeriod="30 seconds">
-    <property name="LOG_PATH" value="logs/cdc-1.log"/>
-    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <property name="START_UP_PATH" value="logs/redis-connect-startup.log"/>
+    <property name="LOG_PATH" value="logs/redis-connect.log"/>
+
+    <appender name="STARTUP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${START_UP_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/startup.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="REDISCONNECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
@@ -118,21 +137,53 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
         </encoder>
     </appender>
 
-    <logger name="com.ivoyant" level="INFO" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
-    </logger>
-    <logger name="io.netty" level="INFO" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
-    </logger>
-    <logger name="io.lettuce" level="INFO" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="startup" level="INFO" additivity="false">
+        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="CONSOLE" />
     </logger>
 
-    <root level="error">
-        <appender-ref ref="FILE-ROLLING"/>
+    <logger name="redisconnect" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+
+    <logger name="com.redislabs" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="io.netty" level="OFF" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="io.lettuce" level="OFF" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="com.zaxxer" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="STARTUP"/>
+    </logger>
+    <logger name="io.debezium" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="STARTUP"/>
+    </logger>
+    <logger name="org.apache.kafka" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="STARTUP"/>
+    </logger>
+
+    <root>
+        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="REDISCONNECT"/>
     </root>
 
 </configuration>
+
 ```
 
 </p>
@@ -145,7 +196,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml under rl-connector-rdb/config/samples/cdc folder
+### Sample env.yml under redis-connect-sqlserver/config/samples/sqlserver folder
 
 ```yml
 connections:
@@ -183,7 +234,7 @@ connections:
 
 #### Environment level configurations.
 
-### Sample Setup.yml under rl-connector-rdb/config/samples/cdc folder
+### Sample Setup.yml under redis-connect-sqlserver/config/samples/sqlserver folder
 
 ```yml
 connectionId: jobConfigConnection
@@ -223,7 +274,7 @@ job:
       config: JobConfig.yml
       variables:
         database: testdb
-        sourceValueTranslator: SOURCE_RECORD_2_OP_TRANSLATOR
+        sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR
 ```
 
 </p>
@@ -234,7 +285,7 @@ job:
 
 #### Configuration for Job Reaper and Job Claimer processes.
 
-### Sample JobManager.yml under rl-connector-rdb/config/samples/cdc folder
+### Sample JobManager.yml under redis-connect-sqlserver/config/samples/sqlserver folder
 
 ```yml
 connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
@@ -269,7 +320,7 @@ jobClaimerConfig:
 
 #### Job level details.
 
-### Sample JobConfig.yml under rl-connector-rdb/config/samples/cdc folder
+### Sample JobConfig.yml under redis-connect-sqlserver/config/samples/sqlserver folder
 
 You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then RedisConnect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 
@@ -293,13 +344,14 @@ pipelineConfig:
     checkpoint: "${jobId}-${database}"
   stages:
     HashWriteStage:
-      handlerId: OP_2_HASH_WRITER
+      handlerId: REDIS_HASH_WRITER
       connectionId: srcConnection
+      metricsEnabled: false
       prependTableNameToKeys: true
       deleteOnKeyUpdate: true
       async: true
     CheckpointStage:
-      handlerId: OP_CP_WRITER
+      handlerId: REDIS_OP_CP_WRITER
       connectionId: srcConnection
       metricEnabled: false
       async: true
@@ -309,58 +361,65 @@ pipelineConfig:
 </p>
 </details>
 
-<details><summary>Configure mapper.xml</summary>
+<details><summary>Configure mapper.yml</summary>
 <p>
 
 #### mapper configuration file.
 
-### Sample mapper.xml under rl-connector-rdb/config/samples/cdc/mappers folder
+### Sample mapper.yml under redis-connect-sqlserver/config/samples/sqlserver/mappers folder
 
-```xml
-<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
-    <Tables>
-        <Table name="emp"> <!-- emp table under dbo schema -->
-            <!-- publishBefore - Global setting, that specifies if before values have to be published for all columns
- *                 - This setting could be overridden at each column level -->
-            <Mapper id="Test" processorID="Test" publishBefore="false">
-                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table -->
-                <Column src="fname" target="FName"/>
-                <Column src="lname" target="LName"/>
-                <Column src="job" target="Job"/>
-                <Column src="mgr" target="Manager" type="INT"/>
-                <Column src="hiredate" target="HireDate" type="DATE_TIME"/>
-                <Column src="sal" target="Salary" type="DOUBLE"/>
-                <Column src="comm" target="Commission"/>
-                <Column src="dept" target="Department"/>
-            </Mapper>
-        </Table>
-<!--
-        <Table name="dept"> # dept table under dbo schema
-            <Mapper id="Test" processorID="Test" publishBefore="false">
-                <Column src="deptno" target="DeptNum" type="INT" publishBefore="false"/> # key column on the source dept table
-                <Column src="dname" target="DeptName"/>
-                <Column src="loc" target="Location"/>
-            </Mapper>
-        </Table>
--->
-    </Tables>
-</Schema>
+```yml
+schema: dbo # Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.
+tables:
+  - table: emp # emp table under dbo schema
+    mapper:
+      id: Test
+      processorID: Test
+      publishBefore: false # publishBefore - Global setting, that specifies if before values have to be published for all columns. This setting could be overridden at each column level
+      columns:
+        - src: empno # key column on the source emp table
+          target: EmployeeNumber
+          type: INT
+          publishBefore: false
+        - src: fname
+          target: FirstName
+        - src: lname
+          target: LastName
+        - src: job
+          target: Job
+        - src: mgr
+          target: Manager
+          type: INT
+        - src: hiredate
+          target: HireDate
+          type: DATE_TIME
+        - src: sal
+          target: Salary
+          type: DOUBLE
+        - src: comm
+          target: Commission
+          type: DOUBLE
+        - src: dept
+          target: Department
+          type: INT
 ```
 
 If you don't need any transformation of source columns then you can simply use passThrough option and you don't need to explicitly map each source columns to Redis target data structure.
 
-```xml
-<Schema xmlns="http://cdc.ivoyant.com/Mapper/Config" name="dbo"> <!-- Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
-    <Tables>
-        <Table name="emp"> <!-- emp table under dbo schema -->
-            <!-- publishBefore - Global setting, that specifies if before values have to be published for all columns
- *                 - This setting could be overridden at each column level -->
-            <Mapper id="Test" processorID="Test" publishBefore="false" passThrough="true">
-                <Column src="empno" target="EmpNum" type="INT" publishBefore="false"/> <!-- key column on the source emp table -->
-            </Mapper>
-        </Table>
-    </Tables>
-</Schema>
+```yml
+schema: dbo # Schema name e.g. dbo. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.
+tables:
+  - table: emp # emp table under dbo schema
+    mapper:
+      id: Test
+      processorID: Test
+      publishBefore: false # publishBefore - Global setting, that specifies if before values have to be published for all columns. This setting could be overridden at each column level
+      passThrough: true # set it to true if you don't need to map individual columns. You always need to have the key column mappings.
+      columns:
+        - src: empno # key column on the source emp table
+          target: empno
+          type: INT
+          publishBefore: false
 ```
 
 </p>
@@ -370,17 +429,12 @@ If you don't need any transformation of source columns then you can simply use p
 <p>Before starting a RedisConnect instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
 
 ```bash
-rl-connector-rdb/bin$./cleansetup.sh
-../config/samples
+redis-connect-sqlserver/bin$ ./cleansetup.sh
 ```
 
 <h4>Start RedisConnect Connector</h4>
-<p>Execute startup.sh script to start a RedisConnect instance. Pass <b>true</b> or <b>false</b> parameter indicating whether the RedisConnect instance should start with Job Management role.</p>
+<p>Execute startup.sh script to start a RedisConnect instance.
 
 ```bash
-rl-connector-rdb/bin$./startup.sh true (starts RedisConnect Connector with Job Management enabled)
-```
-
-```bash
-rl-connector-rdb/bin$./startup.sh false (starts RedisConnect Connector with Job Management disabled
+redis-connect-sqlserver/bin$ ./startup.sh
 ```
