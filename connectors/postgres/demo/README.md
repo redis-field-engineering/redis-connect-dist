@@ -62,7 +62,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
 -p 8282:8282 \
 redislabs/redis-connect-postgres:pre-release-alpine
 -------------------------------
