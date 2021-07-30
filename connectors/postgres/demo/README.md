@@ -6,22 +6,26 @@ i.e.</br>
 ```bash
 wget -c https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-postgres/demo && \
-unzip -j main.zip "redis-connect-dist-main/connectors/postgres/demo/*" -d redis-connect-postgres/demo && \
-rm -rf master.zip redis-connect-dist-main && \
+unzip main.zip "redis-connect-dist-main/connectors/postgres/demo/*" -d redis-connect-postgres/demo && \
+cp -R redis-connect-postgres/demo/redis-connect-dist-main/connectors/postgres/demo/* redis-connect-postgres/demo && \
+mv redis-connect-postgres/demo/config redis-connect-postgres && \
+rm -rf main.zip redis-connect-postgres/demo/redis-connect-dist-main && \
 cd redis-connect-postgres && \
 chmod a+x demo/*.sh
 ```
 Expected output:
 ```bash
 redis-connect-postgres$ ls
-config
+config demo
 ```
 
 ## Setup PostgreSQL 10+ database (Source)
 <b>_PostgreSQL on Docker_</b>
 <br>Execute [setup_postgres.sh](setup_postgres.sh)</br>
 ```bash
-$ ./setup_postgres.sh 12.5 (or latest or any supported 10+ version)
+redis-connect-postgres$ cd demo
+demo$ ./setup_postgres.sh 12.5
+(or latest or any supported 10+ version from postgres dockerhub)
 ```
 <b>_PostgreSQL on Amazon RDS_</b>
 * Set the instance parameter `rds.logical_replication` to `1`.
