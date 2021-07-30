@@ -27,6 +27,23 @@ redis-connect-postgres$ cd demo
 demo$ ./setup_postgres.sh 12.5
 (or latest or any supported 10+ version from postgres dockerhub)
 ```
+
+<details><summary>Validate Postgres database is running as expected:</summary>
+<p>
+
+```bash
+demo$ sudo docker ps -a | grep postgres
+724aea897d12        postgres:12.5                                         "docker-entrypoint.s…"   10 days ago         Up 10 days          0.0.0.0:5432->5432/tcp                                                                                                                                                                                                                                                                                          postgres-12.5-virag-cdc
+
+demo$ docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect" -c "select count(*) from emp;"'
+ count
+-------
+     0
+(1 row)  
+```
+</p>
+</details>  
+  
 <b>_PostgreSQL on Amazon RDS_</b>
 * Set the instance parameter `rds.logical_replication` to `1`.
 * Verify that the `wal_level` parameter is set to `logical` by running the query `SHOW wal_level` as the database RDS master user.
@@ -181,3 +198,67 @@ redislabs/redis-connect-postgres:pre-release-alpine start_cdc
 
 </p>
 </details>
+
+* Send a change event e.g. `INSERT` a record into postgres table (source)
+
+```bash
+demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect"'
+
+psql (12.5 (Debian 12.5-1.pgdg100+1))
+Type "help" for help.
+
+RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (151, 'Virag', 'Tripathi', 'PFE', 1, '2018-08-06', 2000, 10, 1);
+INSERT 0 1
+
+RedisConnect=# select * from emp;
+ empno | fname |  lname   | job | mgr |  hiredate  |    sal    |  comm   | dept
+-------+-------+----------+-----+-----+------------+-----------+---------+------
+   151 | Virag | Tripathi | PFE |   1 | 2018-08-06 | 2000.0000 | 10.0000 |    1
+(1 row)
+```
+
+* Query for the above inserted record in Redis (target)
+
+```bash
+demo$ sudo docker exec -it re-node1 bash -c "redis-cli -p 12000 hgetall emp:151"
+ 1) "fname"
+ 2) "Virag"
+ 3) "lname"
+ 4) "Tripathi"
+ 5) "comm"
+ 6) "10.0"
+ 7) "mgr"
+ 8) "1"
+ 9) "empno"
+10) "151"
+11) "dept"
+12) "1"
+13) "job"
+14) "PFE"
+15) "hiredate"
+16) "17749"
+17) "sal"
+18) "2000.0"
+
+docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
+1) (integer) 1
+2) "emp:151"
+3)  1) "fname"
+    2) "Virag"
+    3) "lname"
+    4) "Tripathi"
+    5) "comm"
+    6) "10.0"
+    7) "mgr"
+    8) "1"
+    9) "empno"
+   10) "151"
+   11) "dept"
+   12) "1"
+   13) "job"
+   14) "PFE"
+   15) "hiredate"
+   16) "17749"
+   17) "sal"
+   18) "2000.0"
+```
