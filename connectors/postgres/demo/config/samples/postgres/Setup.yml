@@ -1,0 +1,44 @@
+connectionId: jobConfigConnection
+job:
+  stream: jobStream
+  configSet: jobConfigs
+  consumerGroup: jobGroup
+  metrics:
+    connectionId: metricsConnection
+    retentionInHours: 12
+    keys:
+      - key: "dbo:emp:C:Throughput"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+          op: I
+      - key: "dbo:emp:U:Throughput"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+          op: U
+      - key: "dbo:emp:D:Throughput"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+          op: D
+      - key: "dbo:emp:Latency"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+  jobConfig:
+    - name: testdb-postgres
+      config: JobConfig.yml
+      variables:
+        database: testdb
+        sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR
+
+        
+
+
+
+

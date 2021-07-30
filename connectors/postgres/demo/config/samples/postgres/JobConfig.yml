@@ -1,0 +1,32 @@
+jobId: ${jobId}
+producerConfig:
+  producerId: RDB_EVENT_PRODUCER
+  connectionId: postgresConnection
+  tables:
+    - public.emp
+  pollingInterval: 5
+  metricsKey: testdb-emp
+  metricsEnabled: false
+pipelineConfig:
+  bufferSize: 1024
+  eventTranslator: "${sourceValueTranslator}"
+  checkpointConfig:
+    providerId: RDB_CHECKPOINT_READER
+    connectionId: srcConnection
+    checkpoint: "${jobId}-${database}"
+  stages:
+    HashWriteStage:
+      handlerId: REDIS_HASH_WRITER
+      connectionId: srcConnection
+      metricsEnabled: false
+      prependTableNameToKeys: true
+      deleteOnKeyUpdate: true
+      async: true
+    CheckpointStage:
+      handlerId: REDIS_OP_CP_WRITER
+      connectionId: srcConnection
+      metricEnabled: false
+      async: true
+      checkpoint: "${jobId}-${database}"
+
+

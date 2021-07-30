@@ -1,0 +1,31 @@
+jobId: ${jobId}
+producerConfig:
+  producerId: RDB_BATCH_EVENT_PRODUCER
+  connectionId: msSQLServerConnection
+  batchSize: 5000
+  startRecord: ${startRecord}
+  endRecord: ${endRecord}
+  loadQuery: ${loadQuery}
+  table: ${table}
+pipelineConfig:
+  bufferSize: 1024
+  eventTranslator: "RDB_RS_TO_OP_TRANSLATOR"
+  checkpointConfig:
+    providerId: HASH_CHECKPOINT_READER
+    connectionId: srcConnection
+    checkpoint: "${jobId}"
+  stages:
+    HashWriteStage:
+      handlerId: REDIS_HASH_WRITER
+      connectionId: srcConnection
+      prependTableNameToKeys: true
+      deleteOnKeyUpdate: true
+      async: true
+    CheckpointStage:
+      handlerId: REDIS_OP_CP_WRITER
+      connectionId: srcConnection
+      metricEnabled: false
+      async: true
+      checkpoint: "${jobId}"
+
+

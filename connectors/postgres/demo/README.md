@@ -1,8 +1,23 @@
 # Prerequisites
-TBD
+Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker](https://docs.docker.com/get-docker) installed.
+<br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.</br>
+<br>Execute the following commands (copy & paste) to download and setup Redis Connect Postgres Connector and demo scripts.
+i.e.</br>
+```bash
+wget -c https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/archive/main.zip && \
+mkdir -p redis-connect-postgres/demo && \
+unzip -j main.zip "redis-connect-dist-main/connectors/postgres/demo/*" -d redis-connect-postgres/demo && \
+rm -rf master.zip redis-connect-dist-main && \
+cd redis-connect-postgres && \
+chmod a+x demo/*.sh
+```
+Expected output:
+```bash
+redis-connect-postgres$ ls
+config
+```
 
 ## Setup PostgreSQL 10+ database (Source)
-
 <b>_PostgreSQL on Docker_</b>
 <br>Execute [setup_postgres.sh](setup_postgres.sh)</br>
 ```bash
@@ -24,6 +39,11 @@ $ ./setup_postgres.sh 12.5 (or latest or any supported 10+ version)
   To enable accounts other than the master account to create an initial snapshot, you must grant `SELECT` permission to the accounts on the tables to be captured.
   For more information about security for PostgreSQL logical replication, see the [PostgreSQL documentation](https://www.postgresql.org/docs/current/logical-replication-security.html).
 
+## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
+<br>Execute [setup_re.sh](setup_re.sh)</br>
+```bash
+demo$ ./setup_re.sh
+```
 
 ## Start Redis Connect Postgres Connector
 
@@ -35,9 +55,10 @@ docker run \
 -e REDIS_CONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
 -e REST_API_ENABLED=true \
 -e REST_API_PORT=8282 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 -p 8282:8282 \
 redislabs/redis-connect-postgres:pre-release-alpine
 -------------------------------

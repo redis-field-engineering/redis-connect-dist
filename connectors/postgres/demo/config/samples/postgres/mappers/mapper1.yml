@@ -1,0 +1,11 @@
+schema: public
+tables:
+  - table: emp
+    mapper:
+      id: Test
+      processorID: Test
+      publishBefore: false
+      passThrough: true
+      columns:
+        - src: empno
+          target: empno 
