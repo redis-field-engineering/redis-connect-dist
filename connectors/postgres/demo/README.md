@@ -199,7 +199,7 @@ redislabs/redis-connect-postgres:pre-release-alpine start_cdc
 </p>
 </details>
 
-* Send a change event e.g. `INSERT` a record into postgres table (source)
+* `INSERT` a record into postgres table (source)
 
 ```bash
 demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect"'
@@ -240,7 +240,7 @@ demo$ sudo docker exec -it re-node1 bash -c "redis-cli -p 12000 hgetall emp:151"
 17) "sal"
 18) "2000.0"
 
-docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
 1) (integer) 1
 2) "emp:151"
 3)  1) "fname"
@@ -262,3 +262,5 @@ docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
    17) "sal"
    18) "2000.0"
 ```
+
+Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target getting updated in near real-time.
