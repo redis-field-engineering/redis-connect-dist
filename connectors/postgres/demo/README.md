@@ -48,9 +48,13 @@ demo$ ./setup_postgres.sh 12.5
 ```bash
 demo$ ./setup_re.sh
 ```
+**NOTE**
+
+The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/), [Start a docker instance of grafana with Redis Data Source](https://redisgrafana.github.io/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
 ## Start Redis Connect Postgres Connector
 
+* Run Redis Connect Postgres Connector docker container to see all the options
 ```bash
 docker run \
 -it --rm --privileged=true \
@@ -66,7 +70,11 @@ docker run \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine
 ```
-```
+
+<details><summary>Expected output:</summary>
+<p>
+  
+```bash
 -------------------------------
 Redis Connect Connector wrapper script for Docker containers.
 
@@ -81,3 +89,95 @@ start_cdc: start Redis Connect connector instance.
 start_loader: start Redis Connect initial loader instance.
 -------------------------------
 ```
+
+</p>
+</details>
+
+* Stage pre configured cdc job
+```bash
+docker run \
+-it --rm --privileged=true \
+--name redis-connect-postgres \
+-e LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDIS_CONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
+-e REST_API_ENABLED=true \
+-e REST_API_PORT=8282 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+--net host \
+redislabs/redis-connect-postgres:pre-release-alpine stage_cdc
+```
+
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+-------------------------------
+/opt/redislabs/redis-connect-postgres/config/samples/postgres
+.....
+.....
+19:24:21.258 [main] INFO  startup - Setup Completed.
+-------------------------------
+```
+
+</p>
+</details>
+
+* Start pre configured cdc job
+```bash
+docker run \
+-itd --rm --privileged=true \
+--name redis-connect-postgres \
+-e LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDIS_CONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
+-e REST_API_ENABLED=true \
+-e REST_API_PORT=8282 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+--net host \
+redislabs/redis-connect-postgres:pre-release-alpine start_cdc
+```
+
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+-------------------------------
+/opt/redislabs/redis-connect-postgres/config/samples/postgres
+.....
+.....
+19:28:57.813 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+19:28:57.817 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+19:28:57.817 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+19:28:57.818 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+19:28:57.818 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+19:28:57.818 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+19:28:57.818 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+19:28:57.818 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+19:28:57.818 [main] INFO  startup -
+19:28:57.819 [main] INFO  startup -
+19:28:57.819 [main] INFO  startup - ##################################################################
+19:28:57.819 [main] INFO  startup -
+19:28:57.819 [main] INFO  startup - Initializing Redis Connect Instance
+19:28:57.819 [main] INFO  startup -
+19:28:57.819 [main] INFO  startup - ##################################################################
+.....
+.....
+19:29:17.316 [JobManagement-1] INFO  redisconnect - Server type configured as - postgres
+19:29:17.318 [JobManagement-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-postgres/config/samples/postgres/mappers
+19:29:17.545 [JobManagement-1] INFO  redisconnect - Loaded Config for : public.emp
+19:29:17.841 [JobManagement-1] INFO  startup - Fetched JobConfig for : testdb-postgres
+19:29:17.841 [JobManagement-1] INFO  startup - Starting Pipeline for Job : testdb-postgres
+19:29:17.842 [JobManagement-1] INFO  startup - 1 of 1 Jobs Claimed
+19:29:17.842 [JobManagement-2] INFO  redisconnect - Refreshing Heartbeat signal for : hb-job:testdb-postgres , with value : JC-7@virag-cdc , expiry : 30000
+19:29:17.842 [JobManagement-1] INFO  startup - 1 of 1 Jobs Claimed
+.....
+.....  
+```
+
+</p>
+</details>
