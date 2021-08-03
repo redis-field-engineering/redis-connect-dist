@@ -71,29 +71,32 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ## Start Redis Connect Postgres Connector
 
-* Run Redis Connect Postgres Connector docker container to see all the options
+<details><summary>Run Redis Connect Postgres Connector docker container to see all the options</summary>
+<p>
+
 ```bash
 docker run \
 -it --rm --privileged=true \
 --name redis-connect-postgres \
--e LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
--e REDIS_CONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
--e REST_API_ENABLED=true \
--e REST_API_PORT=8282 \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
--e JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine
 ```
+
+</p>
+</details>
 
 <details><summary>Expected output:</summary>
 <p>
   
 ```bash
 -------------------------------
-Redis Connect Connector wrapper script for Docker containers.
+Redis Connect Connector startup script.
 
 Usage: [-h|-v|start_cli|stage_cdc|stage_loader|start_cdc|start_loader]
 options:
@@ -110,88 +113,96 @@ start_loader: start Redis Connect initial loader instance.
 </p>
 </details>
 
-* Stage pre configured cdc job
+<details><summary><b>Stage pre configured cdc job</b></summary>
+<p>
+
 ```bash
 docker run \
 -it --rm --privileged=true \
 --name redis-connect-postgres \
--e LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
--e REDIS_CONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
--e REST_API_ENABLED=true \
--e REST_API_PORT=8282 \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
--e JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine stage_cdc
 ```
+
+</p>
+</details>
 
 <details><summary>Expected output:</summary>
 <p>
 
 ```bash
 -------------------------------
-/opt/redislabs/redis-connect-postgres/config/samples/postgres
+Staging Redis Connect redis-connect-postgres v1.0.2.151 job using Java 11.0.12 on virag-cdc started by root in /opt/redislabs/redis-connect-postgres/bin.
+Loading Redis Connect redis-connect-postgres Configurations from /opt/redislabs/redis-connect-postgres/config/samples/postgres.
 .....
 .....
-19:24:21.258 [main] INFO  startup - Setup Completed.
+20:15:06.819 [main] INFO  startup - Setup Completed.
 -------------------------------
 ```
 
 </p>
 </details>
 
-* Start pre configured cdc job
+<details><summary><b>Start pre configured cdc job</b></summary>
+<p>
+
 ```bash
 docker run \
--itd --rm --privileged=true \
+-it --rm --privileged=true \
 --name redis-connect-postgres \
--e LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
--e REDIS_CONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
--e REST_API_ENABLED=true \
--e REST_API_PORT=8282 \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
+-e REDISCONNECT_API_ENABLED=true \
+-e REDISCONNECT_API_PORT=8282 \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
--e JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine start_cdc
 ```
+
+</p>
+</details>
 
 <details><summary>Expected output:</summary>
 <p>
 
 ```bash
 -------------------------------
-/opt/redislabs/redis-connect-postgres/config/samples/postgres
+Starting Redis Connect redis-connect-postgres v1.0.2.151 instance using Java 11.0.12 on virag-cdc started by root in /opt/redislabs/redis-connect-postgres/bin.
+Loading Redis Connect redis-connect-postgres Configurations from /opt/redislabs/redis-connect-postgres/config/samples/postgres.
 .....
 .....
-19:28:57.813 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
-19:28:57.817 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
-19:28:57.817 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
-19:28:57.818 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
-19:28:57.818 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
-19:28:57.818 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
-19:28:57.818 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
-19:28:57.818 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
-19:28:57.818 [main] INFO  startup -
-19:28:57.819 [main] INFO  startup -
-19:28:57.819 [main] INFO  startup - ##################################################################
-19:28:57.819 [main] INFO  startup -
-19:28:57.819 [main] INFO  startup - Initializing Redis Connect Instance
-19:28:57.819 [main] INFO  startup -
-19:28:57.819 [main] INFO  startup - ##################################################################
+20:15:39.125 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+20:15:39.128 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+20:15:39.128 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+20:15:39.128 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+20:15:39.128 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+20:15:39.129 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+20:15:39.129 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+20:15:39.129 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+20:15:39.129 [main] INFO  startup -
+20:15:39.129 [main] INFO  startup -
+20:15:39.129 [main] INFO  startup - ##################################################################
+20:15:39.129 [main] INFO  startup -
+20:15:39.129 [main] INFO  startup - Initializing Redis Connect Instance
+20:15:39.130 [main] INFO  startup -
+20:15:39.130 [main] INFO  startup - ##################################################################
 .....
 .....
-19:29:17.316 [JobManagement-1] INFO  redisconnect - Server type configured as - postgres
-19:29:17.318 [JobManagement-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-postgres/config/samples/postgres/mappers
-19:29:17.545 [JobManagement-1] INFO  redisconnect - Loaded Config for : public.emp
-19:29:17.841 [JobManagement-1] INFO  startup - Fetched JobConfig for : testdb-postgres
-19:29:17.841 [JobManagement-1] INFO  startup - Starting Pipeline for Job : testdb-postgres
-19:29:17.842 [JobManagement-1] INFO  startup - 1 of 1 Jobs Claimed
-19:29:17.842 [JobManagement-2] INFO  redisconnect - Refreshing Heartbeat signal for : hb-job:testdb-postgres , with value : JC-7@virag-cdc , expiry : 30000
-19:29:17.842 [JobManagement-1] INFO  startup - 1 of 1 Jobs Claimed
+20:15:58.678 [JobManagement-1] INFO  redisconnect - Server type configured as - postgres
+20:15:58.680 [JobManagement-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-postgres/config/samples/postgres/mappers
+20:15:58.975 [JobManagement-1] INFO  redisconnect - Loaded Config for : public.emp
+20:15:59.293 [JobManagement-1] INFO  startup - Fetched JobConfig for : testdb-postgres
+20:15:59.293 [JobManagement-1] INFO  startup - Starting Pipeline for Job : testdb-postgres
+20:15:59.294 [JobManagement-1] INFO  startup - 1 of 1 Jobs Claimed
 .....
 .....  
 ```
@@ -199,7 +210,8 @@ redislabs/redis-connect-postgres:pre-release-alpine start_cdc
 </p>
 </details>
 
-* `INSERT` a record into postgres table (source)
+<details><summary><b>INSERT a record into postgres table (source)</b></summary>
+<p>
 
 ```bash
 demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect"'
@@ -217,7 +229,11 @@ RedisConnect=# select * from emp;
 (1 row)
 ```
 
-* Query for the above inserted record in Redis (target)
+</p>
+</details>
+
+<details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
+<p>
 
 ```bash
 demo$ sudo docker exec -it re-node1 bash -c "redis-cli -p 12000 hgetall emp:151"
@@ -262,5 +278,8 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
    17) "sal"
    18) "2000.0"
 ```
+
+</p>
+</details>
 
 Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target getting updated in near real-time.
