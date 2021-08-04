@@ -158,8 +158,8 @@ docker run \
 --name redis-connect-postgres \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/postgres \
--e REDISCONNECT_API_ENABLED=true \
--e REDISCONNECT_API_PORT=8282 \
+-e REDISCONNECT_REST_API_ENABLED=true \
+-e REDISCONNECT_REST_API_PORT=8282 \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
