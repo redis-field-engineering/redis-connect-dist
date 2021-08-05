@@ -96,17 +96,16 @@ redislabs/redis-connect-postgres:pre-release-alpine
   
 ```bash
 -------------------------------
-Redis Connect Connector startup script.
-
-Usage: [-h|-v|start_cli|stage_cdc|stage_loader|start_cdc|start_loader]
+Redis Connect startup script.
+*******************************
+Please ensure that the values of environment variables in /opt/redislabs/redis-connect-postgres/bin/redisconnect.conf are correctly mapped before executing any of the options below
+*******************************
+Usage: [-h|cli|stage|start]
 options:
 -h: Print this help message and exit.
--v: Print version information and exit.
-start_cli: starts redis-connect-cli.
-stage_cdc: clean and stage redis database with cdc job configurations.
-stage_loader: clean and stage redis database with initial loader job configurations.
-start_cdc: start Redis Connect connector instance.
-start_loader: start Redis Connect initial loader instance.
+cli: starts redis-connect-cli.
+stage: clean and stage redis database with cdc or initial loader job configurations.
+start: start Redis Connect instance with provided cdc or initial loader job configurations.
 -------------------------------
 ```
 
@@ -127,7 +126,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine stage_cdc
+redislabs/redis-connect-postgres:pre-release-alpine stage
 ```
 
 </p>
@@ -165,7 +164,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine start_cdc
+redislabs/redis-connect-postgres:pre-release-alpine start
 ```
 
 </p>
