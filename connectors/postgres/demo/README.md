@@ -97,7 +97,8 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 </details>
 
 -------------------------------
-### <b>_Initial Loader Steps_</b>
+
+### Initial Loader Steps
 <details><summary><b>INSERT few records into postgres table (source)</b></summary>
 <p>
 
@@ -271,7 +272,8 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 </details>
 
 -------------------------------
-### <b>_CDC Steps_</b>
+
+### CDC Steps
 <details><summary><b>Stage pre configured cdc job</b></summary>
 <p>
 
@@ -462,9 +464,10 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target getting updated in near real-time.
 
 -------------------------------
+
 ### [_Custom Stage_](https://github.com/RedisLabs-Field-Engineering/redis-connect-custom-stage-demo)
 
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#b_initial-loader-steps_b) and [CDC Steps](#b_cdc-steps_b).
+Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#initial-loader-steps) and [CDC Steps](#cdc-steps).
 
 Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
 ```yml
