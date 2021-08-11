@@ -97,7 +97,7 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 </details>
 
 -------------------------------
-<b>_Initial Loader Steps_</b>
+### <b>_Initial Loader Steps_</b>
 <details><summary><b>INSERT few records into postgres table (source)</b></summary>
 <p>
 
@@ -271,9 +271,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 </details>
 
 -------------------------------
-
-
-<b>_CDC Steps_</b>
+### <b>_CDC Steps_</b>
 <details><summary><b>Stage pre configured cdc job</b></summary>
 <p>
 
@@ -462,3 +460,60 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 </details>
 
 Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target getting updated in near real-time.
+
+-------------------------------
+### [_Custom Stage_](https://github.com/RedisLabs-Field-Engineering/redis-connect-custom-stage-demo)
+
+Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#b_initial-loader-steps_b) and [CDC Steps](#b_cdc-steps_b).
+
+Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
+```yml
+  stages:
+    CustomStage:
+      handlerId: TO_UPPER_CASE
+```
+<details><summary><b>Stage pre configured loader job with Custom Stage</b></summary>
+<p>
+
+```bash
+docker run \
+-it --rm --privileged=true \
+--name redis-connect-postgres \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/loader \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-postgres/extlib \
+--net host \
+redislabs/redis-connect-postgres:pre-release-alpine stage
+```
+
+</p>
+</details>
+
+<details><summary><b>Start pre configured loader job with Custom Stage</b></summary>
+<p>
+
+```bash
+docker run \
+-it --rm --privileged=true \
+--name redis-connect-postgres \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/loader \
+-e REDISCONNECT_REST_API_ENABLED=false \
+-e REDISCONNECT_REST_API_PORT=8282 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-postgres/extlib \
+--net host \
+redislabs/redis-connect-postgres:pre-release-alpine start
+```
+
+</p>
+</details>
+
+Validate the output after CustomStage run and make sure that `fname` and `lname` values in Redis has been updated to UPPER CASE.
