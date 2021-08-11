@@ -1,7 +1,7 @@
 jobId: ${jobId}
 producerConfig:
   producerId: RDB_BATCH_EVENT_PRODUCER
-  connectionId: msSQLServerConnection
+  connectionId: postgresConnection
   batchSize: 5000
   startRecord: ${startRecord}
   endRecord: ${endRecord}

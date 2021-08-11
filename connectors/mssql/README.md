@@ -1,11 +1,11 @@
-<h1>redis-connect-sqlserver</h1>
+# redis-connect-sqlserver
 
 redis-connect-sqlserver is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target).
 
 <p>
 The first time redis-connect-sqlserver connects to a SQL Server database/cluster, it reads a consistent snapshot of all of the schemas.
 When that snapshot is complete, the connector continuously streams the changes that were committed to SQL Server and generates a corresponding insert, update or delete event.
-All of the events for each table are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
+All of the events for each tables are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
 
 ## Overview
 

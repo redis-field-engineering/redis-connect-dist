@@ -42,23 +42,7 @@ demo$ docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"
 (1 row)  
 ```
 </p>
-</details>  
-  
-<b>_PostgreSQL on Amazon RDS_</b>
-* Set the instance parameter `rds.logical_replication` to `1`.
-* Verify that the `wal_level` parameter is set to `logical` by running the query `SHOW wal_level` as the database RDS master user.
-  This might not be the case in multi-zone replication setups.
-  You cannot set this option manually.
-  It is [automatically changed](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html) when the `rds.logical_replication` parameter is set to `1`.
-  If the `wal_level` is not set to `logical` after you make the preceding change, it is probably because the instance has to be restarted after the parameter group change.
-  Restarts occur during your maintenance window, or you can initiate a restart manually.
-* Initiate logical replication from an AWS account that has the `rds_replication` role.
-  The role grants permissions to manage logical slots and to stream data using logical slots.
-  By default, only the master user account on AWS has the `rds_replication` role on Amazon RDS.
-  To enable a user account other than the master account to initiate logical replication, you must grant the account the `rds_replication` role.
-  For example, `grant rds_replication to _<my_user>_`. You must have `superuser` access to grant the `rds_replication` role to a user.
-  To enable accounts other than the master account to create an initial snapshot, you must grant `SELECT` permission to the accounts on the tables to be captured.
-  For more information about security for PostgreSQL logical replication, see the [PostgreSQL documentation](https://www.postgresql.org/docs/current/logical-replication-security.html).
+</details>
 
 ## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
 <br>Execute [setup_re.sh](setup_re.sh)</br>
@@ -112,6 +96,184 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 </p>
 </details>
 
+-------------------------------
+<b>_Initial Loader Steps_</b>
+<details><summary><b>INSERT few records into postgres table (source)</b></summary>
+<p>
+
+```bash
+demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect"'
+
+psql (12.5 (Debian 12.5-1.pgdg100+1))
+Type "help" for help.
+
+RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (151, 'Virag', 'Tripathi', 'PFE', 1, '2018-08-06', 2000, 10, 1);
+INSERT 0 1
+
+RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (152, 'Brad', 'Barnes', 'RedisConnect-K8s-SME', 1, '2018-08-06', 20000, 10, 1);
+INSERT 0 1
+
+RedisConnect=# select * from emp;
+ empno | fname |  lname   |         job          | mgr |  hiredate  |    sal     |  comm   | dept
+-------+-------+----------+----------------------+-----+------------+------------+---------+------
+   151 | Virag | Tripathi | PFE                  |   1 | 2018-08-06 |  2000.0000 | 10.0000 |    1
+   152 | Brad  | Barnes   | RedisConnect-K8s-SME |   1 | 2018-08-06 | 20000.0000 | 10.0000 |    1
+(2 rows)
+```
+
+</p>
+</details>
+
+<details><summary><b>Stage pre configured loader job</b></summary>
+<p>
+
+```bash
+docker run \
+-it --rm --privileged=true \
+--name redis-connect-postgres \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/loader \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+--net host \
+redislabs/redis-connect-postgres:pre-release-alpine stage
+```
+
+</p>
+</details>
+
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+-------------------------------
+Staging Redis Connect redis-connect-postgres v1.0.2.151 job using Java 11.0.12 on 16229e5715a1 started by root in /opt/redislabs/redis-connect-postgres/bin
+Loading Redis Connect redis-connect-postgres Configurations from /opt/redislabs/redis-connect-postgres/config/samples/loader
+.....
+.....
+12:31:38.726 [main] INFO  startup - Setup Completed.
+-------------------------------
+```
+
+</p>
+</details>
+
+<details><summary><b>Start pre configured loader job</b></summary>
+<p>
+
+```bash
+docker run \
+-it --rm --privileged=true \
+--name redis-connect-postgres \
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-postgres/config/logback.xml \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/loader \
+-e REDISCONNECT_REST_API_ENABLED=false \
+-e REDISCONNECT_REST_API_PORT=8282 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+--net host \
+redislabs/redis-connect-postgres:pre-release-alpine start
+```
+
+</p>
+</details>
+
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+-------------------------------
+Starting Redis Connect redis-connect-postgres v1.0.2.151 instance using Java 11.0.12 on 5aa3dc7a4ead started by root in /opt/redislabs/redis-connect-postgres/bin
+Loading Redis Connect redis-connect-postgres Configurations from /opt/redislabs/redis-connect-postgres/config/samples/loader
+.....
+.....
+12:31:49.698 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+12:31:49.708 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+12:31:49.714 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+12:31:49.715 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+12:31:49.719 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+12:31:49.720 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+12:31:49.722 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+12:31:49.723 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+12:31:49.724 [main] INFO  startup -
+12:31:49.725 [main] INFO  startup -
+12:31:49.726 [main] INFO  startup - ##################################################################
+12:31:49.727 [main] INFO  startup -
+12:31:49.728 [main] INFO  startup - Initializing Redis Connect Instance
+12:31:49.728 [main] INFO  startup -
+12:31:49.729 [main] INFO  startup - ##################################################################
+.....
+.....
+12:32:07.007 [JobManagement-1] INFO  startup - Job Manager owned by a different process ? : false : jobType1
+12:32:17.600 [JobManagement-1] INFO  startup - Fetched JobConfig for : batchtaskcreator
+12:32:17.601 [JobManagement-1] INFO  startup - Starting Pipeline for Job : batchtaskcreator
+12:32:17.602 [JobManagement-1] INFO  startup - 1 of 5 Jobs Claimed
+12:32:17.602 [JobManagement-2] INFO  redisconnect - Refreshing Heartbeat signal for : hb-job:batchtaskcreator , with value : JC-32@5aa3dc7a4ead , expiry : 30000
+12:32:17.603 [JobManagement-1] INFO  startup - 1 of 5 Jobs Claimed
+.....
+.....  
+```
+
+</p>
+</details>
+
+<details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
+<p>
+
+```bash
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
+1) (integer) 2
+2) "emp:152"
+3)  1) "Salary"
+    2) "20000.0000"
+    3) "Department"
+    4) "1"
+    5) "fname"
+    6) "Brad"
+    7) "Commission"
+    8) "10.0000"
+    9) "HireDate"
+   10) "2018-08-06"
+   11) "empno"
+   12) "152"
+   13) "lname"
+   14) "Barnes"
+   15) "Job"
+   16) "RedisConnect-K8s-SME"
+   17) "Manager"
+   18) "1"
+4) "emp:151"
+5)  1) "Salary"
+    2) "2000.0000"
+    3) "Department"
+    4) "1"
+    5) "fname"
+    6) "Virag"
+    7) "Commission"
+    8) "10.0000"
+    9) "HireDate"
+   10) "2018-08-06"
+   11) "empno"
+   12) "151"
+   13) "lname"
+   14) "Tripathi"
+   15) "Job"
+   16) "PFE"
+   17) "Manager"
+   18) "1"
+```
+
+</p>
+</details>
+
+-------------------------------
+
+
+<b>_CDC Steps_</b>
 <details><summary><b>Stage pre configured cdc job</b></summary>
 <p>
 
@@ -218,13 +380,13 @@ demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect
 psql (12.5 (Debian 12.5-1.pgdg100+1))
 Type "help" for help.
 
-RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (151, 'Virag', 'Tripathi', 'PFE', 1, '2018-08-06', 2000, 10, 1);
+RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (1, 'Virag', 'Tripathi', 'PFE', 1, '2018-08-06', 2000, 10, 1);
 INSERT 0 1
 
 RedisConnect=# select * from emp;
  empno | fname |  lname   | job | mgr |  hiredate  |    sal    |  comm   | dept
 -------+-------+----------+-----+-----+------------+-----------+---------+------
-   151 | Virag | Tripathi | PFE |   1 | 2018-08-06 | 2000.0000 | 10.0000 |    1
+   1 | Virag | Tripathi | PFE |   1 | 2018-08-06 | 2000.0000 | 10.0000 |    1
 (1 row)
 ```
 
@@ -235,47 +397,65 @@ RedisConnect=# select * from emp;
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c "redis-cli -p 12000 hgetall emp:151"
- 1) "fname"
- 2) "Virag"
- 3) "lname"
- 4) "Tripathi"
- 5) "comm"
- 6) "10.0"
- 7) "mgr"
- 8) "1"
- 9) "empno"
-10) "151"
-11) "dept"
-12) "1"
-13) "job"
-14) "PFE"
-15) "hiredate"
-16) "17749"
-17) "sal"
-18) "2000.0"
-
 demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
-1) (integer) 1
-2) "emp:151"
+1) (integer) 3
+2) "emp:152"
 3)  1) "fname"
-    2) "Virag"
-    3) "lname"
-    4) "Tripathi"
-    5) "comm"
-    6) "10.0"
-    7) "mgr"
+    2) "BRAD"
+    3) "Salary"
+    4) "20000.0000"
+    5) "lname"
+    6) "BARNES"
+    7) "Department"
     8) "1"
-    9) "empno"
+    9) "EmployeeNumber"
+   10) "152"
+   11) "Commission"
+   12) "10.0000"
+   13) "HireDate"
+   14) "2018-08-06"
+   15) "Job"
+   16) "RedisConnect-K8s-SME"
+   17) "Manager"
+   18) "1"
+4) "emp:151"
+5)  1) "fname"
+    2) "Virag"
+    3) "Salary"
+    4) "2000.0000"
+    5) "lname"
+    6) "Tripathi"
+    7) "Department"
+    8) "1"
+    9) "EmployeeNumber"
    10) "151"
-   11) "dept"
-   12) "1"
-   13) "job"
-   14) "PFE"
-   15) "hiredate"
-   16) "17749"
-   17) "sal"
-   18) "2000.0"
+   11) "Commission"
+   12) "10.0000"
+   13) "HireDate"
+   14) "2018-08-06"
+   15) "Job"
+   16) "PFE"
+   17) "Manager"
+   18) "1"
+6) "emp:1"
+7)  1) "fname"
+    2) "Virag"
+    3) "Salary"
+    4) "2000.0"
+    5) "lname"
+    6) "Tripathi"
+    7) "Department"
+    8) "1"
+    9) "EmployeeNumber"
+   10) "1"
+   11) "Commission"
+   12) "10.0"
+   13) "HireDate"
+   14) "17749"
+   15) "Job"
+   16) "PFE"
+   17) "Manager"
+   18) "1"
 ```
 
 </p>

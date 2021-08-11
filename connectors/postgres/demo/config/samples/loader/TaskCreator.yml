@@ -2,14 +2,11 @@ jobId: ${jobId}
 jobType: TASK_CREATOR
 producerConfig:
   producerId: RDB_TASK_CREATOR
-  connectionId: msSQLServerConnection
+  connectionId: postgresConnection
   jobs:
-    - table: movies.title
-      jobPrefix: movieTitleLoader-
+    - table: public.emp
+      jobPrefix: empLoader-
       numJobs: 5
       config: JobConfig.yml
-      loadQuery: "select * from (select Row_Number() over (order by (select 0)) as RowIndex, * from movies.title) as titles Where titles.RowIndex >= ${start} and titles.RowIndex <= ${end}"
-
-
-
+      loadQuery: "select * from (select Row_Number() over (order by (select 0)) as RowIndex, * from public.emp) as emps Where emps.RowIndex >= ${start} and emps.RowIndex <= ${end}"
 
