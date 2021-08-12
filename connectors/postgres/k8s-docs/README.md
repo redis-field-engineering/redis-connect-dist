@@ -16,26 +16,33 @@ Overall flow:
 ```
 $ git clone https://github.com/RedisLabs-Field-Engineering/redis-connect-dist.git
 ...
-$ cd redis-connect-dist/connectors/postgres/
+$ cd redis-connect-dist/connectors/postgres/k8s-docs
 ```
 
 ## 2. Configure Redis Connect 
 
-Configure the files in `config/` to describe your Redis Connect Job. One sample configuration is <a href="config/">here</a>. 
+Configure the files to describe your Redis Connect Job. One sample configuration is <a href="../demo/config/samples/postgres">here</a>. 
 
 Redis Connect is a Java application which is a client of both the source RDBMS and the target Redis. As such, you will need:
 * Source database details (endpoint, port, credentials)
-  * *WAL and replication configuration* completed on the source database system
+  * <a href="../" target="_blank">WAL and replication configuration</a> completed on the source database system
 * Source schema details
 * Target Redis details and instances (one for the data, one for the Job configuration)
 
-Details for configurating Redis Connect for Postgres are <a href="../" target="_blank"><here</a>. 
+Details for configurating Redis Connect for Postgres are <a href="../demo/" target="_blank">here</a>. 
 
 ## 3. Deploy the Redis Connect Configuration to Kubernetes
 
 This deployment requires the use of K8s ConfigMaps. The necessary config maps will be uploaded from your local directories using the commands below. 
 
-Here is an example of creating the ConfigMap. This command should be run from the directory containing your config files:
+```
+$  cd ../demo/config/samples/postgres
+demo/config/samples/postgres$ ls
+FormatterConfig.yml  JobManager.yml       env.yml              templates/
+JobConfig.yml        Setup.yml            mappers/
+```
+
+Here is an example of creating the ConfigMap. This command should be *run from the directory containing your config files*.
 ```
 kubectl create configmap redis-connect-postgres-config \
   --from-file=JobConfig.yml=JobConfig.yml \
@@ -68,7 +75,7 @@ NAME                            DATA   AGE
 redis-connect-postgres-config   6      12s
 ```
 
-If the ConfigMap did not get created, it's likely that one of more of the source configuration files was not found (eg. JobConfig.yml) 
+If the ConfigMap did not get created, it's likely that one of more of the source configuration files was not found (eg. JobConfig.yml) so please verify the path to your files.
 
 The details of the the command above are:
 `kubectl create configmap <configmap_name>  --from-file=<key_name>=<path-to/file_name>`
@@ -82,7 +89,6 @@ The values of keys in the ConfigMap will be mounted directly to the pod's filesy
 The following volume mount is defined in the manifests. The a will mount the resource `config-volume` to that `mountPath`.
 ```
         volumeMounts:
-        ...
         - name: config-volume
           mountPath: /opt/redislabs/redis-connect-postgres/config/fromconfigmap
 ```
@@ -115,7 +121,6 @@ lrwxrwxrwx    1 root     root            14 Aug 12 15:52 mappers -> ..data/mappe
 The final link is the environment variable that instructs Redis Connect to use these mapped files:
 ```
         env:
-        ...
           - name: REDISCONNECT_CONFIG
             value: "/opt/redislabs/redis-connect-postgres/config/fromconfigmap"
 ```
@@ -123,7 +128,6 @@ The final link is the environment variable that instructs Redis Connect to use t
 ## 4. Configure the Redis Connect Deployment Manifests
 
 Update both the `redis-connect-postgres-stage.yaml` and `redis-connect-postgres-start.yaml` to map the appropriate environment variables in the `env:` section. Notable, the `REDISCONNECT_SOURCE_USERNAME`, `REDISCONNECT_SOURCE_PASSWORD`, `REDISCONNECT_TARGET_USERNAME` and `REDISCONNECT_TARGET_PASSWORD`. 
-
 
 ## Stage the Redis Connect Job
 
@@ -148,9 +152,25 @@ redis-connect-postgres-stage-lkvp2           0/1     Completed   0          3m10
 
 The effect of the above is that the Redis Connect job has started. The Job Owner should be specified in the in `env.yml`:`jobConfigConnection` Redis DB as `JC-xx@redis-connect-postgres-cbc7dcd9d-k9mxj` indicating that the pod created is the Redis Connect job owner. You should see your changes propagate to the `targetConnection` Redis database as defined in `env.yml`. 
 
+---
 ### Troubleshooting Options
 
-To be detailed:
-1. Adjust log level in logback.xml, tail logs.
+1. Tail the pod logs. `oc logs -f pod/redis-connect-postgres-cbc7dcd9d-k9mxj`
 2. Start the pods in interactive mode.
+   * Launch the pods in a do/while loop instead of the redisconnect.sh start command:
+    ```
+    #### uncomment the following two lines while you are setting up your 
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
+    ####
+    # comment out the default starting point
+    #     command: ["/opt/redislabs/redis-connect-postgres/bin/redisconnect.sh", "start"] 
+    ```
+    * Now you can leverage the `bin/redisconnect.sh` enterpoint interactively to:
+      * Test source and target connections
+      * Run Redis Connect interactively to test a configuration
+3. Enable more verbose logging. 
+   * Adjust and add `logback.xml` to your ConfigMap
+   * Add to the `volumeMounts` and `volumes` to leverage the map the `logback.xml` file.
+   * Point to the file in the `REDISCONNECT_LOGBACK_CONFIG` environment variable. 
 
