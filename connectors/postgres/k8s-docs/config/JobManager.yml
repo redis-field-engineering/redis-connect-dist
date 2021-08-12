@@ -1,0 +1,23 @@
+connectionId: jobConfigConnection
+jobTypeId: jobType1
+jobStream: jobStream
+jobConfigSet: jobConfigs
+initialDelay: 10000
+numManagementThreads: 2
+# metricsReporter:
+#   - REDIS_TS_METRICS_REPORTER
+heartBeatConfig:
+  key: hb-jobManager
+  expiry: 30000
+jobHeartBeatKeyPrefix: "hb-job:"
+jobHeartbeatCheckInterval: 45000
+jobClaimerConfig:
+  initialDelay: 3000
+  claimInterval: 10000
+  heartBeatConfig:
+    key: "hb-job:"
+    expiry: 30000
+  maxNumberOfJobs: 1
+  consumerGroup: jobGroup
+  batchSize: 1
+
