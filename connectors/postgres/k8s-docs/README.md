@@ -4,7 +4,7 @@ This repository describes the steps involved to deploy Redis Connect for Postgre
 
 Overall flow:
 1. Clone the Redis Connect for Postgres repository.
-2. Configure Redis Connect as in this set of docs.
+2. Configure Redis Connect as in <a href="../demo/config/samples/postgres" target="_blank">this set of docs</a>.
 3. Deploy the Redis Connect configuration to Kubernetes.
 4. Configure the Redis Connect deployment manifests.
 5. Stage the Redis Connect job.
@@ -21,7 +21,7 @@ $ cd redis-connect-dist/connectors/postgres/k8s-docs
 
 ## 2. Configure Redis Connect 
 
-Configure the files to describe your Redis Connect Job. One sample configuration is <a href="../demo/config/samples/postgres">here</a>. 
+Configure the files to describe your Redis Connect Job. One sample configuration is <a href="../demo/config/samples/postgres" target="_blank">here</a>. 
 
 Redis Connect is a Java application which is a client of both the source RDBMS and the target Redis. As such, you will need:
 * Source database details (endpoint, port, credentials)
@@ -129,7 +129,7 @@ The final link is the environment variable that instructs Redis Connect to use t
 
 Update both the `redis-connect-postgres-stage.yaml` and `redis-connect-postgres-start.yaml` to map the appropriate environment variables in the `env:` section. Notable, the `REDISCONNECT_SOURCE_USERNAME`, `REDISCONNECT_SOURCE_PASSWORD`, `REDISCONNECT_TARGET_USERNAME` and `REDISCONNECT_TARGET_PASSWORD`. 
 
-## Stage the Redis Connect Job
+## 5. Stage the Redis Connect Job
 
 Apply the stage manifest as follows: `oc apply -f redis-connect-postgres-stage.yaml`. The outcome will be a k8s batch/Job which will run once and exit. 
 ```
@@ -140,7 +140,7 @@ redis-connect-postgres-stage-lkvp2           0/1     Completed   0          44s
   
 The effect of this stage operation is the configuration keys are loaded in to the target Redis instance defined in `env.yml`:`jobConfigConnection`. The Job should have an `UNASSIGNED` owner.
 
-## Start the Redis Connect Job
+## 6. Start the Redis Connect Job
 
 Apply the stage manifest as follows: `oc apply -f redis-connect-postgres-start.yaml`. The outcome will be a k8s apps/Deployment which will run continually. 
 ```
