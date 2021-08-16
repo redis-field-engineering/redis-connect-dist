@@ -73,7 +73,7 @@ Before using the SQL Server connector (redis-connect-sqlserver) to capture the c
 
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 1.8 and tested with JRE 1.8 and above. Please have JRE 1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) or above installed prior to running this connector. The scripts below to seed Job config data and start RedisConnect connector is currently only written for [\*nix platform](https://en.wikipedia.org/wiki/Unix-like).
+The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 1.8 and tested with JRE 1.8 and above. Please have JRE 1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) or above installed prior to running this connector.
 
 ---
 
@@ -85,10 +85,11 @@ Contents of redis-connect-sqlserver
 <br>• bin – contains script files
 <br>• lib – contains java libraries
 <br>• config – contains sample config files for cdc and initial loader jobs
+<br>• extlib – directory to copy [custom stage](https://github.com/RedisLabs-Field-Engineering/redis-connect-custom-stage-demo) implementation jar(s)
 
 ## RedisConnect Setup and Job Management Configurations
 
-Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ` redis-connect-sqlserver$ cp -R config/samples/sqlserver config/<project_name>` or reuse sample folder as is and edit/update the configuration values according to your setup.
+Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. `redis-connect-sqlserver$ cp -R config/samples/sqlserver config/<project_name>` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
 #### Configuration files
 
@@ -200,7 +201,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml under redis-connect-sqlserver/config/samples/sqlserver folder
+### Sample env.yml under redis-connect-sqlserver/config/samples/sqlserver folder. Any of these fields (values) can be replaced by environment variables.
 
 ```yml
 connections:
@@ -216,7 +217,7 @@ connections:
       db: RedisConnect #database
       hostname: 127.0.0.1
       port: 1433
-      username: sa
+      username: sa #This can be a non privileged user. Please see and example in the demo, https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/blob/main/connectors/mssql/demo/mssql_cdc.sql#L36
       password: Redis@123
       type: mssqlserver #this value cannot be changed for mssqlserver
       jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect"
