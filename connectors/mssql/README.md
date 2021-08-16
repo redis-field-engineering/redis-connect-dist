@@ -176,6 +176,10 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
         <appender-ref ref="REDISCONNECT"/>
         <appender-ref ref="STARTUP"/>
     </logger>
+    <logger name="org.springframework" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="STARTUP"/>
+    </logger>    
 
     <root>
         <appender-ref ref="STARTUP"/>
@@ -201,11 +205,11 @@ Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/
 ```yml
 connections:
   jobConfigConnection:
-    redisUrl: redis://127.0.0.1:14001
+    redisUrl: redis://127.0.0.1:14001 #Job configuration Redis database
   srcConnection:
-    redisUrl: redis://127.0.0.1:14000
+    redisUrl: redis://127.0.0.1:14000 #Target Redis database
   metricsConnection:
-    redisUrl: redis://127.0.0.1:14001
+    redisUrl: redis://127.0.0.1:14001 #Metrics Redis database, can be same as Job Configuration database.
   msSQLServerConnection:
     database:
       name: testdb #database name same as database value in Setup.yml
@@ -425,16 +429,39 @@ tables:
 </p>
 </details>
 
-<h4>Seed Config Data</h4>
-<p>Before starting a RedisConnect instance, job config data needs to be seeded into Redis Config database from a Job Configuration file. Configuration is provided in Setup.yml. After the file is modified as needed, execute cleansetup.sh. This script will delete existing configs and reload them into Config DB.
+## Start Redis Connect SQL Server Connector
+<details><summary>Execute Redis Connect startup script to see all the options</summary>
+<p>
+    
+```bash
+redis-connect-sqlserver/bin$ ./redisconnect.sh    
+-------------------------------
+Redis Connect startup script.
+*******************************
+Please ensure that the value of REDISCONNECT_CONFIG points to the correct config directory in /home/viragtripathi/redis-connect-sqlserver/bin/redisconnect.conf before executing any of the options below
+*******************************
+Usage: [-h|cli|stage|start]
+options:
+-h: Print this help message and exit.
+cli: starts redis-connect-cli.
+stage: clean and stage redis database with cdc or initial loader job configurations.
+start: start Redis Connect instance with provided cdc or initial loader job configurations.
+-------------------------------
+    
+```
+</p>
+</details>
+    
+<h4>Stage Redis Connect Job</h4>
+Before starting a Redis Connect instance, job config data needs to be seeded into Redis Config database from Job Configuration files. Configuration is provided in Setup.yml. After the configuration files are modified as needed, execute the startup script with <i>stage</i> option.
 
 ```bash
-redis-connect-sqlserver/bin$ ./cleansetup.sh
+redis-connect-sqlserver/bin$ ./redisconnect.sh stage
 ```
 
-<h4>Start RedisConnect Connector</h4>
-<p>Execute startup.sh script to start a RedisConnect instance.
+<h4>Start Redis Connect Job</h4>
+<br>Once staging is done, execute the same script with <i>start</i> option to start the configured Job(s) i.e. an instance of Redis Connect.
 
 ```bash
-redis-connect-sqlserver/bin$ ./startup.sh
+redis-connect-sqlserver/bin$ ./redisconnect.sh start
 ```
