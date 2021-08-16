@@ -25,10 +25,10 @@ This includes snapshots; if the snapshot was not completed when the connector is
 ![Redis Connect high-level Architecture](/docs/images/RedisConnect_Arch.png)
 <b>Redis Connect high-level Architecture Diagram</b>
 
-RedisConnect has a cloud-native shared-nothing architecture which allows any cluster node (RedisConnect Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing RedisConnect instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of RedisConnect will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
+Redis Connect has a cloud-native shared-nothing architecture which allows any cluster node (Redis Connect Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing Redis Connect instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of Redis Connect will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
 
 <p>
-On their own RedisConnect instances are stateless therefore require Redis to manage Job Management and Job Execution state - such as checkpoints, claims, optional intermediary data storage, etc. With this design, RedisConnect instances can fail/failover without risking data loss, duplication, and/or order. As long as another RedisConnect instance is actively available to claim responsibility for Job Execution, or can be recovered, it will pick up from the last recorded checkpoint.
+On their own Redis Connect instances are stateless therefore require Redis to manage Job Management and Job Execution state - such as checkpoints, claims, optional intermediary data storage, etc. With this design, Redis Connect instances can fail/failover without risking data loss, duplication, and/or order. As long as another Redis Connect instance is actively available to claim responsibility for Job Execution, or can be recovered, it will pick up from the last recorded checkpoint.
 
 <h5>Redis Connect Components</h5>
 
@@ -39,7 +39,7 @@ On their own RedisConnect instances are stateless therefore require Redis to man
 <p>A Pipeline moves, transforms and orchestrates data transfer from one data structure in source data store to another data structure in target data source.
 
 <h6>Job</h6>
-<p>A Job is an implementation of a pipeline. One pipeline can have only one implementation. A job is considered “assigned” if a RedisConnect instance is executing the job. RedisConnect instance executes one or more Job processes that
+<p>A Job is an implementation of a pipeline. One pipeline can have only one implementation. A job is considered “assigned” if a Redis Connect instance is executing the job. Redis Connect instance executes one or more Job processes that
 <br>• Read data, in batch, from the data structure on the source data store
 <br>• Transforms and maps data to a predefined data structure on the target data store
 <br>• Writes data, in batch, to the data structure on the target data store
@@ -48,10 +48,10 @@ On their own RedisConnect instances are stateless therefore require Redis to man
 <p>Job Manager is a wrapper process that instantiates Job Reaper and Job Claimer processes.
 
 <h6>Job Reaper</h6>
-<p>Job Reaper is a process, within a RedisConnect instance, that tracks the status of all jobs. If any Jobs are not being executed, then the reaper process makes them available to be “assigned”. A single job reaper process is instantiated within each RedisConnect instance. Only one job reaper process is active across all RedisConnect instances.
+<p>Job Reaper is a process, within a Redis Connect instance, that tracks the status of all jobs. If any Jobs are not being executed, then the reaper process makes them available to be “assigned”. A single job reaper process is instantiated within each Redis Connect instance. Only one job reaper process is active across all Redis Connect instances.
 
 <h6>Job Claimer</h6>
-<p>Job Claimer is a process, within a RedisConnect instance that initiates “unassigned” jobs. A single job claimer process is instantiated within each RedisConnect instance. All job claimer processes are active across all RedisConnect instances.
+<p>Job Claimer is a process, within a Redis Connect instance that initiates “unassigned” jobs. A single job claimer process is instantiated within each Redis Connect instance. All job claimer processes are active across all Redis Connect instances.
 
 ## Setting up SQL Server (Source)
 
@@ -65,7 +65,7 @@ Please see an example, [SQL Statements](https://github.com/RedisLabs-Field-Engin
 
 ## Setting up Redis Enterprise Databases (Target)
 
-Before using the SQL Server connector (redis-connect-sqlserver) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by RedisConnect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
+Before using the SQL Server connector (redis-connect-sqlserver) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by Redis Connect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
 
 ## Download and Setup
 
@@ -87,7 +87,7 @@ Contents of redis-connect-sqlserver
 <br>• config – contains sample config files for cdc and initial loader jobs
 <br>• extlib – directory to copy [custom stage](https://github.com/RedisLabs-Field-Engineering/redis-connect-custom-stage-demo) implementation jar(s)
 
-## RedisConnect Setup and Job Management Configurations
+## Redis Connect Setup and Job Management Configurations
 
 Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. `redis-connect-sqlserver$ cp -R config/samples/sqlserver config/<project_name>` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
@@ -217,7 +217,7 @@ connections:
       db: RedisConnect #database
       hostname: 127.0.0.1
       port: 1433
-      username: sa #This can be a non privileged user. Please see and example in the demo, https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/blob/main/connectors/mssql/demo/mssql_cdc.sql#L36
+      username: sa #This can be a non privileged user. Please see an example in the demo, https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/blob/main/connectors/mssql/demo/mssql_cdc.sql#L36
       password: Redis@123
       type: mssqlserver #this value cannot be changed for mssqlserver
       jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect"
@@ -327,7 +327,7 @@ jobClaimerConfig:
 
 ### Sample JobConfig.yml under redis-connect-sqlserver/config/samples/sqlserver folder
 
-You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then RedisConnect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
+You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 
 ```yml
 jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
