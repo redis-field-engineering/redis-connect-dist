@@ -11,7 +11,7 @@ sudo docker run -d --cap-add sys_resource -h re-node1 --name re-node1 -p 18443:8
 echo "Waiting for the servers to start..."
 sleep 60
 echo "Creating Redis Enterprise cluster..."
-sudo docker exec -it --privileged re-node1 "/opt/redislabs/bin/rladmin" cluster create name re-cluster.local username demo@redislabs.com password redislabs
+sudo docker exec -it --privileged re-node1 "/opt/redislabs/bin/rladmin" cluster create name re-cluster.local username demo@redis.com password redislabs
 echo ""
 # Test the cluster
 sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/rladmin info cluster"
@@ -19,8 +19,8 @@ sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/rladmin info cluster"
 echo "Creating databases..."
 rm create_demodb.sh
 tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "185d404506c485d79a4d6a9ad461625e", "module_name": "search", "semantic_version": "2.0.8"} ] }' https://localhost:9443/v1/bdbs
-curl -v -k -L -u demo@redislabs.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_id": "d625bfec1b0b1db1904b3d904f604ecb", "module_name": "timeseries", "semantic_version": "1.4.9"}]}' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "9f8e4b44fbd28838190dbee7935e964d", "module_name": "search", "semantic_version": "2.0.11"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_id": "6715acd18978c330bb2fb3f4193f070c", "module_name": "timeseries", "semantic_version": "1.4.10"}]}' https://localhost:9443/v1/bdbs
 EOF
 sleep 20
 sudo docker cp create_demodb.sh re-node1:/opt/create_demodb.sh
@@ -38,12 +38,12 @@ sudo docker port re-node1 | egrep "12000|12001"
 echo "------- RLADMIN status -------"
 sudo docker exec -it re-node1 bash -c "rladmin status"
 echo ""
-echo "You can open a browser and access Redis Enterprise Admin UI at https://127.0.0.1:18443 (replace localhost with your ip/host) with username=demo@redislabs.com and password=redislabs."
+echo "You can open a browser and access Redis Enterprise Admin UI at https://127.0.0.1:18443 (replace localhost with your ip/host) with username=demo@redis.com and password=redislabs."
 echo "To connect using RedisInsight or redis-cli, please use the exposed port from the node where master shard for the database resides."
 echo "Creating RedisInsight in docker container.."
 sudo docker run -d --name redisinsight -p 18001:8001 -v redisinsight:/db redislabs/redisinsight:latest
 echo "Creating Grafana with redis-datasource in docker container.."
 sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-datasource" grafana/grafana
 echo "You can open a browser and access RedisInsight client UI at http://127.0.0.1:18001 (replace localhost with your ip/host) and add databases to monitor."
-echo "Please visit, https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/ for steps to add these databases to RedisInsight."
-echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redislabs.com/latest/rs/getting-started/getting-started-docker"
+echo "Please visit, https://docs.redis.com/latest/ri/using-redisinsight/add-instance/ for steps to add these databases to RedisInsight."
+echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redis.com/latest/rs/getting-started/getting-started-docker"
