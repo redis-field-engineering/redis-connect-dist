@@ -8,32 +8,35 @@
 
 
 version="$1"
-db_port=1521
+db_port="$2"
+#https_port="$3"
 db_pwd=Redis123
 [[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. 12.2.0.1-ee, 19.3.0-ee"; exit 1; }
+[[ -z "$db_port" ]] && { echo "Error: Missing database port e.g. 1521"; exit 1; }
+#[[ -z "$https_port" ]] && { echo "Error: Missing https port e.g. 5500"; exit 1; }
 
 container_name="oracle-$version-$(hostname)"
 # delete the existing container if it exist
 sudo docker kill $container_name;sudo docker rm $container_name;
 
 # create volume and setup necessary permissions
-sudo rm -rf $(pwd)/oradata
-sudo mkdir -p $(pwd)/oradata/recovery_area
-sudo chgrp -R 54321 $(pwd)/oradata
-sudo chown -R 54321 $(pwd)/oradata
+sudo rm -rf $(pwd)/$version/oradata
+sudo mkdir -p $(pwd)/$version/oradata/recovery_area
+sudo chgrp -R 54321 $(pwd)/$version/oradata
+sudo chown -R 54321 $(pwd)/$version/oradata
 
 echo "Creating $container_name docker container."
 sudo docker run --name $container_name \
 	-p $db_port:1521 \
-	-p 5500:5500 \
 	-e ORACLE_PWD=$db_pwd \
-	-v $(pwd)/oradata:/opt/oracle/oradata \
+	-v $(pwd)/$version/oradata:/opt/oracle/oradata \
         -d virag/oracle-$version
+#	-p $https_port:5500 \
 #	oracle/database:$version
 
 #sudo docker wait $container_name
 
-while ! nc -vz $(sudo docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $container_name) $db_port < /dev/null
+while ! nc -vz $(sudo docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $container_name) 1521 < /dev/null
 do
   echo "$(date) - still trying"
   sleep 2
@@ -41,7 +44,7 @@ done
 echo "$(date) - connected successfully"
 
 attempt=0
-while [ $attempt -le 200 ]; do
+while [ $attempt -le 400 ]; do
     attempt=$(( $attempt + 1 ))
     echo "$(date) - Waiting for oracle database to be up (attempt: $attempt)..."
     result=$(docker logs $container_name)
