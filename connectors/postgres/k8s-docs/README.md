@@ -127,7 +127,22 @@ The final link is the environment variable that instructs Redis Connect to use t
 
 ## 4. Configure the Redis Connect Deployment Manifests
 
-Update both the `redis-connect-postgres-stage.yaml` and `redis-connect-postgres-start.yaml` to map the appropriate environment variables in the `env:` section. Notable, the `REDISCONNECT_SOURCE_USERNAME`, `REDISCONNECT_SOURCE_PASSWORD`, `REDISCONNECT_TARGET_USERNAME` and `REDISCONNECT_TARGET_PASSWORD`. 
+Update both the `redis-connect-postgres-stage.yaml` and `redis-connect-postgres-start.yaml` to map the appropriate environment variables in the `env:` section. Notable, the `REDISCONNECT_SOURCE_USERNAME`, `REDISCONNECT_SOURCE_PASSWORD`, `REDISCONNECT_TARGET_USERNAME` and `REDISCONNECT_TARGET_PASSWORD`.  
+
+Examples are provided to populate environment variables from the manifest/yaml, from configmap, and from k8s secrets for sensitive info such as credentials:
+
+```
+          - name: REDISCONNECT_SOURCE_PASSWORD
+            value: admin123                          
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_SOURCE_PASSWORD
+            #     name: redis-connect-postgres-config
+            # valueFrom:
+            #   secretKeyRef:
+            #     key: password
+            #     name: redis-connect-secret
+```
 
 ## 5. Stage the Redis Connect Job
 

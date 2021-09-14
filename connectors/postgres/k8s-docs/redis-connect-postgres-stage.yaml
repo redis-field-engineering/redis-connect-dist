@@ -15,7 +15,7 @@ spec:
       containers:
       - name:  redis-connect-postgres # Container name 
         image: redislabs/redis-connect-postgres:pre-release-alpine #repo/image:tag
-# #### comment out the following two lines for troubleshooting 
+# #### uncomment the following two lines for troubleshooting 
 #         command: [ "/bin/bash", "-c", "--" ]
 #         args: [ "while true; do sleep 30; done;" ]
 # ####
@@ -62,12 +62,20 @@ spec:
             #   configMapKeyRef:
             #     key: REDISCONNECT_SOURCE_USERNAME
             #     name: redis-connect-postgres-config
+            # valueFrom:
+            #   secretKeyRef:
+            #     key: username
+            #     name: redis-connect-secret
           - name: REDISCONNECT_SOURCE_PASSWORD
             value: admin123
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_SOURCE_PASSWORD
             #     name: redis-connect-postgres-config
+            # valueFrom:
+            #   secretKeyRef:
+            #     key: password
+            #     name: redis-connect-secret
           - name: REDISCONNECT_JAVA_OPTIONS
             value: "-XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx1g"
             # valueFrom:
