@@ -1,0 +1,11 @@
+jobId: ${jobId}
+jobType: TASK_CREATOR
+producerConfig:
+  producerId: RDB_TASK_CREATOR
+  connectionId: RDBConnection
+  jobs:
+    - table: jjd47182.emp # schema.table
+      jobPrefix: empLoader-
+      numJobs: 5
+      config: JobConfig.yml
+      loadQuery: "select * from (select ROW_NUMBER() OVER (ORDER BY empno) AS RowIndex, * from jjd47182.emp) AS emps Where emps.RowIndex >= ${start} and emps.RowIndex <= ${end}"

@@ -1,0 +1,21 @@
+connectionId: jobConfigConnection
+jobTypeId: empLoader
+jobStream: loaderJobStream
+jobConfigSet: loaderJobConfigs
+completedJobsSet: loaderCompletedJobs
+initialDelay: 10000
+numManagementThreads: 2
+heartBeatConfig:
+  key: hb-loaderJobManager
+  expiry: 30000
+jobHeartBeatKeyPrefix: "hb-job:"
+jobHeartbeatCheckInterval: 45000
+jobClaimerConfig:
+  initialDelay: 10000
+  claimInterval: 30000
+  heartBeatConfig:
+    key: "hb-job:"
+    expiry: 30000
+  maxNumberOfJobs: 5
+  consumerGroup: loaderJobGroup
+  batchSize: 3

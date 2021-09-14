@@ -1,0 +1,26 @@
+schema: jjd47182 # schema name
+tables:
+  - table: emp # table name
+    mapper:
+      id: emp-loader # unique id for this mapper
+      processorID: emp # processor ID for the mapper
+      passThrough: true # set it to true if you don't need to map individual columns
+      columns:
+        - src: empno
+          target: EmployeeNumber
+        - src: fname
+          target: FirstName
+        - src: lname
+          target: LastName
+        #- src: job
+        #  target: job
+        #- src: mgr
+        #  target: mgr
+        #- src: hiredate
+        #  target: hiredate
+        #- src: sal
+        #  target: sal
+        #- src: comm
+        #  target: comm
+        #- src: dept
+        #  target: dept
