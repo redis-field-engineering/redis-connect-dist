@@ -5,7 +5,7 @@ metadata:
   labels:
     app: redis-connect-postgres # deployment label
 spec:
-  replicas: 1 # a single replica pod
+  replicas: 2 # replicas for HA
   selector:
     matchLabels:
       app: redis-connect-postgres # which pods is the deployment managing, as defined by the pod template
@@ -14,7 +14,7 @@ spec:
       labels:
         app: redis-connect-postgres 
     spec:
-      affinity:  ### the following
+      affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:

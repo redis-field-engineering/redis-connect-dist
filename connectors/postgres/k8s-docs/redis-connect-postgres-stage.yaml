@@ -23,10 +23,10 @@ spec:
         imagePullPolicy: Always # IfNotPresent # Always pull image
         resources:
           limits:
-            cpu: "1000m"
-            memory: "1024Mi"
-          requests:
             cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "250m"
             memory: "256Mi"
         ports:  
         - containerPort: 8282 # exposed container port to the REST API 
