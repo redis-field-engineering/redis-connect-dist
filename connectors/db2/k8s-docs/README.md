@@ -4,7 +4,7 @@ This repository describes the steps involved to deploy Redis Connect for DB2 in 
 
 Overall flow:
 1. Clone the Redis Connect for db2 repository.
-2. Configure Redis Connect as in <a href="../demo/config/samples/db2" target="_blank">this set of docs</a>.
+2. Configure Redis Connect as in <a href="../demo/config/samples" target="_blank">this set of docs</a>.
 3. Deploy the Redis Connect configuration to Kubernetes.
 4. Configure the Redis Connect deployment manifests.
 5. Stage the Redis Connect job.
@@ -49,7 +49,7 @@ kubectl create configmap redis-connect-db2-config \
   --from-file=JobManager.yml=JobManager.yml \
   --from-file=env.yml=env.yml \
   --from-file=Setup.yml=Setup.yml \
-  --from-file=mapper1.yml=mappers/mapper1.yml
+  --from-file=mapper1.yml=mappers/mapper1.yml \
   --from-file=TaskCreator.yml=TaskCreator.yml
 ```
 The outcome is:
