@@ -21,7 +21,7 @@ $ cd redis-connect-dist/connectors/db2/k8s-docs
 
 ## 2. Configure Redis Connect 
 
-Configure the files to describe your Redis Connect Job. One sample configuration is <a href="../demo/config/samples/db2" target="_blank">here</a>. 
+Configure the files to describe your Redis Connect Job. One sample configuration is <a href="../demo/config/samples" target="_blank">here</a>. 
 
 Redis Connect is a Java application which is a client of both the source RDBMS and the target Redis. As such, you will need:
 * Source database details (endpoint, port, credentials)
