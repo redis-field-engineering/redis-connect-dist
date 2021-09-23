@@ -2,11 +2,11 @@ schema: public
 tables:
   - table: emp
     mapper:
-      id: Test
-      processorID: Test
-      publishBefore: false
-      passThrough: false
-      ignoreReads: true # false (default) reloads the data from last checkpoint
+      id: Test # mapper Id
+      processorID: Test # processor ID for the mapper
+      publishBefore: false # false (default) Global setting, that specifies if before values have to be published for all columns - This setting could be overridden at each column level
+      passThrough: false # false (default) If this is set to true, all of the Columns will be in the output without individual mappings. You still need to map the PK column.
+      ignoreReads: false # false (default) If set to true, reads will be ignored
       columns:
         - src: empno
           target: EmployeeNumber
