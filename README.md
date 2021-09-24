@@ -1,6 +1,16 @@
-<p align="left"><img src="/docs/images/RedisConnect.svg" alt="Redis Connect" height="150px"></p>
+<p align="left"><img src="/docs/images/RedisConnect.svg" alt="Redis Connect" height="100px"></p>
 
 # Redis Connect (Continuous Replication and Initial Load to Redis Enterprise)
+
+- [Redis Connect Overview](#technical-overview)
+  * [Using redis-connect-cassandra](#connectors/cassandra#redis-connect-cassandra)
+  * [Using redis-connect-db2](connectors/db2#redis-connect-db2)
+  * [Using redis-connect-gemfire](#connectors/gemfire#redis-connect-gemfire)
+  * [Using redis-connect-mysql](connectors/mysql#redis-connect-mysql)
+  * [Using redis-connect-oracle](connectors/oracle#redis-connect-oracle)
+  * [Using redis-connect-postgres](connectors/postgres#redis-connect-postgres)
+  * [Using redis-connect-sqlserver](connectors/mssql#redis-connect-sqlserver)
+  * [Using redis-connect-files](#connectors/files#redis-connect-files)
 
 ## Technical Overview
 
