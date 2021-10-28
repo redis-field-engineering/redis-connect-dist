@@ -6,23 +6,40 @@ tables:
       processorID: Test # processor ID for the mapper
       publishBefore: false # false (default) Global setting, that specifies if before values have to be published for all columns - This setting could be overridden at each column level
       passThrough: false # false (default) If this is set to true, all of the Columns will be in the output without individual mappings. You still need to map the PK column.
-      ignoreReads: false # false (default) If set to true, reads will be ignored
       columns:
         - src: empno
           target: EmployeeNumber
+          type: INT
+          publishBefore: false
         - src: fname
-          target: fname
+          target: FirstName
         - src: lname
-          target: lname
+          target: LastName
         - src: job
           target: Job
         - src: mgr
           target: Manager
+          type: INT
         - src: hiredate
           target: HireDate
+          type: DATE
         - src: sal
           target: Salary
+          type: DOUBLE
         - src: comm
           target: Commission
+          type: DOUBLE
         - src: dept
           target: Department
+          type: INT
+  #- table: heartbeat
+    #mapper:
+      #id: heartbeat
+      #processorID: heartbeat
+      #publishBefore: false
+      #passThrough: true
+      #columns:
+        #- src: id
+          #target: id
+          #publishBefore: false
+

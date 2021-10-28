@@ -1,44 +1,35 @@
 connectionId: jobConfigConnection
 job:
-  stream: jobStream
-  configSet: jobConfigs
-  consumerGroup: jobGroup
   metrics:
     connectionId: metricsConnection
     retentionInHours: 12
     keys:
-      - key: "dbo:emp:C:Throughput"
+      - key: "public:emp:C:Throughput"
         retentionInHours: 4
         labels:
-          schema: dbo
+          schema: public
           table: emp
           op: I
-      - key: "dbo:emp:U:Throughput"
+      - key: "public:emp:U:Throughput"
         retentionInHours: 4
         labels:
-          schema: dbo
+          schema: public
           table: emp
           op: U
-      - key: "dbo:emp:D:Throughput"
+      - key: "public:emp:D:Throughput"
         retentionInHours: 4
         labels:
-          schema: dbo
+          schema: public
           table: emp
           op: D
-      - key: "dbo:emp:Latency"
+      - key: "public:emp:Latency"
         retentionInHours: 4
         labels:
-          schema: dbo
+          schema: public
           table: emp
   jobConfig:
-    - name: testdb-postgres
+    - name: RedisConnect-postgres
       config: JobConfig.yml
       variables:
-        database: testdb
+        database: RedisConnect
         sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR
-
-        
-
-
-
-

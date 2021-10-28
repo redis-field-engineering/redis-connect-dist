@@ -1,32 +1,32 @@
 jobId: ${jobId}
 producerConfig:
   producerId: RDB_EVENT_PRODUCER
-  connectionId: postgresConnection
+  connectionId: RDBConnection
   tables:
-    - public.emp
+    - public.emp #schema.table
+    #- public.heartbeat # heartbeat table to keep postgres active
   pollingInterval: 5
-  metricsKey: testdb-emp
+  metricsKey: RedisConnect-emp
   metricsEnabled: false
 pipelineConfig:
   bufferSize: 1024
   eventTranslator: "${sourceValueTranslator}"
   checkpointConfig:
-    providerId: RDB_CHECKPOINT_READER
-    connectionId: srcConnection
+    providerId: RDB_SQL_CHECKPOINT_READER
+    connectionId: targetConnection
     checkpoint: "${jobId}-${database}"
+    rdbType: "postgres"
   stages:
     HashWriteStage:
       handlerId: REDIS_HASH_WRITER
-      connectionId: srcConnection
+      connectionId: targetConnection
       metricsEnabled: false
       prependTableNameToKeys: true
       deleteOnKeyUpdate: true
       async: true
     CheckpointStage:
-      handlerId: REDIS_OP_CP_WRITER
-      connectionId: srcConnection
+      handlerId: REDIS_HASH_CHECKPOINT_WRITER
+      connectionId: targetConnection
       metricEnabled: false
       async: true
       checkpoint: "${jobId}-${database}"
-
-

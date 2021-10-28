@@ -10,9 +10,9 @@ tables:
         - src: empno
           target: EmployeeNumber
         - src: fname
-          target: fname
+          target: FirstName
         - src: lname
-          target: lname
+          target: LastName
         - src: job
           target: Job
         - src: mgr
