@@ -4,7 +4,7 @@ Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker
 <br>Execute the following commands (copy & paste) to download and setup Redis Connect Postgres Connector and demo scripts.
 i.e.</br>
 ```bash
-wget -c https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/archive/main.zip && \
+wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-postgres/demo && \
 unzip main.zip "redis-connect-dist-main/connectors/postgres/demo/*" -d redis-connect-postgres/demo && \
 cp -R redis-connect-postgres/demo/redis-connect-dist-main/connectors/postgres/demo/* redis-connect-postgres/demo && \
@@ -465,7 +465,7 @@ Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target 
 
 -------------------------------
 
-### [_Custom Stage_](https://github.com/RedisLabs-Field-Engineering/redis-connect-custom-stage-demo)
+### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
 
 Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#initial-loader-steps) and [CDC Steps](#cdc-steps).
 
