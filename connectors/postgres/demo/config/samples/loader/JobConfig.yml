@@ -8,7 +8,6 @@ producerConfig:
   loadQuery: ${loadQuery}
   table: ${table}
 pipelineConfig:
-  bufferSize: 1024
   eventTranslator: "RDB_RS_TO_OP_TRANSLATOR"
   checkpointConfig:
     providerId: REDIS_HASH_CHECKPOINT_READER

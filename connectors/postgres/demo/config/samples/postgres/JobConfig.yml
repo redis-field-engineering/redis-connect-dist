@@ -5,11 +5,9 @@ producerConfig:
   tables:
     - public.emp #schema.table
     #- public.heartbeat # heartbeat table to keep postgres active
-  pollingInterval: 5
   metricsKey: RedisConnect-emp
   metricsEnabled: false
 pipelineConfig:
-  bufferSize: 1024
   eventTranslator: "${sourceValueTranslator}"
   checkpointConfig:
     providerId: RDB_SQL_CHECKPOINT_READER
