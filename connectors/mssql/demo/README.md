@@ -7,8 +7,8 @@ i.e.</br>
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-sqlserver/demo && \
-unzip main.zip "redis-connect-dist-main/connectors/sqlserver/demo/*" -d redis-connect-sqlserver/demo && \
-cp -R redis-connect-sqlserver/demo/redis-connect-dist-main/connectors/sqlserver/demo/* redis-connect-sqlserver/demo && \
+unzip main.zip "redis-connect-dist-main/connectors/mssql/demo/*" -d redis-connect-sqlserver/demo && \
+cp -R redis-connect-sqlserver/demo/redis-connect-dist-main/connectors/mssql/demo/* redis-connect-sqlserver/demo && \
 mv redis-connect-sqlserver/demo/config redis-connect-sqlserver && \
 rm -rf main.zip redis-connect-sqlserver/demo/redis-connect-dist-main && \
 cd redis-connect-sqlserver && \
@@ -24,7 +24,7 @@ config demo
 
 <br>Execute [setup_mssql.sh](setup_mssql.sh)</br>
 ```bash
-rl-connector-rdb$ cd demo
+redis-connect-sqlserver$ cd demo
 demo$ ./setup_mssql.sh 2017-latest
 ```
 
@@ -111,7 +111,7 @@ docker run \
 --name redis-connect-sqlserver \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/samples/sqlserver \
--e REDISCONNECT_SOURCE_USERNAME=redisconnect \
+-e REDISCONNECT_SOURCE_USERNAME=sa \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-sqlserver/config \
@@ -126,6 +126,18 @@ redislabs/redis-connect-sqlserver:pre-release-alpine
 <p>
 
 ```bash
+Unable to find image 'redislabs/redis-connect-sqlserver:pre-release-alpine' locally
+pre-release-alpine: Pulling from redislabs/redis-connect-sqlserver
+a0d0a0d46f8b: Already exists
+e1fc1d22fcb4: Pull complete
+3f5fde473eac: Pull complete
+a95f82a482cf: Pull complete
+e06557015f22: Pull complete
+dc1a00dd4c05: Pull complete
+c13b3b271b47: Pull complete
+4d4fa8f69dc1: Pull complete
+Digest: sha256:fc3c53af40ea709a4b4129a869275577b9abe29c8febe7cb2ff864e3dbbe1c32
+Status: Downloaded newer image for redislabs/redis-connect-sqlserver:pre-release-alpine
 -------------------------------
 Redis Connect startup script.
 *******************************
@@ -181,7 +193,34 @@ redislabs/redis-connect-sqlserver:pre-release-alpine stage
 
 ```bash
 -------------------------------
+Staging Redis Connect redis-connect-sqlserver v0.7.0.133 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-sqlserver/bin
+Loading Redis Connect redis-connect-sqlserver Configurations from /opt/redislabs/redis-connect-sqlserver/config/samples/loader
+20:57:15,320 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-sqlserver/config/logback.xml] at [file:/opt/redislabs/redis-connect-sqlserver/config/logback.xml]
+....
+....
+20:57:15.558 [main] INFO  startup - ##################################################################
+20:57:15.560 [main] INFO  startup -
+20:57:15.560 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
 
+20:57:15.560 [main] INFO  startup -
+20:57:15.560 [main] INFO  startup - ##################################################################
+20:57:16.289 [main] INFO  startup - Instance: 29@virag-cdc will attempt to delete (clean) all the metadata related to Redis Connect
+20:57:17.083 [main] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for INIT service
+20:57:17.090 [main] INFO  startup - Instance: 29@virag-cdc successfully completed flush (clean) of all the metadata related to Redis Connect
+20:57:17,628 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-sqlserver/config/logback.xml] at [file:/opt/redislabs/redis-connect-sqlserver/config/logback.xml]
+....
+....
+20:57:17.873 [main] INFO  startup - ##################################################################
+20:57:17.874 [main] INFO  startup -
+20:57:17.875 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+20:57:17.875 [main] INFO  startup -
+20:57:17.875 [main] INFO  startup - ##################################################################
+20:57:18.582 [main] INFO  startup - Instance: 99@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+20:57:19.321 [main] INFO  startup - Instance: 99@virag-cdc successfully established Redis connection for INIT service
+20:57:19.324 [main] INFO  startup - Instance: 99@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+20:57:19.338 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Job related metadata
+20:57:19.338 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Metrics related metadata
+20:57:19.338 [main] INFO  startup - Instance: 99@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
 -------------------------------
 ```
 
