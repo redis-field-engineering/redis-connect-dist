@@ -1,0 +1,7 @@
+connectionId: jobConfigConnection
+job:
+  jobConfig:
+    - name: initial_load
+      config: TaskCreator.yml
+
+

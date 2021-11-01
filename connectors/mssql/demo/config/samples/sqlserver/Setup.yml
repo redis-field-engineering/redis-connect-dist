@@ -1,0 +1,35 @@
+connectionId: jobConfigConnection
+job:
+  metrics:
+    connectionId: metricsConnection
+    retentionInHours: 12
+    keys:
+      - key: "dbo:emp:C:Throughput"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+          op: I
+      - key: "dbo:emp:U:Throughput"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+          op: U
+      - key: "dbo:emp:D:Throughput"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+          op: D
+      - key: "dbo:emp:Latency"
+        retentionInHours: 4
+        labels:
+          schema: dbo
+          table: emp
+  jobConfig:
+    - name: RedisConnect-emp
+      config: JobConfig.yml
+      variables:
+        database: RedisConnect
+        sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR

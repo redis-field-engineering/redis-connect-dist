@@ -19,7 +19,7 @@ sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/rladmin info cluster"
 echo "Creating databases..."
 rm create_demodb.sh
 tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "9f8e4b44fbd28838190dbee7935e964d", "module_name": "search", "semantic_version": "2.0.11"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "9f8e4b44fbd28838190dbee7935e964d", "module_name": "search", "semantic_version": "2.0.11"}, {"module_args": "", "module_id": "4942f870bcd96678dd92cd55ae5d2801", "module_name": "ReJSON", "semantic_version": "1.0.8"} ] }' https://localhost:9443/v1/bdbs
 curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_id": "6715acd18978c330bb2fb3f4193f070c", "module_name": "timeseries", "semantic_version": "1.4.10"}]}' https://localhost:9443/v1/bdbs
 EOF
 sleep 20
