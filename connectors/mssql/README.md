@@ -61,7 +61,7 @@ Before using the SQL Server connector (redis-connect-sqlserver) to monitor the c
 
 Please see [Enable Change Data Capture for a Table](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-ver15#enable-change-data-capture-for-a-table) for reference.
 
-Please see an example, [SQL Statements](https://github.com/redis-field-engineering/redis-connect-dist/blob/master/connectors/mssql/demo/mssql_cdc.sql) under [Demo](https://github.com/redis-field-engineering/redis-connect-dist/blob/master/connectors/mssql/demo/).
+Please see an example, [SQL Statements](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/mssql/demo/mssql_cdc.sql) under [Demo](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/mssql/demo/).
 
 ## Setting up Redis Enterprise Databases (Target)
 
