@@ -1,6 +1,6 @@
 # redis-connect-sqlserver
 
-redis-connect-sqlserver is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target).
+redis-connect-sqlserver is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target). redis-connect-sqlserver implementation is based on [Debezium](https://debezium.io/documentation/reference/stable/connectors/sqlserver.html), which is an open source distributed platform for change data capture.
 
 <p>
 The first time redis-connect-sqlserver connects to a SQL Server database/cluster, it reads a consistent snapshot of all of the schemas.
@@ -101,7 +101,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 ### Sample logback.xml under redis-connect-sqlserver/config folder
 
 ```xml
-<configuration debug="true" scan="true" scanPeriod="30 seconds">
+<configuration debug="true" scan="true" scanPeriod="15 seconds">
 
     <property name="START_UP_PATH" value="logs/redis-connect-startup.log"/>
     <property name="LOG_PATH" value="logs/redis-connect.log"/>
@@ -160,27 +160,29 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="io.netty" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="io.lettuce" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="com.zaxxer" level="OFF" additivity="false">
         <appender-ref ref="REDISCONNECT"/>
-        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
-    <logger name="io.debezium" level="OFF" additivity="false">
+    <logger name="io.debezium" level="INFO" additivity="false">
         <appender-ref ref="REDISCONNECT"/>
-        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
     <logger name="org.apache.kafka" level="OFF" additivity="false">
         <appender-ref ref="REDISCONNECT"/>
-        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
     <logger name="org.springframework" level="OFF" additivity="false">
         <appender-ref ref="REDISCONNECT"/>
-        <appender-ref ref="STARTUP"/>
-    </logger>    
+        <appender-ref ref="CONSOLE"/>
+    </logger>
 
     <root>
         <appender-ref ref="STARTUP"/>
@@ -188,7 +190,6 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
     </root>
 
 </configuration>
-
 ```
 
 </p>
@@ -205,30 +206,24 @@ Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/
 
 ```yml
 connections:
-  jobConfigConnection:
-    redisUrl: redis://127.0.0.1:14001 #Job configuration Redis database
-  srcConnection:
-    redisUrl: redis://127.0.0.1:14000 #Target Redis database
-  metricsConnection:
-    redisUrl: redis://127.0.0.1:14001 #Metrics Redis database, can be same as Job Configuration database.
-  msSQLServerConnection:
-    database:
-      name: testdb #database name same as database value in Setup.yml
-      db: RedisConnect #database
-      hostname: 127.0.0.1
-      port: 1433
-      username: sa #This can be a non privileged user. Please see an example in the demo, https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/blob/main/connectors/mssql/demo/mssql_cdc.sql#L36
-      password: Redis@123
-      type: mssqlserver #this value cannot be changed for mssqlserver
-      jdbcUrl: "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect"
-      maximumPoolSize: 10
-      minimumIdle: 2
-    include.query: "true"
-    snapshot.mode: initial
-    snapshot.isolation.mode: read_uncommitted
-    schemas.enable: "false"
-    include.schema.changes: "false"
-    decimal.handling.mode: double
+  - id: jobConfigConnection
+    type: Redis
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
+  - id: targetConnection
+    type: Redis
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14000
+  - id: metricsConnection
+    type: Redis
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
+  - id: RDBConnection
+    type: RDB
+    name: RedisConnect #database pool name
+    database: RedisConnect #database
+    url: "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect"
+    host: 127.0.0.1
+    port: 1433
+    username: ${REDISCONNECT_SOURCE_USERNAME}
+    password: ${REDISCONNECT_SOURCE_PASSWORD}
 ```
 
 </p>
@@ -244,9 +239,6 @@ connections:
 ```yml
 connectionId: jobConfigConnection
 job:
-  stream: jobStream
-  configSet: jobConfigs
-  consumerGroup: jobGroup
   metrics:
     connectionId: metricsConnection
     retentionInHours: 12
@@ -275,10 +267,10 @@ job:
           schema: dbo
           table: emp
   jobConfig:
-    - name: testdb-emp
+    - name: RedisConnect-emp
       config: JobConfig.yml
       variables:
-        database: testdb
+        database: RedisConnect
         sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR
 ```
 
@@ -293,28 +285,9 @@ job:
 ### Sample JobManager.yml under redis-connect-sqlserver/config/samples/sqlserver folder
 
 ```yml
-connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
-jobTypeId: jobType1 #Variable
-jobStream: jobStream
-jobConfigSet: jobConfigs
-initialDelay: 10000
-numManagementThreads: 2
+connectionId: jobConfigConnection
 metricsReporter:
   - REDIS_TS_METRICS_REPORTER
-heartBeatConfig:
-  key: hb-jobManager
-  expiry: 30000
-jobHeartBeatKeyPrefix: "hb-job:"
-jobHeartbeatCheckInterval: 45000
-jobClaimerConfig:
-  initialDelay: 10000
-  claimInterval: 30000
-  heartBeatConfig:
-    key: "hb-job:"
-    expiry: 30000
-  maxNumberOfJobs: 2 #This indicates the maximum number of Jobs a single RedisConnect instance can execute
-  consumerGroup: jobGroup
-  batchSize: 1
 ```
 
 </p>
@@ -330,34 +303,31 @@ jobClaimerConfig:
 You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 
 ```yml
-jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
+jobId: ${jobId}
 producerConfig:
   producerId: RDB_EVENT_PRODUCER
-  connectionId: testdb-msSQLServerConnection #Name of the Redis connection id specified in env.yml
+  connectionId: RDBConnection
   tables:
-    - dbo.emp #Name of the table with SCHEMA.TABLE format
-  #    - dbo.dept #Name of the table with SCHEMA.TABLE format
-  pollingInterval: 5
-  metricsKey: testdb-emp
+    - dbo.emp #schema.table
+  metricsKey: RedisConnect-emp
   metricsEnabled: false
 pipelineConfig:
-  bufferSize: 1024
   eventTranslator: "${sourceValueTranslator}"
   checkpointConfig:
-    providerId: RDB_CHECKPOINT_READER
-    connectionId: srcConnection
+    providerId: RDB_SQL_CHECKPOINT_READER
+    connectionId: targetConnection
     checkpoint: "${jobId}-${database}"
   stages:
     HashWriteStage:
       handlerId: REDIS_HASH_WRITER
-      connectionId: srcConnection
+      connectionId: targetConnection
       metricsEnabled: false
       prependTableNameToKeys: true
       deleteOnKeyUpdate: true
       async: true
     CheckpointStage:
-      handlerId: REDIS_OP_CP_WRITER
-      connectionId: srcConnection
+      handlerId: REDIS_HASH_CHECKPOINT_WRITER
+      connectionId: targetConnection
       metricEnabled: false
       async: true
       checkpoint: "${jobId}-${database}"
