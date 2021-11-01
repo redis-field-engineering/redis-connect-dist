@@ -8,7 +8,7 @@ i.e.</br>
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-sqlserver/demo && \
 unzip main.zip "redis-connect-dist-main/connectors/sqlserver/demo/*" -d redis-connect-sqlserver/demo && \
-cp -R redis-connect-postgres/demo/redis-connect-dist-main/connectors/sqlserver/demo/* redis-connect-postgres/demo && \
+cp -R redis-connect-sqlserver/demo/redis-connect-dist-main/connectors/sqlserver/demo/* redis-connect-sqlserver/demo && \
 mv redis-connect-sqlserver/demo/config redis-connect-sqlserver && \
 rm -rf main.zip redis-connect-sqlserver/demo/redis-connect-dist-main && \
 cd redis-connect-sqlserver && \
@@ -108,9 +108,9 @@ Open a web browser and navigate to http://127.0.0.1:18001/ and [add both job con
 ```bash
 docker run \
 -it --rm --privileged=true \
---name redis-connect-postgres \
+--name redis-connect-sqlserver \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/samples/postgres \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/samples/sqlserver \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
@@ -129,7 +129,7 @@ redislabs/redis-connect-sqlserver:pre-release-alpine
 -------------------------------
 Redis Connect startup script.
 *******************************
-Please ensure that the values of environment variables in /opt/redislabs/redis-connect-postgres/bin/redisconnect.conf are correctly mapped before executing any of the options below
+Please ensure that the values of environment variables in /opt/redislabs/redis-connect-sqlserver/bin/redisconnect.conf are correctly mapped before executing any of the options below
 *******************************
 Usage: [-h|cli|stage|start]
 options:
@@ -302,7 +302,7 @@ redislabs/redis-connect-sqlserver:pre-release-alpine start
 </p>
 </details>
 
-<details><summary><b>INSERT a record into postgres table (source)</b></summary>
+<details><summary><b>INSERT a record into SQL Server table (source)</b></summary>
 <p>
 
 ```bash
@@ -323,7 +323,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 </p>
 </details>
 
-Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target getting updated in near real-time.
+Similarly `UPDATE` and `DELETE` records on SQL Server source and see Redis target getting updated in near real-time.
 
 -------------------------------
 
@@ -345,14 +345,14 @@ docker run \
 -it --rm --privileged=true \
 --name redis-connect-sqlserver \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-postgres/config/samples/loader \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-sqlserver/config/samples/loader \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-postgres/extlib \
+-v $(pwd)/../config:/opt/redislabs/redis-connect-sqlserver/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-sqlserver/extlib \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine stage
+redislabs/redis-connect-sqlserver:pre-release-alpine stage
 ```
 
 </p>
