@@ -1,6 +1,6 @@
 # redis-connect-postgres
 
-redis-connect-postgres is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from PostgreSQL (source) and writing them to a Redis Enterprise database (Target). redis-connect-postgres implementation is based on [Debezium](https://debezium.io/documentation/reference/stable/connectors/postgresql.html), which is an open source distributed platform for change data capture.
+redis-connect-postgres is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from PostgreSQL (source) and writing them to a Redis Enterprise database (Target). redis-connect-postgres cdc connector implementation is based on [Debezium](https://debezium.io/documentation/reference/stable/connectors/postgresql.html), which is an open source distributed platform for change data capture.
 
 <p>
 The first time redis-connect-postgres connects to a PostgreSQL database, it reads a consistent snapshot of all of the schemas.

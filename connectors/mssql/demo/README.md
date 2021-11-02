@@ -158,11 +158,15 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 -------------------------------
 
 ### Initial Loader Steps
-<details><summary><b>INSERT few records into SQL Server table (source)</b></summary>
+<details><summary><b>INSERT few records into SQL Server table (source) using the insert.sql or create a more realistic load using https://github.com/redis-field-engineering/redis-connect-crud-loader</b></summary>
 <p>
 
 ```bash
 demo$ ./insert_mssql.sh
+```
+OR
+```bash
+redis-connect-crud-loader/bin$ ./start.sh crudloader
 ```
 
 </p>
@@ -254,8 +258,47 @@ redislabs/redis-connect-sqlserver:pre-release-alpine start
 
 ```bash
 -------------------------------
-
-.....  
+Starting Redis Connect redis-connect-sqlserver v0.7.0.133 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-sqlserver/bin
+Loading Redis Connect redis-connect-sqlserver Configurations from /opt/redislabs/redis-connect-sqlserver/config/samples/loader
+23:11:11,963 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-sqlserver/config/logback.xml] at [file:/opt/redislabs/redis-connect-sqlserver/config/logback.xml]
+....
+....
+23:15:11.429 [main] INFO  startup -
+23:15:11.432 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+23:15:11.433 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+23:15:11.433 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+23:15:11.433 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+23:15:11.434 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+23:15:11.434 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+23:15:11.434 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+23:15:11.434 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+23:15:11.434 [main] INFO  startup -
+23:15:11.434 [main] INFO  startup - ##################################################################
+23:15:11.434 [main] INFO  startup -
+23:15:11.434 [main] INFO  startup - Initializing Redis Connect Instance
+23:15:11.434 [main] INFO  startup -
+23:15:11.434 [main] INFO  startup - ##################################################################
+23:15:11.439 [main] INFO  startup - Manifest Details connect-core         : Build : 0.8.0.148 : Build-Time : 2021-11-01T14:59:42Z
+23:15:11.442 [main] INFO  startup - Manifest Details connect-redis-core   : Build : 0.8.0.142 : Build-Time : 2021-11-01T14:59:42Z
+23:15:11.446 [main] INFO  startup - Manifest Details connector-rdb        : Build : 0.8.0.147 : Build-Time : 2021-11-01T14:59:42Z
+23:15:17.834 [main] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for JobManager service
+23:15:17.939 [main] INFO  startup - Instance: 29@virag-cdc successfully established PUB/SUB Redis connection
+23:15:17.959 [main] INFO  startup - Instance: 29@virag-cdc successfully established PUB/SUB Redis connection
+23:15:17.967 [main] INFO  startup - Instance: 29@virag-cdc successfully started JobManager service
+23:15:17.985 [main] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for JobReaper service
+23:15:17.985 [main] INFO  startup - Instance: 29@virag-cdc successfully started JobReaper service
+23:15:18.003 [main] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for JobClaimer service
+23:15:18.003 [main] INFO  startup - Instance: 29@virag-cdc successfully started JobClaimer service
+23:15:18.008 [main] INFO  startup - Instance: 29@virag-cdc successfully subscribed to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS
+23:15:18.008 [main] INFO  startup - Instance: 29@virag-cdc did not enable embedded REST API server
+23:15:27.995 [JobManager-1] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for HeartbeatManager service
+23:15:27.997 [JobManager-1] INFO  startup - Instance: 29@virag-cdc was successfully elected Redis Connect cluster leader
+23:15:38.385 [JobManager-1] INFO  startup - Instance: 29@virag-cdc successfully started job execution for JobId: {connect}:job:initial_load
+23:15:38.386 [JobManager-1] INFO  startup - Instance: 29@virag-cdc has successfully claimed ownership of JobId: {connect}:job:initial_load
+23:15:38.386 [JobManager-1] INFO  startup - Instance: 29@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+23:15:38.398 [JobManager-1] INFO  startup - JobId: {connect}:job:initial_load claim request with ID: 1635808503423-0 has been fully processed and all metadata has been updated
+....
+....
 ```
 
 </p>
@@ -266,7 +309,6 @@ redislabs/redis-connect-sqlserver:pre-release-alpine start
 
 ```bash
 demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
-
 ```
 
 </p>
@@ -300,7 +342,33 @@ redislabs/redis-connect-sqlserver:pre-release-alpine stage
 
 ```bash
 -------------------------------
+Staging Redis Connect redis-connect-sqlserver v0.7.0.133 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-sqlserver/bin
+Loading Redis Connect redis-connect-sqlserver Configurations from /opt/redislabs/redis-connect-sqlserver/config/samples/sqlserver
+00:43:35,730 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-sqlserver/config/logback.xml] at [file:/opt/redislabs/redis-connect-sqlserver/config/logback.xml]
+....
+....
+00:43:35.997 [main] INFO  startup - ##################################################################
+00:43:35.999 [main] INFO  startup -
+00:43:35.999 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
 
+00:43:35.999 [main] INFO  startup -
+00:43:35.999 [main] INFO  startup - ##################################################################
+00:43:36.750 [main] INFO  startup - Instance: 31@virag-cdc will attempt to delete (clean) all the metadata related to Redis Connect
+00:43:37.545 [main] INFO  startup - Instance: 31@virag-cdc successfully established Redis connection for INIT service
+00:43:37.561 [main] INFO  startup - Instance: 31@virag-cdc successfully completed flush (clean) of all the metadata related to Redis Connect
+....
+....
+00:43:38.363 [main] INFO  startup - ##################################################################
+00:43:38.364 [main] INFO  startup -
+00:43:38.365 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+00:43:38.365 [main] INFO  startup -
+00:43:38.365 [main] INFO  startup - ##################################################################
+00:43:39.093 [main] INFO  startup - Instance: 104@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+00:43:39.860 [main] INFO  startup - Instance: 104@virag-cdc successfully established Redis connection for INIT service
+00:43:39.862 [main] INFO  startup - Instance: 104@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+00:43:39.878 [main] INFO  startup - Instance: 104@virag-cdc successfully seeded Job related metadata
+....
+....
 -------------------------------
 ```
 
@@ -334,18 +402,66 @@ redislabs/redis-connect-sqlserver:pre-release-alpine start
 
 ```bash
 -------------------------------
-
-.....  
+Starting Redis Connect redis-connect-sqlserver v0.7.0.133 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-sqlserver/bin
+Loading Redis Connect redis-connect-sqlserver Configurations from /opt/redislabs/redis-connect-sqlserver/config/samples/sqlserver
+00:44:43,241 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-sqlserver/config/logback.xml] at [file:/opt/redislabs/redis-connect-sqlserver/config/logback.xml]
+....
+....
+00:44:43.551 [main] INFO  startup -
+00:44:43.554 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+00:44:43.554 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+00:44:43.555 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+00:44:43.555 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+00:44:43.555 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+00:44:43.555 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+00:44:43.555 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+00:44:43.556 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+00:44:43.556 [main] INFO  startup -
+00:44:43.556 [main] INFO  startup - ##################################################################
+00:44:43.556 [main] INFO  startup -
+00:44:43.556 [main] INFO  startup - Initializing Redis Connect Instance
+00:44:43.556 [main] INFO  startup -
+00:44:43.556 [main] INFO  startup - ##################################################################
+00:44:43.563 [main] INFO  startup - Manifest Details connect-core         : Build : 0.8.0.148 : Build-Time : 2021-11-01T14:59:42Z
+00:44:43.567 [main] INFO  startup - Manifest Details connect-redis-core   : Build : 0.8.0.142 : Build-Time : 2021-11-01T14:59:42Z
+00:44:43.570 [main] INFO  startup - Manifest Details connector-rdb        : Build : 0.8.0.147 : Build-Time : 2021-11-01T14:59:42Z
+00:44:49.991 [main] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for JobManager service
+00:44:50.101 [main] INFO  startup - Instance: 30@virag-cdc successfully established PUB/SUB Redis connection
+00:44:50.119 [main] INFO  startup - Instance: 30@virag-cdc successfully established PUB/SUB Redis connection
+00:44:50.127 [main] INFO  startup - Instance: 30@virag-cdc successfully started JobManager service
+00:44:50.145 [main] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for JobReaper service
+00:44:50.146 [main] INFO  startup - Instance: 30@virag-cdc successfully started JobReaper service
+00:44:50.165 [main] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for JobClaimer service
+00:44:50.165 [main] INFO  startup - Instance: 30@virag-cdc successfully started JobClaimer service
+00:44:50.170 [main] INFO  startup - Instance: 30@virag-cdc successfully subscribed to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS
+00:44:50.170 [main] INFO  startup - Instance: 30@virag-cdc did not enable embedded REST API server
+00:45:00.155 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for HeartbeatManager service
+00:45:00.156 [JobManager-1] INFO  startup - Instance: 30@virag-cdc was successfully elected Redis Connect cluster leader
+00:45:10.234 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_WRITER
+00:45:10.267 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
+00:45:10.271 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_CHECKPOINT_WRITER
+00:45:10.271 [JobManager-1] WARN  startup - metricsKey not set - Metrics collection will be disabled
+00:45:10.291 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisCheckpointReader service
+00:45:10.305 [JobManager-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-sqlserver/config/samples/sqlserver/mappers
+00:45:10.320 [JobManager-1] INFO  redisconnect - Loaded Config for : dbo.emp
+....
+....
 ```
 
 </p>
 </details>
 
-<details><summary><b>INSERT a record into SQL Server table (source)</b></summary>
+<details><summary><b>INSERT a record into SQL Server table (source) using the command line or provided script, insert_mssql.sh in the demo directory</b></summary>
 <p>
 
 ```bash
+sudo docker exec -it mssql-2017-latest-$(hostname) bash -c '/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Redis@123" -d RedisConnect'
 
+1> insert into dbo.emp values(1002, 'Virag', 'Tripathi', 'SA', 1, '2018-08-06 00:00:00.000', '2000', '10', 1)
+2> go
+
+(1 rows affected)
+1> quit
 ```
 
 </p>
@@ -355,14 +471,13 @@ redislabs/redis-connect-sqlserver:pre-release-alpine start
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
-
+sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EmployeeNumber:[1000 1002]"'
 ```
 
 </p>
 </details>
 
-Similarly `UPDATE` and `DELETE` records on SQL Server source and see Redis target getting updated in near real-time.
+Similarly `UPDATE` and `DELETE` records on SQL Server source using queries on the command line or provided scripts [update_mssql.sh](update_mssql.sh) and [delete_mssql.sh](delete_mssql.sh) and see Redis target getting updated in near real-time.
 
 -------------------------------
 

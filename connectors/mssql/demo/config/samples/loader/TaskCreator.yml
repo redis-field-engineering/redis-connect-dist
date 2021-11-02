@@ -4,7 +4,7 @@ producerConfig:
   producerId: RDB_TASK_CREATOR # internal id
   connectionId: RDBConnection # source connectionId same as env.yml
   jobs:
-    - table: public.emp # schema.table
+    - table: dbo.emp # schema.table
       numJobs: 5
       config: JobConfig.yml
-      loadQuery: "select * from (select Row_Number() over (order by (select 0)) as RowIndex, * from public.emp) as emps Where emps.RowIndex >= ${start} and emps.RowIndex <= ${end}"
+      loadQuery: "select * from (select Row_Number() over (order by (select 0)) as RowIndex, * from dbo.emp) as emps Where emps.RowIndex >= ${start} and emps.RowIndex <= ${end}"
