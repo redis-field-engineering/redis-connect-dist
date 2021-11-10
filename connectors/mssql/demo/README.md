@@ -97,9 +97,6 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ---
 
-## Setup RedisInsight
-Open a web browser and navigate to http://127.0.0.1:18001/ and [add both job config & metrics and target Redis databbases](https://docs.redislabs.com/latest/ri/using-redisinsight/add-instance/) (use redisUrl's from env.yml) to RedisInsight UI. Use Redis database endpoints for job management and target databasees, use the `Internal IP` instead of `127.0.0.1` on cloud machines.
-
 ## Start Redis Connect SQL Server Connector
 
 <details><summary>Run Redis Connect SQL Server Connector docker container to see all the options</summary>

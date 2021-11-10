@@ -4,7 +4,6 @@ producerConfig:
   connectionId: RDBConnection
   tables:
     - dbo.emp #schema.table
-  metricsKey: RedisConnect-emp
   metricsEnabled: false
 pipelineConfig:
   eventTranslator: "${sourceValueTranslator}"

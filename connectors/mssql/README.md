@@ -418,8 +418,8 @@ cli: starts redis-connect-cli.
 stage: clean and stage redis database with cdc or initial loader job configurations.
 start: start Redis Connect instance with provided cdc or initial loader job configurations.
 -------------------------------
-    
 ```
+
 </p>
 </details>
     

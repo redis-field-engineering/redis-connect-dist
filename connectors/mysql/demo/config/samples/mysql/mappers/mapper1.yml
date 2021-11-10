@@ -1,0 +1,35 @@
+schema: RedisConnect
+tables:
+  - table: emp
+    mapper:
+      id: Test
+      processorID: Test
+      publishBefore: false
+      passThrough: false
+      ignoreReads: false # false reloads the data from last checkpoint
+      columns:
+        - src: empno
+          target: EmployeeNumber
+          type: INT
+          publishBefore: false
+        - src: fname
+          target: FirstName
+        - src: lname
+          target: LastName
+        - src: job
+          target: Job
+        - src: mgr
+          target: Manager
+          type: INT
+        - src: hiredate
+          target: HireDate
+          type: DATE_TIME
+        - src: sal
+          target: Salary
+          type: DOUBLE
+        - src: comm
+          target: Commission
+          type: DOUBLE
+        - src: dept
+          target: Department
+          type: INT

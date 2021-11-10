@@ -1,18 +1,18 @@
 jobId: ${jobId}
 producerConfig:
-  producerId: RDB_EVENT_PRODUCER
+  producerId: RDB_INITIAL_LOAD_PRODUCER
   connectionId: RDBConnection
-  tables:
-    - public.emp #schema.table
-    #- public.heartbeat # heartbeat table to keep postgres active
-  metricsEnabled: false
+  batchSize: 5000
+  startRecord: ${startRecord}
+  endRecord: ${endRecord}
+  loadQuery: ${loadQuery}
+  table: ${table}
 pipelineConfig:
-  eventTranslator: "${sourceValueTranslator}"
+  eventTranslator: "RDB_RS_TO_OP_TRANSLATOR"
   checkpointConfig:
-    providerId: RDB_SQL_CHECKPOINT_READER
+    providerId: REDIS_HASH_CHECKPOINT_READER
     connectionId: targetConnection
-    checkpoint: "${jobId}-${database}"
-    rdbType: "postgres"
+    checkpoint: "${jobId}"
   stages:
     HashWriteStage:
       handlerId: REDIS_HASH_WRITER
@@ -26,4 +26,6 @@ pipelineConfig:
       connectionId: targetConnection
       metricEnabled: false
       async: true
-      checkpoint: "${jobId}-${database}"
+      checkpoint: "${jobId}"
+
+

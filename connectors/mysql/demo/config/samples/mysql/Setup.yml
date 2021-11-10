@@ -4,32 +4,33 @@ job:
     connectionId: metricsConnection
     retentionInHours: 12
     keys:
-      - key: "public:emp:C:Throughput"
+      - key: "RedisConnect:emp:C:Throughput"
         retentionInHours: 4
         labels:
-          schema: public
+          schema: RedisConnect
           table: emp
           op: C
-      - key: "public:emp:U:Throughput"
+      - key: "RedisConnect:emp:U:Throughput"
         retentionInHours: 4
         labels:
-          schema: public
+          schema: RedisConnect
           table: emp
           op: U
-      - key: "public:emp:D:Throughput"
+      - key: "RedisConnect:emp:D:Throughput"
         retentionInHours: 4
         labels:
-          schema: public
+          schema: RedisConnect
           table: emp
           op: D
-      - key: "public:emp:Latency"
+      - key: "RedisConnect:emp:Latency"
         retentionInHours: 4
         labels:
-          schema: public
+          schema: RedisConnect
           table: emp
   jobConfig:
-    - name: RedisConnect-postgres
+    - name: RedisConnect-mysql
       config: JobConfig.yml
       variables:
         database: RedisConnect
         sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR
+

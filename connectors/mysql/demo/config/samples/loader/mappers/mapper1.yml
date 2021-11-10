@@ -1,0 +1,27 @@
+schema: RedisConnect
+tables:
+  - table: emp
+    mapper:
+      id: Test
+      processorID: Test
+      publishBefore: false
+      passThrough: false
+      columns:
+        - src: empno
+          target: EmployeeNumber
+        - src: fname
+          target: FirstName
+        - src: lname
+          target: LastName
+        - src: job
+          target: Job
+        - src: mgr
+          target: Manager
+        - src: hiredate
+          target: HireDate
+        - src: sal
+          target: Salary
+        - src: comm
+          target: Commission
+        - src: dept
+          target: Department

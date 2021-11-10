@@ -9,7 +9,7 @@ job:
         labels:
           schema: dbo
           table: emp
-          op: I
+          op: C
       - key: "dbo:emp:U:Throughput"
         retentionInHours: 4
         labels:

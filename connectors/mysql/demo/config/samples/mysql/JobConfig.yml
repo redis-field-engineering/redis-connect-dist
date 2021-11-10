@@ -3,8 +3,7 @@ producerConfig:
   producerId: RDB_EVENT_PRODUCER
   connectionId: RDBConnection
   tables:
-    - public.emp #schema.table
-    #- public.heartbeat # heartbeat table to keep postgres active
+    - RedisConnect.emp #schema.table
   metricsEnabled: false
 pipelineConfig:
   eventTranslator: "${sourceValueTranslator}"
@@ -12,7 +11,7 @@ pipelineConfig:
     providerId: RDB_SQL_CHECKPOINT_READER
     connectionId: targetConnection
     checkpoint: "${jobId}-${database}"
-    rdbType: "postgres"
+    rdbType: "mysql"
   stages:
     HashWriteStage:
       handlerId: REDIS_HASH_WRITER

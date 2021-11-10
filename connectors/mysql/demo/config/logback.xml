@@ -1,0 +1,89 @@
+<configuration debug="true" scan="true" scanPeriod="15 seconds">
+
+    <property name="START_UP_PATH" value="logs/redis-connect-startup.log"/>
+    <property name="LOG_PATH" value="logs/redis-connect.log"/>
+
+    <appender name="STARTUP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${START_UP_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/startup.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="REDISCONNECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="startup" level="INFO" additivity="false">
+        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="redisconnect" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+
+    <logger name="com.redislabs" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="io.netty" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="io.lettuce" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="com.zaxxer" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="io.debezium" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.apache.kafka" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.springframework" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root>
+        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="REDISCONNECT"/>
+    </root>
+
+</configuration>
