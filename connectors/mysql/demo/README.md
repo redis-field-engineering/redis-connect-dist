@@ -25,7 +25,7 @@ config demo
 <br>Execute [setup_mysql.sh](setup_mysql.sh)</br>
 ```bash
 redis-connect-mysql$ cd demo
-demo$ ./setup_mysql.sh 5.7.33
+demo$ ./setup_mysql.sh latest
 ```
 
 <details><summary>Validate MySQL database is running as expected:</summary>
@@ -33,9 +33,9 @@ demo$ ./setup_mysql.sh 5.7.33
 
 ```bash
 demo$ docker ps -a | grep mysql
-7c0d7c0d5036        mysql:5.7.33                                 "docker-entrypoint.s…"   4 days ago          Up 4 days           0.0.0.0:3306->3306/tcp, 33060/tcp                                                                                                                                                                                                                                                                               mysql-5.7.33-virag-cdc
+33e66aaa75db        mysql:latest                                 "docker-entrypoint.s…"   31 minutes ago      Up 31 minutes       0.0.0.0:3306->3306/tcp, 33060/tcp                                                                                                                                                                                                                                                                               mysql-latest-virag-cdc
 
-demo$ docker exec -i mysql-5.7.33-virag-cdc mysql -uroot -pRedis@123  <<< "SHOW VARIABLES LIKE 'log_bin';"
+demo$ docker exec -i mysql-latest-virag-cdc mysql -uroot -pRedis@123  <<< "SHOW VARIABLES LIKE 'log_bin';"
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Variable_name	Value
 log_bin	ON
@@ -397,7 +397,7 @@ Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/red
 <p>
 
 ```bash
-sudo docker exec -it mysql-5.7.33-virag-cdc bash -c "mysql -uroot -pRedis@123 RedisConnect"
+sudo docker exec -it mysql-latest-virag-cdc bash -c "mysql -uroot -pRedis@123 RedisConnect"
 
 mysql> insert into emp values(1002, 'Virag', 'Tripathi', 'SA', 1, '2018-08-06 00:00:00.000', '2000', '10', 1);
 Query OK, 1 row affected (0.00 sec)
