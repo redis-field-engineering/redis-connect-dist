@@ -25,7 +25,7 @@ Configure the files to describe your Redis Connect Job. One sample configuration
 
 Redis Connect is a Java application which is a client of both the source RDBMS and the target Redis. As such, you will need:
 * Source database details (endpoint, port, credentials)
-  * <a href="../" target="_blank">WAL and replication configuration</a> completed on the source database system
+  * <a href="../" target="_blank">BinLog and replication configuration</a> completed on the source database system
 * Source schema details
 * Target Redis details and instances (one for the data, one for the Job configuration)
 

@@ -154,6 +154,9 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 
 ```bash
 demo$ ./insert_mysql.sh
+mysql: [Warning] Using a password on the command line interface can be insecure.
+count(*)
+12
 ```
 OR
 ```bash
@@ -187,7 +190,33 @@ redislabs/redis-connect-mysql:pre-release-alpine stage
 <p>
 
 ```bash
+-------------------------------
+Staging Redis Connect redis-connect-mysql v0.4.0.7 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
+Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/loader
+04:20:11,322 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
+04:20:11,498 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - Will scan for changes in [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
+....
+....
+04:20:11.584 [main] INFO  startup - ##################################################################
+04:20:11.586 [main] INFO  startup -
+04:20:11.587 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
 
+04:20:11.587 [main] INFO  startup -
+04:20:11.587 [main] INFO  startup - ##################################################################
+....
+....
+04:20:13.910 [main] INFO  startup - ##################################################################
+04:20:13.912 [main] INFO  startup -
+04:20:13.913 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+04:20:13.913 [main] INFO  startup -
+04:20:13.913 [main] INFO  startup - ##################################################################
+04:20:14.639 [main] INFO  startup - Instance: 99@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+04:20:15.375 [main] INFO  startup - Instance: 99@virag-cdc successfully established Redis connection for INIT service
+04:20:15.377 [main] INFO  startup - Instance: 99@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+04:20:15.391 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Job related metadata
+04:20:15.392 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Metrics related metadata
+04:20:15.392 [main] INFO  startup - Instance: 99@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+-------------------------------
 ```
 
 </p>
