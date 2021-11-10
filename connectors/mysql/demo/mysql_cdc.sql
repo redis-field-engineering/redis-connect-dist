@@ -6,9 +6,9 @@ SHOW DATABASES;
 SELECT variable_value as "BINARY LOGGING STATUS (log-bin) ::" FROM performance_schema.global_variables WHERE variable_name='log_bin';
 
 -- create a demo user for bin_log based replication
-CREATE USER 'redisconnectuser'@'localhost' IDENTIFIED BY 'redisconnectpassword';
+CREATE USER 'redisconnectuser' IDENTIFIED BY 'redisconnectpassword';
 -- Grant the required permissions to the user
-GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'redisconnectuser' IDENTIFIED BY 'redisconnectpassword';
+GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'redisconnectuser';
 -- check the permissions
 SELECT * from mysql.`user` where user='redisconnectuser';
 
@@ -29,5 +29,3 @@ CREATE TABLE IF NOT EXISTS emp (
     ENGINE = InnoDB;
 
 desc emp;
-
-SET GLOBAL show_compatibility_56 = ON;

@@ -291,7 +291,37 @@ redislabs/redis-connect-mysql:pre-release-alpine stage
 <p>
 
 ```bash
+-------------------------------
+Staging Redis Connect redis-connect-mysql v0.4.0.7 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
+Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/mysql
 
+06:37:36,477 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
+....
+....
+06:37:36.727 [main] INFO  startup - ##################################################################
+06:37:36.730 [main] INFO  startup -
+06:37:36.730 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
+
+06:37:36.730 [main] INFO  startup -
+06:37:36.730 [main] INFO  startup - ##################################################################
+....
+....
+06:37:39.104 [main] INFO  startup - ##################################################################
+06:37:39.106 [main] INFO  startup -
+06:37:39.106 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+06:37:39.106 [main] INFO  startup -
+06:37:39.106 [main] INFO  startup - ##################################################################
+06:37:39.841 [main] INFO  startup - Instance: 99@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+06:37:40.591 [main] INFO  startup - Instance: 99@virag-cdc successfully established Redis connection for INIT service
+06:37:40.593 [main] INFO  startup - Instance: 99@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+06:37:40.607 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Job related metadata
+06:37:40.755 [main] ERROR startup - Key - RedisConnect:emp:C:Throughput already exists
+06:37:40.756 [main] ERROR startup - Key - RedisConnect:emp:U:Throughput already exists
+06:37:40.757 [main] ERROR startup - Key - RedisConnect:emp:D:Throughput already exists
+06:37:40.759 [main] ERROR startup - Key - RedisConnect:emp:Latency already exists
+06:37:40.769 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Metrics related metadata
+06:37:40.769 [main] INFO  startup - Instance: 99@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+-------------------------------
 ```
 
 </p>
@@ -323,7 +353,41 @@ redislabs/redis-connect-mysql:pre-release-alpine start
 <p>
 
 ```bash
-
+-------------------------------
+Starting Redis Connect redis-connect-mysql v0.4.0.7 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
+Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/mysql
+06:37:51,779 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
+....
+....
+06:37:52.098 [main] INFO  startup -
+06:37:52.103 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+06:37:52.103 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+06:37:52.104 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+06:37:52.104 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+06:37:52.104 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+06:37:52.105 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+06:37:52.105 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+06:37:52.105 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+06:37:52.105 [main] INFO  startup -
+06:37:52.105 [main] INFO  startup - ##################################################################
+06:37:52.105 [main] INFO  startup -
+06:37:52.105 [main] INFO  startup - Initializing Redis Connect Instance
+06:37:52.106 [main] INFO  startup -
+06:37:52.106 [main] INFO  startup - ##################################################################
+....
+....
+06:38:08.788 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for HeartbeatManager service
+06:38:08.788 [JobManager-1] INFO  startup - Instance: 30@virag-cdc was successfully elected Redis Connect cluster leader
+06:38:18.858 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_WRITER
+06:38:18.890 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
+06:38:18.893 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_CHECKPOINT_WRITER
+06:38:18.894 [JobManager-1] WARN  startup - metricsKey not set - Metrics collection will be disabled
+06:38:18.912 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisCheckpointReader service
+06:38:18.925 [JobManager-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-mysql/config/samples/mysql/mappers
+06:38:18.940 [JobManager-1] INFO  redisconnect - Loaded Config for : RedisConnect.emp
+06:38:19.469 [JobManager-1] INFO  i.d.connector.common.BaseSourceTask - Starting MySqlConnectorTask with configuration:
+....
+....
 ```
 
 </p>
