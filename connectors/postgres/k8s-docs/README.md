@@ -29,7 +29,7 @@ Redis Connect is a Java application which is a client of both the source RDBMS a
 * Source schema details
 * Target Redis details and instances (one for the data, one for the Job configuration)
 
-Details for configurating Redis Connect for Postgres are <a href="../demo/" target="_blank">here</a>. 
+Details for configuring Redis Connect for Postgres are <a href="../demo/" target="_blank">here</a>. 
 
 ## 3. Deploy the Redis Connect Configuration to Kubernetes
 
