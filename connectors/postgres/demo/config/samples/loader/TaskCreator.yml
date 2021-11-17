@@ -2,10 +2,9 @@ jobId: ${jobId}
 jobType: TASK_CREATOR
 producerConfig:
   producerId: RDB_TASK_CREATOR
-  connectionId: postgresConnection
+  connectionId: RDBConnection
   jobs:
     - table: public.emp
-      jobPrefix: empLoader-
       numJobs: 5
       config: JobConfig.yml
       loadQuery: "select * from (select Row_Number() over (order by (select 0)) as RowIndex, * from public.emp) as emps Where emps.RowIndex >= ${start} and emps.RowIndex <= ${end}"
