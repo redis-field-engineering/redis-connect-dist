@@ -17,6 +17,7 @@ pipelineConfig:
     HashWriteStage:
       handlerId: REDIS_HASH_WRITER
       connectionId: targetConnection
+      metricEnabled: false
       prependTableNameToKeys: true
       deleteOnKeyUpdate: true
       async: true
