@@ -248,7 +248,48 @@ redislabs/redis-connect-mysql:pre-release-alpine start
 <p>
 
 ```bash
-
+-------------------------------
+Starting Redis Connect redis-connect-mysql v0.4.0.7 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
+Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/loader
+02:48:13,831 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
+....
+....
+02:48:14.145 [main] INFO  startup -
+02:48:14.149 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+02:48:14.149 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+02:48:14.149 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+02:48:14.150 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+02:48:14.150 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+02:48:14.150 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+02:48:14.150 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+02:48:14.150 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+02:48:14.150 [main] INFO  startup -
+02:48:14.150 [main] INFO  startup - ##################################################################
+02:48:14.151 [main] INFO  startup -
+02:48:14.151 [main] INFO  startup - Initializing Redis Connect Instance
+02:48:14.151 [main] INFO  startup -
+02:48:14.151 [main] INFO  startup - ##################################################################
+....
+....
+02:48:41.481 [JobManager-1] INFO  startup - JobId: {connect}:job:initial_load claim request with ID: 1637117271879-0 has been fully processed and all metadata has been updated
+02:48:41.485 [JobManager-1] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+02:48:41.485 [lettuce-nioEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+02:48:51.532 [EventProducer-1] WARN  startup - Instance: 30@virag-cdc did not find entry in its executor threads local cache during stop process for JobId: {connect}:job:initial_load
+02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:job:initial_load
+02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:job:initial_load
+02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
+02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully stopped JobId: {connect}:job:initial_load and added it to {connect}:jobs:stopped
+02:49:11.019 [JobManager-2] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_WRITER
+02:49:11.054 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
+02:49:11.057 [JobManager-2] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_CHECKPOINT_WRITER
+02:49:11.057 [JobManager-2] WARN  startup - metricsKey not set - Metrics collection will be disabled
+02:49:11.086 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisCheckpointReader service
+02:49:11.090 [JobManager-2] INFO  redisconnect - Instance: 30@virag-cdc recovered JobId: {connect}:task:partition:initial_load:1 and will set StartRecord: 2
+02:49:11.092 [JobManager-2] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-mysql/config/samples/loader/mappers
+02:49:11.108 [JobManager-2] INFO  redisconnect - Loaded Config for : RedisConnect.emp
+02:49:11.147 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:1
+....
+....
 ```
 
 </p>

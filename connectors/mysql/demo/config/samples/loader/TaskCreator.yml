@@ -7,4 +7,4 @@ producerConfig:
     - table: RedisConnect.emp # schema.table
       numJobs: 5
       config: JobConfig.yml
-      loadQuery: "SELECT * FROM (SELECT e.*, ROW_NUMBER() OVER (ORDER BY e.empno) RowIndex FROM RedisConnect.emp e) emps WHERE emps.RowIndex BETWEEN ${start} and ${end}"
+      loadQuery: "SELECT * FROM (SELECT e.*, ROW_NUMBER() OVER (ORDER BY e.empno) RowIndex FROM RedisConnect.emp e) emps WHERE emps.RowIndex >= ${start} and emps.RowIndex <= ${end}"
