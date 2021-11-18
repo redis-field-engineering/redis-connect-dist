@@ -279,7 +279,32 @@ redislabs/redis-connect-oracle:pre-release-alpine stage
 <p>
 
 ```bash
+-------------------------------
+Staging Redis Connect redis-connect-oracle v0.4.0.26 job using Java 11.0.13 on docker-desktop started by root in /opt/redislabs/redis-connect-oracle/bin
+Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/redis-connect-oracle/config/samples/loader
+05:00:41,562 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
+....
+....
+05:00:42.216 [main] INFO  startup - ##################################################################
+05:00:42.221 [main] INFO  startup -
+05:00:42.222 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
 
+05:00:42.222 [main] INFO  startup -
+05:00:42.222 [main] INFO  startup - ##################################################################
+....
+....
+05:00:47.299 [main] INFO  startup - ##################################################################
+05:00:47.305 [main] INFO  startup -
+05:00:47.306 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+05:00:47.307 [main] INFO  startup -
+05:00:47.307 [main] INFO  startup - ##################################################################
+05:00:48.569 [main] INFO  startup - Instance: 56@docker-desktop will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+05:00:50.264 [main] INFO  startup - Instance: 56@docker-desktop successfully established Redis connection for INIT service
+05:00:50.298 [main] INFO  startup - Instance: 56@docker-desktop successfully created Job Claim Assignment Stream and Consumer Group
+05:00:50.436 [main] INFO  startup - Instance: 56@docker-desktop successfully seeded Job related metadata
+05:00:50.437 [main] INFO  startup - Instance: 56@docker-desktop successfully seeded Metrics related metadata
+05:00:50.437 [main] INFO  startup - Instance: 56@docker-desktop successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+-------------------------------
 ```
 
 </p>
@@ -312,7 +337,34 @@ redislabs/redis-connect-oracle:pre-release-alpine start
 <p>
 
 ```bash
-
+-------------------------------
+Starting Redis Connect redis-connect-oracle v0.4.0.26 instance using Java 11.0.13 on docker-desktop started by root in /opt/redislabs/redis-connect-oracle/bin
+Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/redis-connect-oracle/config/samples/loader
+05:04:10,455 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
+....
+....
+05:04:11.170 [main] INFO  startup -
+05:04:11.179 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+05:04:11.180 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+05:04:11.181 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+05:04:11.182 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+05:04:11.184 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+05:04:11.185 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+05:04:11.186 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+05:04:11.187 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+05:04:11.188 [main] INFO  startup -
+05:04:11.188 [main] INFO  startup - ##################################################################
+05:04:11.189 [main] INFO  startup -
+05:04:11.190 [main] INFO  startup - Initializing Redis Connect Instance
+05:04:11.190 [main] INFO  startup -
+05:04:11.190 [main] INFO  startup - ##################################################################
+....
+....
+05:04:42.224 [JobManager-1] INFO  startup - JobId: {connect}:job:initial_load claim request with ID: 1637211839157-0 has been fully processed and all metadata has been updated
+05:04:42.265 [lettuce-nioEventLoop-4-1] INFO  startup - Instance: 30@docker-desktop consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@docker-desktop","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+05:04:42.267 [JobManager-1] INFO  startup - Instance: 30@docker-desktop published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@docker-desktop","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+....
+....
 ```
 
 </p>
@@ -320,6 +372,7 @@ redislabs/redis-connect-oracle:pre-release-alpine start
 
 <details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
 <p>
+e.g.
 
 ```bash
 demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
