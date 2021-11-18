@@ -3,23 +3,26 @@
 * Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker](https://docs.docker.com/get-docker) installed.
 * Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.
 * [Oracle JDBC Driver](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) (`ojdbc8.jar`)
-<div class="notecard note">
-<h4>Note</h4>
-<p>We can not include the Oracle JDBC Driver due to licensing requirement. Please obtain the Oracle client jar following the link above or get a copy from your existing Oracle installation.</p>
-</div>
 
-<br>Execute the following commands (copy & paste) to download and setup Redis Connect Oracle Connector and demo scripts.
-i.e.</br>
+| :exclamation: IMPORTANT       |
+| :-----------------------------|
+| We can not include the Oracle JDBC Driver due to licensing requirement. Please obtain the Oracle client jar following the link above or get a copy from your existing Oracle installation. |
+
+<p>Execute the following commands (copy & paste) to download and setup Redis Connect Oracle Connector and demo scripts.
+i.e.</p>
+
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-oracle/demo && \
-unzip main.zip "redis-connect-dist-main/connectors/oracle/demo/*" -d redis-connect-oracle/demo && \
-cp -R redis-connect-oracle/demo/redis-connect-dist-main/connectors/oracle/demo/* redis-connect-oracle/demo && \
-mv redis-connect-oracle/demo/config redis-connect-oracle && \
-rm -rf main.zip redis-connect-oracle/demo/redis-connect-dist-main && \
+mkdir -p redis-connect-oracle/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/connectors/oracle/*" -d redis-connect-oracle && \
+cp -R redis-connect-oracle/redis-connect-dist-main/connectors/oracle/demo/* redis-connect-oracle/demo && \
+cp -R redis-connect-oracle/redis-connect-dist-main/connectors/oracle/k8s-docs/* redis-connect-oracle/k8s-docs && \
+rm -rf main.zip redis-connect-oracle/redis-connect-dist-main && \
 cd redis-connect-oracle && \
 chmod a+x demo/*.sh
 ```
+
 Expected output:
 ```bash
 redis-connect-oracle$ ls
@@ -29,12 +32,14 @@ config demo
 ## Setup Oracle database in docker (Source)
 
 <br>Execute [setup_oracle.sh](setup_oracle.sh)</br>
-<u>Oracle 12c and 18c:</u>
+_**Oracle 12c and 18c:**_
+
 ```bash
 redis-connect-oracle$ cd demo
 demo$ ./setup_oracle.sh 12.2.0.1-ee 1521 logminer
 ```
-<u>Oracle 19c:</u> Currently redis-connect-oracle does not support CDC with 19c but works with Initial load.
+_**Oracle 19c:**_ Currently redis-connect-oracle does not support CDC with 19c but works with Initial load.
+
 ```bash
 demo$ ./setup_oracle.sh 19.3.0-ee 1522 logminer
 ```
@@ -148,13 +153,18 @@ demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT._LIST"
 </details>
 
 ---
-**NOTE**
+
+| :memo:        |
+|---------------|
 
 The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
 ---
 
 ## Start Redis Connect Oracle Connector
+
+| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. ```bash demo$ cp ojdbc8.jar extlib```   |
+|---------------|:--------------------------|
 
 <details><summary>Run Redis Connect Oracle Connector docker container to see all the options</summary>
 <p>
@@ -169,6 +179,7 @@ docker run \
 -e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine
 ```
@@ -256,6 +267,7 @@ docker run \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine stage
 ```
@@ -314,6 +326,7 @@ docker run \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine start
 ```
@@ -400,6 +413,7 @@ docker run \
 -e REDISCONNECT_SOURCE2_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine stage
 ```
@@ -464,6 +478,7 @@ docker run \
 -e REDISCONNECT_SOURCE2_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine start
 ```

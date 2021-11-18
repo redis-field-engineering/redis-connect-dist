@@ -10,13 +10,13 @@ Overall flow:
 5. Stage the Redis Connect job.
 6. Start the Redis Connect job.
 
-**Note:** This doc uses `kubectl` and `oc` interchangably.
+**Note:** This doc uses `kubectl` and `oc` interchangeably.
 
 ## 1. Clone the Redis Connect for Oracle Repository
+
+Follow the [demo](../demo) steps then goto k8s-docs directory
 ```
-$ git clone https://github.com/redis-field-engineering/redis-connect-dist.git
-...
-$ cd redis-connect-dist/connectors/oracle/k8s-docs
+redis-connect-oracle$ cd k8s-docs
 ```
 
 ## 2. Configure Redis Connect 
@@ -35,8 +35,8 @@ Details for configuring Redis Connect for Oracle are <a href="../demo/" target="
 
 This deployment requires the use of K8s ConfigMaps. The necessary config maps will be uploaded from your local directories using the commands below. 
 
-```
-$  cd ../demo/config/samples/oracle
+```bash
+k8s-docs$ cd ../demo/config/samples/oracle
 demo/config/samples/oracle$ ls
 FormatterConfig.yml  JobManager.yml       env.yml              templates/
 JobConfig.yml        Setup.yml            mappers/
