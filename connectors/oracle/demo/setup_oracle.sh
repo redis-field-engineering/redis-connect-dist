@@ -9,7 +9,7 @@
 
 version="$1"
 db_port="$2"
-#https_port="$3"
+logminer="$3"
 db_pwd=Redis123
 [[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. 12.2.0.1-ee, 19.3.0-ee"; exit 1; }
 [[ -z "$db_port" ]] && { echo "Error: Missing database port e.g. 1521"; exit 1; }
@@ -31,7 +31,6 @@ sudo docker run --name $container_name \
 	-e ORACLE_PWD=$db_pwd \
 	-v $(pwd)/$version/oradata:/opt/oracle/oradata \
         -d virag/oracle-$version
-#	-p $https_port:5500 \
 #	oracle/database:$version
 
 #sudo docker wait $container_name
@@ -55,6 +54,11 @@ while [ $attempt -le 400 ]; do
     sleep 5
 done
 
-echo "Setting up LogMiner and loading sample HR schema on $container_name.."
-sudo docker cp setup_logminer.sh $container_name:/tmp/setup_logminer.sh
-sudo docker exec -it $container_name bash -c "/tmp/setup_logminer.sh"
+#Check if the logminer option is provided or not
+if [ $# -eq 3 ] && [ "$3" = "logminer" ]; then
+	echo "Setting up LogMiner and loading sample HR schema on $container_name.."
+	sudo docker cp setup_logminer.sh $container_name:/tmp/setup_logminer.sh
+	sudo docker exec -it $container_name bash -c "/tmp/setup_logminer.sh"
+else
+	echo "Skipping LogMiner setup.."
+fi
