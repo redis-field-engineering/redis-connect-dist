@@ -1,35 +1,61 @@
-schema: RedisConnect
+schema: HR
 tables:
-  - table: emp
+  - table: EMPLOYEES
     mapper:
-      id: Test
-      processorID: Test
+      id: employees
+      processorID: employees
       publishBefore: false
       passThrough: false
-      ignoreReads: false # false reloads the data from last checkpoint
       columns:
-        - src: empno
+        - src: EMPLOYEE_ID
+          target: EmpId
+          type: INT
+          publishBefore: false
+        - src: FIRST_NAME
+          target: FName
+        - src: LAST_NAME
+          target: LName
+        - src: EMAIL
+          target: Email
+        - src: JOB_ID
+          target: JobId
+        - src: SALARY
+          target: Salary
+          type: DOUBLE
+  - table: JOBS
+    mapper:
+      id: Jobs
+      processorID: Jobs
+      publishBefore: false
+      passThrough: true
+      columns:
+        - src: JOB_ID
+          target: JobId
+          type: INT
+  - table: EMP
+    mapper:
+      id: emp
+      processorID: emp
+      publishBefore: false
+      passThrough: false
+      columns:
+        - src: EMPNO
           target: EmployeeNumber
           type: INT
           publishBefore: false
-        - src: fname
+        - src: FNAME
           target: FirstName
-        - src: lname
+        - src: LNAME
           target: LastName
-        - src: job
+        - src: JOB
           target: Job
-        - src: mgr
+        - src: MGR
           target: Manager
-          type: INT
-        - src: hiredate
+        - src: HIREDATE
           target: HireDate
-          type: DATE_TIME
-        - src: sal
+        - src: SAL
           target: Salary
-          type: DOUBLE
-        - src: comm
+        - src: COMM
           target: Commission
-          type: DOUBLE
-        - src: dept
+        - src: DEPT
           target: Department
-          type: INT
