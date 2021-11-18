@@ -406,7 +406,7 @@ docker run \
 -it --rm --privileged=true \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/mysql \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/oracle \
 -e REDISCONNECT_SOURCE1_USERNAME=c##rcuser \
 -e REDISCONNECT_SOURCE1_PASSWORD=rcpwd \
 -e REDISCONNECT_SOURCE2_USERNAME=hr \
