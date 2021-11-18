@@ -1,6 +1,6 @@
 # redis-connect-oracle
 
-redis-connect-oracle is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MySQL (source) and writing them to a Redis Enterprise database (Target). The connector uses [Oracle LogMiner](https://docs.oracle.com/cd/B19306_01/server.102/b14215/logminer.htm#i1010243) to read the database redo log.
+redis-connect-oracle is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from Oracle Database (source) and writing them to a Redis Enterprise database (Target). The connector uses [Oracle LogMiner](https://docs.oracle.com/cd/B19306_01/server.102/b14215/logminer.htm#i1010243) to read the database redo log.
 
 <p>
 The first time redis-connect-oracle connects to a Oracle database, it reads a consistent snapshot of all of the schemas.
