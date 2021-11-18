@@ -178,8 +178,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
 -e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine
 ```
@@ -266,8 +266,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine stage
 ```
@@ -325,8 +325,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine start
 ```
@@ -412,8 +412,8 @@ docker run \
 -e REDISCONNECT_SOURCE2_USERNAME=hr \
 -e REDISCONNECT_SOURCE2_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine stage
 ```
@@ -477,8 +477,8 @@ docker run \
 -e REDISCONNECT_SOURCE2_USERNAME=hr \
 -e REDISCONNECT_SOURCE2_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine start
 ```
@@ -562,8 +562,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine stage
 ```
@@ -585,8 +585,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-oracle/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
 redislabs/redis-connect-oracle:pre-release-alpine start
 ```
