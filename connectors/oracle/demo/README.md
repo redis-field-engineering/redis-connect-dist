@@ -163,7 +163,7 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ## Start Redis Connect Oracle Connector
 
-| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. ```bash demo$ cp ojdbc8.jar extlib```   |
+| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. `demo$ cp ojdbc8.jar extlib` |
 |---------------|:--------------------------|
 
 <details><summary>Run Redis Connect Oracle Connector docker container to see all the options</summary>
