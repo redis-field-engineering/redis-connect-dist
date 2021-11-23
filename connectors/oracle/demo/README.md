@@ -521,13 +521,33 @@ Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/re
 </p>
 </details>
 
-<details><summary><b>INSERT/UPDATE a record in the Oracle HR.EMPLOYEES table (source)</b></summary>
+<details><summary><b>INSERT few records in the Oracle HR.EMPLOYEES table (source)</b>
+
+Insert data using [insert sql scripts](load_sql.sh):
+<p>
+
+* 12c
+```bash
+docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert"
+```
+</p>
+</summary>
 </details>
 
 <details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
 </details>
 
 Similarly `UPDATE` and `DELETE` records on Oracle source and see Redis target getting updated in near real-time.
+
+<details><summary><b>12c</b></summary>
+
+```bash
+docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh update"
+
+docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh delete"
+```
+
+</details>
 
 -------------------------------
 
