@@ -73,7 +73,7 @@ Before using the SQL Server connector (redis-connect-sqlserver) to capture the c
 
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 1.8 and tested with JRE 1.8 and above. Please have JRE 1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) or above installed prior to running this connector.
+The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 1.8 and above. Please have JRE 1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) or above installed prior to running this connector.
 
 ---
 
@@ -309,7 +309,6 @@ producerConfig:
   connectionId: RDBConnection
   tables:
     - dbo.emp #schema.table
-  metricsKey: RedisConnect-emp
   metricsEnabled: false
 pipelineConfig:
   eventTranslator: "${sourceValueTranslator}"

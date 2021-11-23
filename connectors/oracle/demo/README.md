@@ -147,7 +147,7 @@ db:1          RedisConnect-Target-db                                      redis:
 db:2          RedisConnect-JobConfig-Metrics-db                           redis:2       node:1      master      0-16383       1.99MB               OK
 
 demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT._LIST"
-1) "idx:emp"
+1) "idx:employees"
 ```
 </p>
 </details>
@@ -226,31 +226,40 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 
 <details><summary><b>INSERT few records into Oracle table (source) or create a more realistic load using https://github.com/redis-field-engineering/redis-connect-crud-loader</b></summary>
 
-The Oracle [setup](setup_logminer.sh) already loads [Oracle's HR Sample Schema Tables](https://docs.oracle.com/en/database/oracle/oracle-database/19/comsc/HR-sample-schema-table-descriptions.html#GUID-506C25CE-FA5D-472A-9C4C-F9EF200823EE). If you like to work with another Schema or Table then please create using the existing `HR` schema e.g.
+The Oracle [setup](setup_logminer.sh) already loads [Oracle's HR Sample Schema Tables](https://docs.oracle.com/en/database/oracle/oracle-database/19/comsc/HR-sample-schema-table-descriptions.html#GUID-506C25CE-FA5D-472A-9C4C-F9EF200823EE)
+<p>Please follow the steps below if you need to load more data into the oracle table before starting the loader job.</p>
+
+Load data using [load sql scripts](load_sql.sh):
+<p>
+
+* 12c
 ```bash
-create table hr.emp(  
-  empno		number(6,0),
-  fname		varchar2(30),
-  lname		varchar2(30),  
-  job		varchar2(40),
-  mgr		number(4,0),
-  hiredate	date,
-  sal		number(10,4),
-  comm		number(10,4),
-  dept		number(4,0),
-  constraint pk_emp primary key (empno)
-)
+sudo docker cp load_sql.sh oracle-12.2.0.1-ee-$(hostname):/tmp/load_sql.sh
 
-insert into hr.emp values (1, 'Virag', 'Tripathi', 'PFE', 1, (TO_DATE('2016-08-05 04:07:50', 'yyyy-MM-dd HH:mi:ss')), 1671.34, 1235.13, 96)
+sudo docker cp employees1k_insert.sql oracle-12.2.0.1-ee-$(hostname):/opt/oracle/product/12.2.0.1/dbhome_1/demo/employees1k_insert.sql
+sudo docker cp update.sql oracle-12.2.0.1-ee-$(hostname):/opt/oracle/product/12.2.0.1/dbhome_1/demo/update.sql
+sudo docker cp delete.sql oracle-12.2.0.1-ee-$(hostname):/opt/oracle/product/12.2.0.1/dbhome_1/demo/delete.sql
+
+docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert"
 ```
+* 19c
+```bash
+sudo docker cp load_sql.sh oracle-19.3.0-ee-$(hostname):/tmp/load_sql.sh
 
-Load data using the crud loader:
+sudo docker cp employees1k_insert.sql oracle-19.3.0-ee-$(hostname):/opt/oracle/product/19c/dbhome_1/demo/employees1k_insert.sql
+sudo docker cp update.sql oracle-19.3.0-ee-$(hostname):/opt/oracle/product/19c/dbhome_1/demo/update.sql
+sudo docker cp delete.sql oracle-19.3.0-ee-$(hostname):/opt/oracle/product/19c/dbhome_1/demo/delete.sql
+
+docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh insert"
+```
+</p>
+
+Load data using crud loader:
 <p>
 
 ```bash
 redis-connect-crud-loader/bin$ ./start.sh crudloader
 ```
-
 </p>
 </details>
 
@@ -375,7 +384,7 @@ Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/re
 e.g.
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:employees "*"'
 ```
 
 </p>
