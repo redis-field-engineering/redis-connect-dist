@@ -11,24 +11,3 @@ All of the events for each tables are recorded in a separate Redis data structur
 |:---------------------------|
 | Quick Start: Follow the [demo](demo)|
 | K8s Setup: Follow the [k8s-docs](k8s-docs)|
-
-<h3 class="section" id="compatibility">:rocket: Tested Versions</h3>
-<table class="releases-compatibility">
-    <tbody>
-        <tr>
-            <td>Java</td>
-            <td>11+</td>
-        </tr>
-        <tr>
-            <td>Redis Connect</td>
-            <td>0.8.x</td> 
-        </tr> 
-        <tr>
-            <td>Oracle</td>
-            <td>
-                <span class="test-with-subcategory"> Database: </span> 12c, 19c (currently only supported for initial load / batch / snapshots) <br/> 
-                <span class="test-with-subcategory"> JDBC Driver: </span> 12.2.0.1, 19.8.0.0, 21.1.0.0 <br/>
-            </td>
-        </tr>
-    </tbody>
-</table>
