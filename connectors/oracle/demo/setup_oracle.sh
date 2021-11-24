@@ -59,6 +59,11 @@ if [ $# -eq 3 ] && [ "$3" = "logminer" ]; then
 	echo "Setting up LogMiner and loading sample HR schema on $container_name.."
 	sudo docker cp setup_logminer.sh $container_name:/tmp/setup_logminer.sh
 	sudo docker exec -it $container_name bash -c "/tmp/setup_logminer.sh"
+	sudo docker cp load_sql.sh $container_name:/tmp/load_sql.sh
+	sudo docker cp employees1k_insert.sql $container_name:/tmp/employees1k_insert.sql
+	sudo docker cp employees10k_insert.sql $container_name:/tmp/employees10k_insert.sql
+	sudo docker cp update.sql $container_name:/tmp/update.sql
+	sudo docker cp delete.sql $container_name:/tmp/delete.sql
 else
 	echo "Skipping LogMiner setup.."
 fi

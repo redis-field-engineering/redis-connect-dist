@@ -234,23 +234,11 @@ Load data using [load sql scripts](load_sql.sh):
 
 * 12c
 ```bash
-sudo docker cp load_sql.sh oracle-12.2.0.1-ee-$(hostname):/tmp/load_sql.sh
-
-sudo docker cp employees1k_insert.sql oracle-12.2.0.1-ee-$(hostname):/opt/oracle/product/12.2.0.1/dbhome_1/demo/employees1k_insert.sql
-sudo docker cp update.sql oracle-12.2.0.1-ee-$(hostname):/opt/oracle/product/12.2.0.1/dbhome_1/demo/update.sql
-sudo docker cp delete.sql oracle-12.2.0.1-ee-$(hostname):/opt/oracle/product/12.2.0.1/dbhome_1/demo/delete.sql
-
-docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert"
+docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert10k"
 ```
 * 19c
 ```bash
-sudo docker cp load_sql.sh oracle-19.3.0-ee-$(hostname):/tmp/load_sql.sh
-
-sudo docker cp employees1k_insert.sql oracle-19.3.0-ee-$(hostname):/opt/oracle/product/19c/dbhome_1/demo/employees1k_insert.sql
-sudo docker cp update.sql oracle-19.3.0-ee-$(hostname):/opt/oracle/product/19c/dbhome_1/demo/update.sql
-sudo docker cp delete.sql oracle-19.3.0-ee-$(hostname):/opt/oracle/product/19c/dbhome_1/demo/delete.sql
-
-docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh insert"
+docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh insert10k"
 ```
 </p>
 
@@ -528,7 +516,7 @@ Insert data using [insert sql scripts](load_sql.sh):
 
 * 12c
 ```bash
-docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert"
+docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert1k"
 ```
 </p>
 </summary>

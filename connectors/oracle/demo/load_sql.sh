@@ -23,10 +23,25 @@ case ${options} in
 -h)
 help
 exit;;
-insert)
+insert1k)
 sqlplus hr/hr@ORCLPDB1 <<- EOF
   select count(*) from employees;
-  @?/demo/employees1k_insert.sql
+  Prompt ******  Populating EMPLOYEES table with 1K records ....
+
+  @/tmp/employees1k_insert.sql
+
+  commit;
+  select count(*) from employees;
+
+  exit;
+EOF
+break;;
+insert10k)
+sqlplus hr/hr@ORCLPDB1 <<- EOF
+  select count(*) from employees;
+  Prompt ******  Populating EMPLOYEES table with 10K records ....
+
+  @/tmp/employees1k_insert.sql
 
   commit;
   select count(*) from employees;
@@ -37,7 +52,10 @@ break;;
 update)
 sqlplus hr/hr@ORCLPDB1 <<- EOF
   select count(*) from employees;
-  @?/demo/update.sql
+  Prompt ******  Updating EMPLOYEES table ....
+
+  @/tmp/update.sql
+  ;
 
   commit;
   select count(*) from employees;
@@ -48,7 +66,10 @@ break;;
 delete)
 sqlplus hr/hr@ORCLPDB1 <<- EOF
   select count(*) from employees;
-  @?/demo/delete.sql
+  Prompt ******  Deleting from EMPLOYEES table ....
+
+  @/tmp/delete.sql
+  ;
 
   commit;
   select count(*) from employees;
