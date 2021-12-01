@@ -5,7 +5,7 @@ tables:
       id: Test # mapper Id
       processorID: Test # processor ID for the mapper
       publishBefore: false # false (default) Global setting, that specifies if before values have to be published for all columns - This setting could be overridden at each column level
-      passThrough: false # false (default) If this is set to true, all of the Columns will be in the output without individual mappings. You still need to map the PK column.
+      passThrough: false # false (default) If this is set to true, all the Columns will be in the output without individual mappings. You still need to map the PK column.
       columns:
         - src: empno
           target: EmployeeNumber

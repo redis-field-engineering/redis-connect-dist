@@ -4,8 +4,8 @@
 * Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.
 * [Oracle JDBC Driver](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) (`ojdbc8.jar`)
 
-| :exclamation: IMPORTANT       |
-| :-----------------------------|
+| :exclamation: IMPORTANT                                                                                                                                                                    |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | We can not include the Oracle JDBC Driver due to licensing requirement. Please obtain the Oracle client jar following the link above or get a copy from your existing Oracle installation. |
 
 <p>Execute the following commands (copy & paste) to download and setup Redis Connect Oracle Connector and demo scripts.
@@ -91,7 +91,7 @@ demo$ docker ps -a | grep oracle
 ae728fa6e001        virag/oracle-12.2.0.1-ee                     "/bin/sh -c 'exec $O…"   5 hours ago         Up 5 hours (healthy)    0.0.0.0:1521->1521/tcp                                                                                                                                                                                                                                                                                          oracle-12.2.0.1-ee-virag-cdc
 cb7c33534565        virag/oracle-19.3.0-ee                       "/bin/sh -c 'exec $O…"   44 hours ago        Up 44 hours (healthy)   0.0.0.0:1522->1521/tcp                                                                                                                                                                                                                                                                                          oracle-19.3.0-ee-virag-cdc
 
-demo$ docker exec -it oracle-12.2.0.1-ee-virag-cdc bash -c "sqlplus sys/Redis123@ORCLPDB1 as sysdba"
+demo$ docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "sqlplus sys/Redis123@ORCLPDB1 as sysdba"
 
 SQL*Plus: Release 12.2.0.1.0 Production on Wed Nov 17 20:22:35 2021
 
@@ -163,8 +163,8 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ## Start Redis Connect Oracle Connector
 
-| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. `demo$ cp ojdbc8.jar extlib` |
-|---------------|:--------------------------|
+| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. `demo$ cp ojdbc8.jar extlib`   |
+|---------------|:-------------------------------------------------------------------------------------------------------------------|
 
 <details><summary>Run Redis Connect Oracle Connector docker container to see all the options</summary>
 <p>

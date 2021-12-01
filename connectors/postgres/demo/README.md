@@ -35,7 +35,7 @@ demo$ ./setup_postgres.sh 12.5
 demo$ sudo docker ps -a | grep postgres
 724aea897d12        postgres:12.5                                         "docker-entrypoint.s…"   10 days ago         Up 10 days          0.0.0.0:5432->5432/tcp                                                                                                                                                                                                                                                                                          postgres-12.5-virag-cdc
 
-demo$ docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect" -c "select count(*) from emp;"'
+demo$ docker exec -it postgres-12.5-$(hostname) bash -c 'psql -U"redisconnect" -d"RedisConnect" -c "select count(*) from emp;"'
  count
 -------
      0
@@ -103,7 +103,7 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 <p>
 
 ```bash
-demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect"'
+demo$ sudo docker exec -it postgres-12.5-$(hostname) bash -c 'psql -U"redisconnect" -d"RedisConnect"'
 
 psql (12.5 (Debian 12.5-1.pgdg100+1))
 Type "help" for help.
@@ -375,7 +375,7 @@ Loading Redis Connect redis-connect-postgres Configurations from /opt/redislabs/
 <p>
 
 ```bash
-demo$ sudo docker exec -it postgres-12.5-virag-cdc bash -c 'psql -U"redisconnect" -d"RedisConnect"'
+demo$ sudo docker exec -it postgres-12.5-$(hostname) bash -c 'psql -U"redisconnect" -d"RedisConnect"'
 
 psql (12.5 (Debian 12.5-1.pgdg100+1))
 Type "help" for help.

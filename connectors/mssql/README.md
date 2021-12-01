@@ -3,9 +3,9 @@
 redis-connect-sqlserver is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target). redis-connect-sqlserver cdc connector implementation is based on [Debezium](https://debezium.io/documentation/reference/stable/connectors/sqlserver.html), which is an open source distributed platform for change data capture.
 
 <p>
-The first time redis-connect-sqlserver connects to a SQL Server database/cluster, it reads a consistent snapshot of all of the schemas.
+The first time redis-connect-sqlserver connects to a SQL Server database/cluster, it reads a consistent snapshot of all the schemas.
 When that snapshot is complete, the connector continuously streams the changes that were committed to SQL Server and generates a corresponding insert, update or delete event.
-All of the events for each tables are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
+All the events for each table(s) are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
 
 ## Overview
 
@@ -435,3 +435,7 @@ redis-connect-sqlserver/bin$ ./redisconnect.sh stage
 ```bash
 redis-connect-sqlserver/bin$ ./redisconnect.sh start
 ```
+
+| ℹ️                                         |
+|:-------------------------------------------|
+| Quick Start: Follow the [demo](demo)       |
