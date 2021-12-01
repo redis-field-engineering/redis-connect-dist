@@ -1,6 +1,6 @@
 # redis-connect-postgres
 
-redis-connect-postgres is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from PostgreSQL (source) and writing them to a Redis Enterprise database (Target). redis-connect-postgres cdc connector implementation is based on [Debezium](https://debezium.io/documentation/reference/stable/connectors/postgresql.html), which is an open source distributed platform for change data capture.
+redis-connect-postgres is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from PostgreSQL (source) and writing them to a Redis Enterprise database (Target). redis-connect-postgres cdc connector implementation is based on <a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html" target="_blank">Debezium</a>, which is an open source distributed platform for change data capture.
 
 <p>
 The first time redis-connect-postgres connects to a PostgreSQL database, it reads a consistent snapshot of all the schemas.
@@ -38,11 +38,11 @@ On their own Redis Connect instances are stateless therefore require Redis to ma
 <p>Job Reaper is a process, within a Redis Connect instance, that tracks the status of all jobs. If any Jobs are not being executed, then the reaper process makes them available to be “assigned”. A single job reaper process is instantiated within each Redis Connect instance. Only one job reaper process is active across all Redis Connect instances.
 
 <h6>Job Claimer</h6>
-<p>Job Claimer is a process, within a Redis Connect instance that initiates “unassigned” jobs. A single job claimer process is instantiated within each Redis Connect instance. All job claimer processes are active across all Redis Connect instances.
+<p>Job Claimer is a process, within a Redis Connect instance that initiates <i>UNASSIGNED</i> jobs. A single job claimer process is instantiated within each Redis Connect instance. All job claimer processes are active across all Redis Connect instances.
 
 ## Setting up PostgreSQL (Source)
 
-Please see [PostgreSQL Setup](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#setting-up-postgresql) for reference.
+Please see <a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html#setting-up-postgresql" target="_blank">PostgreSQL Setup</a> for reference.
 
 Please see an example under [Demo](demo/setup_postgres.sh).
 
@@ -188,7 +188,7 @@ Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/
 ### Sample env.yml under redis-connect-postgres/config/samples/[postgres|loader] folder. Any of these fields (values) can be replaced by environment variables.
 | :memo:        |
 |---------------|
-If you encounter [WAL disk space consumption](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-wal-disk-space) issue with Postgres then uncomment the `heartbeat.interval.ms` and `heartbeat.action.query` properties below and enable the producer's pipeline for the `heartbeat` table by uncommenting `#- public.heartbeat # heartbeat table to keep postgres active` in `JobConfig.yml`.
+If you encounter <a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-wal-disk-space" target="_blank">WAL disk space consumption</a> issue with Postgres then <a href="https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/postgres/demo/postgres_cdc.sql#L18-L20" target="_blank">Create a heartbeat table</a> and uncomment the `heartbeat.interval.ms` and `heartbeat.action.query` properties below and enable the producer's pipeline for the `heartbeat` table by uncommenting `#- public.heartbeat # heartbeat table to keep postgres active` in `JobConfig.yml`.
 
 ```yml
 connections:
@@ -431,7 +431,7 @@ redis-connect-postgres/bin$ ./redisconnect.sh stage
 ```
 
 <h4>Start Redis Connect Job</h4>
-<br>Once staging is done, execute the same script with <i>start</i> option to start the configured Job(s) i.e. an instance of Redis Connect.
+Once staging is done, execute the same script with <i>start</i> option to start the configured Job(s) i.e. an instance of Redis Connect.
 
 ```bash
 redis-connect-postgres/bin$ ./redisconnect.sh start
