@@ -3,16 +3,19 @@ Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.</br>
 <br>Execute the following commands (copy & paste) to download and setup Redis Connect Postgres Connector and demo scripts.
 i.e.</br>
+
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-postgres/demo && \
-unzip main.zip "redis-connect-dist-main/connectors/postgres/demo/*" -d redis-connect-postgres/demo && \
-cp -R redis-connect-postgres/demo/redis-connect-dist-main/connectors/postgres/demo/* redis-connect-postgres/demo && \
-mv redis-connect-postgres/demo/config redis-connect-postgres && \
-rm -rf main.zip redis-connect-postgres/demo/redis-connect-dist-main && \
+mkdir -p redis-connect-postgres/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/connectors/postgres/*" -d redis-connect-postgres && \
+cp -R redis-connect-postgres/redis-connect-dist-main/connectors/postgres/demo/* redis-connect-postgres/demo && \
+cp -R redis-connect-postgres/redis-connect-dist-main/connectors/postgres/k8s-docs/* redis-connect-postgres/k8s-docs && \
+rm -rf main.zip redis-connect-postgres/redis-connect-dist-main && \
 cd redis-connect-postgres && \
 chmod a+x demo/*.sh
 ```
+
 Expected output:
 ```bash
 redis-connect-postgres$ ls

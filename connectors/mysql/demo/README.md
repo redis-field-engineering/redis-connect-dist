@@ -4,16 +4,19 @@ Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.</br>
 <br>Execute the following commands (copy & paste) to download and setup Redis Connect MySQL Connector and demo scripts.
 i.e.</br>
+
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-mysql/demo && \
-unzip main.zip "redis-connect-dist-main/connectors/mysql/demo/*" -d redis-connect-mysql/demo && \
-cp -R redis-connect-mysql/demo/redis-connect-dist-main/connectors/mysql/demo/* redis-connect-mysql/demo && \
-mv redis-connect-mysql/demo/config redis-connect-mysql && \
-rm -rf main.zip redis-connect-mysql/demo/redis-connect-dist-main && \
+mkdir -p redis-connect-mysql/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/connectors/mysql/*" -d redis-connect-mysql && \
+cp -R redis-connect-mysql/redis-connect-dist-main/connectors/mysql/demo/* redis-connect-mysql/demo && \
+cp -R redis-connect-mysql/redis-connect-dist-main/connectors/mysql/k8s-docs/* redis-connect-mysql/k8s-docs && \
+rm -rf main.zip redis-connect-mysql/redis-connect-dist-main && \
 cd redis-connect-mysql && \
 chmod a+x demo/*.sh
 ```
+
 Expected output:
 ```bash
 redis-connect-mysql$ ls

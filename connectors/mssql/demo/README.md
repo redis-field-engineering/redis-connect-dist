@@ -4,16 +4,19 @@ Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.</br>
 <br>Execute the following commands (copy & paste) to download and setup Redis Connect MSSQL Connector and demo scripts.
 i.e.</br>
+
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-sqlserver/demo && \
-unzip main.zip "redis-connect-dist-main/connectors/mssql/demo/*" -d redis-connect-sqlserver/demo && \
-cp -R redis-connect-sqlserver/demo/redis-connect-dist-main/connectors/mssql/demo/* redis-connect-sqlserver/demo && \
-mv redis-connect-sqlserver/demo/config redis-connect-sqlserver && \
-rm -rf main.zip redis-connect-sqlserver/demo/redis-connect-dist-main && \
+mkdir -p redis-connect-sqlserver/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/connectors/sqlserver/*" -d redis-connect-sqlserver && \
+cp -R redis-connect-sqlserver/redis-connect-dist-main/connectors/sqlserver/demo/* redis-connect-sqlserver/demo && \
+cp -R redis-connect-sqlserver/redis-connect-dist-main/connectors/sqlserver/k8s-docs/* redis-connect-sqlserver/k8s-docs && \
+rm -rf main.zip redis-connect-sqlserver/redis-connect-dist-main && \
 cd redis-connect-sqlserver && \
 chmod a+x demo/*.sh
 ```
+
 Expected output:
 ```bash
 redis-connect-sqlserver$ ls

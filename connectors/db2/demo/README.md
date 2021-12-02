@@ -3,16 +3,19 @@ Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.</br>
 <br>Execute the following commands (copy & paste) to download and setup Redis Connect db2 Connector and demo scripts.
 i.e.</br>
+
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-db2/demo && \
-unzip main.zip "redis-connect-dist-main/connectors/db2/demo/*" -d redis-connect-db2/demo && \
-cp -R redis-connect-db2/demo/redis-connect-dist-main/connectors/db2/demo/* redis-connect-db2/demo && \
-mv redis-connect-db2/demo/config redis-connect-db2 && \
-rm -rf main.zip redis-connect-db2/demo/redis-connect-dist-main && \
+mkdir -p redis-connect-db2/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/connectors/db2/*" -d redis-connect-db2 && \
+cp -R redis-connect-db2/redis-connect-dist-main/connectors/db2/demo/* redis-connect-db2/demo && \
+cp -R redis-connect-db2/redis-connect-dist-main/connectors/db2/k8s-docs/* redis-connect-db2/k8s-docs && \
+rm -rf main.zip redis-connect-db2/redis-connect-dist-main && \
 cd redis-connect-db2 && \
 chmod a+x demo/*.sh
 ```
+
 Expected output:
 ```bash
 redis-connect-db2$ ls

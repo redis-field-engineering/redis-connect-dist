@@ -66,7 +66,7 @@ kubectl create configmap redis-connect-oracle-config \
   --from-file=env.yml=env.yml \
   --from-file=Setup.yml=Setup.yml \
   --from-file=mapper1.yml=mappers/mapper1.yml \
-  --from-file=redis-connect-custom-stage-demo-1.0-SNAPSHOT.0.jar=redis-connect-custom-stage-demo-1.0-SNAPSHOT.0.jar
+  --from-file=redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar=redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
 ```
 The outcome is:
 ```

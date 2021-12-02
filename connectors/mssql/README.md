@@ -55,13 +55,9 @@ On their own Redis Connect instances are stateless therefore require Redis to ma
 
 ## Setting up SQL Server (Source)
 
-Before using the SQL Server connector (redis-connect-sqlserver) to monitor the changes committed on SQL Server, first [enable](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017) _CDC_ on a monitored database.
+Please see <a href="https://debezium.io/documentation/reference/stable/connectors/sqlserver.html#setting-up-sqlserver" target="_blank">SQL Server Setup</a> for reference.
 
-<h5>Note: To support net changes queries, the source table must have a primary key or unique index to uniquely identify rows. If a unique index is used, the name of the index must be specified using the <em>@index_name</em> parameter. The columns defined in the primary key or unique index must be included in the list of source columns to be captured.</h5>
-
-Please see [Enable Change Data Capture for a Table](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-ver15#enable-change-data-capture-for-a-table) for reference.
-
-Please see an example, [SQL Statements](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/mssql/demo/mssql_cdc.sql) under [Demo](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/mssql/demo/).
+Please see an example under [Demo](demo/setup_mssql.sh).
 
 ## Setting up Redis Enterprise Databases (Target)
 
@@ -73,7 +69,7 @@ Before using the SQL Server connector (redis-connect-sqlserver) to capture the c
 
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 1.8 and above. Please have JRE 1.8 ([OpenJRE](https://openjdk.java.net/install/) or OracleJRE) or above installed prior to running this connector.
+The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
 
 ---
 
@@ -430,7 +426,7 @@ redis-connect-sqlserver/bin$ ./redisconnect.sh stage
 ```
 
 <h4>Start Redis Connect Job</h4>
-<br>Once staging is done, execute the same script with <i>start</i> option to start the configured Job(s) i.e. an instance of Redis Connect.
+Once staging is done, execute the same script with <i>start</i> option to start the configured Job(s) i.e. an instance of Redis Connect.
 
 ```bash
 redis-connect-sqlserver/bin$ ./redisconnect.sh start
@@ -439,3 +435,4 @@ redis-connect-sqlserver/bin$ ./redisconnect.sh start
 | ℹ️                                         |
 |:-------------------------------------------|
 | Quick Start: Follow the [demo](demo)       |
+| K8s Setup: Follow the [k8s-docs](k8s-docs) |

@@ -10,13 +10,14 @@ Overall flow:
 5. Stage the Redis Connect job.
 6. Start the Redis Connect job.
 
-**Note:** This doc uses `kubectl` and `oc` interchangably.
+**Note:** This doc uses `kubectl` and `oc` interchangeably.
 
 ## 1. Clone the Redis Connect for MySQL Repository
+
+Follow the [demo](../demo) steps then goto k8s-docs directory
+
 ```
-$ git clone https://github.com/redis-field-engineering/redis-connect-dist.git
-...
-$ cd redis-connect-dist/connectors/mysql/k8s-docs
+redis-connect-mysql$ cd k8s-docs
 ```
 
 ## 2. Configure Redis Connect 
@@ -66,7 +67,7 @@ kubectl create configmap redis-connect-mysql-config \
   --from-file=env.yml=env.yml \
   --from-file=Setup.yml=Setup.yml \
   --from-file=mapper1.yml=mappers/mapper1.yml \
-  --from-file=redis-connect-custom-stage-demo-1.0-SNAPSHOT.0.jar=redis-connect-custom-stage-demo-1.0-SNAPSHOT.0.jar
+  --from-file=redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar=redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
 ```
 The outcome is:
 ```
