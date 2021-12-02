@@ -9,9 +9,9 @@ i.e.</br>
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect-sqlserver/demo && \
 mkdir -p redis-connect-sqlserver/k8s-docs && \
-unzip main.zip "redis-connect-dist-main/connectors/sqlserver/*" -d redis-connect-sqlserver && \
-cp -R redis-connect-sqlserver/redis-connect-dist-main/connectors/sqlserver/demo/* redis-connect-sqlserver/demo && \
-cp -R redis-connect-sqlserver/redis-connect-dist-main/connectors/sqlserver/k8s-docs/* redis-connect-sqlserver/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/connectors/mssql/*" -d redis-connect-sqlserver && \
+cp -R redis-connect-sqlserver/redis-connect-dist-main/connectors/mssql/demo/* redis-connect-sqlserver/demo && \
+cp -R redis-connect-sqlserver/redis-connect-dist-main/connectors/mssql/k8s-docs/* redis-connect-sqlserver/k8s-docs && \
 rm -rf main.zip redis-connect-sqlserver/redis-connect-dist-main && \
 cd redis-connect-sqlserver && \
 chmod a+x demo/*.sh
