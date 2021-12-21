@@ -28,7 +28,8 @@ job:
           schema: HR
           table: EMPLOYEES
   jobConfig:
-    - name: ORACLE-HR
+    - name: RedisConnect-Oracle
       config: JobConfig.yml
       variables:
-        schema: HR
+        database: RedisConnect
+        sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR

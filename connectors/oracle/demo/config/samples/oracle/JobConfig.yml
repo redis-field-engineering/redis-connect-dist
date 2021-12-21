@@ -5,14 +5,15 @@ producerConfig:
   metaConnectionId: RDBMetadataConnection
   tables:
     - HR.EMPLOYEES #schema.table
-    - HR.JOBS
+    #- HR.JOBS
   metricsEnabled: false
 pipelineConfig:
-  eventTranslator: "ORACLE_LOG_MINER_TRANSLATOR"
+  eventTranslator: "${sourceValueTranslator}"
   checkpointConfig:
-    providerId: REDIS_HASH_CHECKPOINT_READER
+    providerId: RDB_SQL_CHECKPOINT_READER
     connectionId: targetConnection
-    checkpoint: "${jobId}-${schema}"
+    checkpoint: "${jobId}-${database}"
+    rdbType: "oracle"
   stages:
     HashWriteStage:
       handlerId: REDIS_HASH_WRITER
@@ -26,4 +27,4 @@ pipelineConfig:
       connectionId: targetConnection
       metricEnabled: false
       async: true
-      checkpoint: "${jobId}-${schema}"
+      checkpoint: "${jobId}-${database}"

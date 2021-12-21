@@ -69,11 +69,11 @@ Before using the SQL Server connector (redis-connect-sqlserver) to capture the c
 
 **NOTE**
 
-The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
+The current [release](https://github.com/redis-field-engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
 
 ---
 
-Download the [latest release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) and untar redis-connect-sqlserver-`<version>.<build>`.tar.gz archive.
+Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-sqlserver-`<version>.<build>`.tar.gz archive.
 
 All the contents would be extracted under redis-connect-sqlserver
 
@@ -81,7 +81,7 @@ Contents of redis-connect-sqlserver
 <br>• bin – contains script files
 <br>• lib – contains java libraries
 <br>• config – contains sample config files for cdc and initial loader jobs
-<br>• extlib – directory to copy [custom stage](https://github.com/RedisLabs-Field-Engineering/redis-connect-custom-stage-demo) implementation jar(s)
+<br>• extlib – directory to copy [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo) implementation jar(s)
 
 ## Redis Connect Setup and Job Management Configurations
 
@@ -194,7 +194,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <details><summary>Configure env.yml</summary>
 <p>
 
-#### Environment configuration file with source and target connection informations.
+#### Environment configuration file with source and target connection information.
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 

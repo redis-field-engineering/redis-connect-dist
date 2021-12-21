@@ -38,7 +38,7 @@ _**Oracle 12c and 18c:**_
 redis-connect-oracle$ cd demo
 demo$ ./setup_oracle.sh 12.2.0.1-ee 1521 logminer
 ```
-_**Oracle 19c:**_ Currently redis-connect-oracle does not support CDC with 19c but works with Initial load.
+_**Oracle 19c:**_
 
 ```bash
 demo$ ./setup_oracle.sh 19.3.0-ee 1522 logminer
@@ -163,8 +163,8 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ## Start Redis Connect Oracle Connector
 
-| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. `demo$ cp ojdbc8.jar extlib`   |
-|---------------|:-------------------------------------------------------------------------------------------------------------------|
+| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. `demo$ cp ojdbc8.jar extlib` (we have included ojdbc8.jar for this demo purposes) |
+|---------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 <details><summary>Run Redis Connect Oracle Connector docker container to see all the options</summary>
 <p>
@@ -175,13 +175,9 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/oracle \
--e REDISCONNECT_SOURCE_USERNAME=hr \
--e REDISCONNECT_SOURCE_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
--v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine
+redislabs/redis-connect-oracle:latest
 ```
 
 </p>
@@ -191,18 +187,20 @@ redislabs/redis-connect-oracle:pre-release-alpine
 <p>
 
 ```bash
-Unable to find image 'redislabs/redis-connect-oracle:pre-release-alpine' locally
-pre-release-alpine: Pulling from redislabs/redis-connect-oracle
-a0d0a0d46f8b: Already exists
-44537f359f3a: Pull complete
-9aaa9874ae7f: Pull complete
-13f6c829139b: Pull complete
-06add1107609: Pull complete
-bfc29d6a129c: Pull complete
-249c85a8a900: Pull complete
-ffe4c573e59c: Pull complete
-Digest: sha256:da7987fd874c50bc858b3ba2d3affde3e2f8506b7a3a5f7d42c6feb1bc9d8621
-Status: Downloaded newer image for redislabs/redis-connect-oracle:pre-release-alpine
+Unable to find image 'redislabs/redis-connect-oracle:latest' locally
+latest: Pulling from redislabs/redis-connect-oracle
+97518928ae5f: Already exists
+7e453f2d6ca6: Pull complete
+fbe136ef5948: Pull complete
+b765f6e5f803: Pull complete
+26dfdb35b1c9: Pull complete
+8c79ede59dbd: Pull complete
+fa1f01880109: Pull complete
+f1620ca0c97f: Pull complete
+919ed065f3c8: Pull complete
+e1bffcb6a74e: Pull complete
+Digest: sha256:c076f988b517c1bc66c7c3d897915c8e5caeaaf094560a18bb057d3df0e56afb
+Status: Downloaded newer image for redislabs/redis-connect-oracle:latest
 -------------------------------
 Redis Connect startup script.
 *******************************
@@ -251,7 +249,7 @@ redis-connect-crud-loader/bin$ ./start.sh crudloader
 </p>
 </details>
 
-<details><summary><b>Stage pre configured loader job</b></summary>
+<details><summary><b>Stage pre-configured loader job</b></summary>
 <p>
 
 ```bash
@@ -260,13 +258,20 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/loader \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
+-e REDISCONNECT_SOURCE_PORT=1521 \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
+-e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
+-e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine stage
+redislabs/redis-connect-oracle:latest stage
 ```
 
 </p>
@@ -277,37 +282,38 @@ redislabs/redis-connect-oracle:pre-release-alpine stage
 
 ```bash
 -------------------------------
-Staging Redis Connect redis-connect-oracle v0.4.0.26 job using Java 11.0.13 on docker-desktop started by root in /opt/redislabs/redis-connect-oracle/bin
+Staging Redis Connect redis-connect-oracle v0.6.1.1 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-oracle/bin
 Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/redis-connect-oracle/config/samples/loader
-05:00:41,562 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
+01:14:59,609 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
 ....
-....
-05:00:42.216 [main] INFO  startup - ##################################################################
-05:00:42.221 [main] INFO  startup -
-05:00:42.222 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
+01:14:59.913 [main] INFO  startup - ##################################################################
+01:14:59.916 [main] INFO  startup -
+01:14:59.916 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
 
-05:00:42.222 [main] INFO  startup -
-05:00:42.222 [main] INFO  startup - ##################################################################
+01:14:59.916 [main] INFO  startup -
+01:14:59.916 [main] INFO  startup - ##################################################################
+01:15:00.631 [main] INFO  startup - Instance: 31@virag-cdc will attempt to delete (clean) all the metadata related to Redis Connect
+01:15:01.418 [main] INFO  startup - Instance: 31@virag-cdc successfully established Redis connection for INIT service
+01:15:01.426 [main] INFO  startup - Instance: 31@virag-cdc successfully completed flush (clean) of all the metadata related to Redis Connect
 ....
-....
-05:00:47.299 [main] INFO  startup - ##################################################################
-05:00:47.305 [main] INFO  startup -
-05:00:47.306 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
-05:00:47.307 [main] INFO  startup -
-05:00:47.307 [main] INFO  startup - ##################################################################
-05:00:48.569 [main] INFO  startup - Instance: 56@docker-desktop will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
-05:00:50.264 [main] INFO  startup - Instance: 56@docker-desktop successfully established Redis connection for INIT service
-05:00:50.298 [main] INFO  startup - Instance: 56@docker-desktop successfully created Job Claim Assignment Stream and Consumer Group
-05:00:50.436 [main] INFO  startup - Instance: 56@docker-desktop successfully seeded Job related metadata
-05:00:50.437 [main] INFO  startup - Instance: 56@docker-desktop successfully seeded Metrics related metadata
-05:00:50.437 [main] INFO  startup - Instance: 56@docker-desktop successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+01:15:02.279 [main] INFO  startup - ##################################################################
+01:15:02.281 [main] INFO  startup -
+01:15:02.281 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+01:15:02.281 [main] INFO  startup -
+01:15:02.281 [main] INFO  startup - ##################################################################
+01:15:02.981 [main] INFO  startup - Instance: 95@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+01:15:03.711 [main] INFO  startup - Instance: 95@virag-cdc successfully established Redis connection for INIT service
+01:15:03.714 [main] INFO  startup - Instance: 95@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+01:15:03.728 [main] INFO  startup - Instance: 95@virag-cdc successfully seeded Job related metadata
+01:15:03.728 [main] INFO  startup - Instance: 95@virag-cdc successfully seeded Metrics related metadata
+01:15:03.728 [main] INFO  startup - Instance: 95@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
 -------------------------------
 ```
 
 </p>
 </details>
 
-<details><summary><b>Start pre configured loader job</b></summary>
+<details><summary><b>Start pre-configured loader job</b></summary>
 <p>
 
 ```bash
@@ -316,15 +322,20 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/loader \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
+-e REDISCONNECT_SOURCE_PORT=1521 \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
+-e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine start
+redislabs/redis-connect-oracle:latest start
 ```
 
 </p>
@@ -335,33 +346,90 @@ redislabs/redis-connect-oracle:pre-release-alpine start
 
 ```bash
 -------------------------------
-Starting Redis Connect redis-connect-oracle v0.4.0.26 instance using Java 11.0.13 on docker-desktop started by root in /opt/redislabs/redis-connect-oracle/bin
+Starting Redis Connect redis-connect-oracle v0.6.1.1 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-oracle/bin
 Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/redis-connect-oracle/config/samples/loader
-05:04:10,455 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
+01:18:32,266 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
 ....
+01:18:32.575 [main] INFO  startup -
+01:18:32.578 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+01:18:32.578 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+01:18:32.579 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+01:18:32.579 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+01:18:32.579 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+01:18:32.579 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+01:18:32.579 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+01:18:32.580 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+01:18:32.580 [main] INFO  startup -
+01:18:32.580 [main] INFO  startup - ##################################################################
+01:18:32.580 [main] INFO  startup -
+01:18:32.580 [main] INFO  startup - Initializing Redis Connect Instance
+01:18:32.580 [main] INFO  startup -
+01:18:32.580 [main] INFO  startup - ##################################################################
 ....
-05:04:11.170 [main] INFO  startup -
-05:04:11.179 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
-05:04:11.180 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
-05:04:11.181 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
-05:04:11.182 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
-05:04:11.184 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
-05:04:11.185 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
-05:04:11.186 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
-05:04:11.187 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
-05:04:11.188 [main] INFO  startup -
-05:04:11.188 [main] INFO  startup - ##################################################################
-05:04:11.189 [main] INFO  startup -
-05:04:11.190 [main] INFO  startup - Initializing Redis Connect Instance
-05:04:11.190 [main] INFO  startup -
-05:04:11.190 [main] INFO  startup - ##################################################################
+01:18:59.911 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+01:18:59.924 [JobManager-1] INFO  startup - JobId: {connect}:job:initial_load claim request with ID: 1640049303721-0 has been fully processed and all metadata has been updated
+01:18:59.927 [JobManager-1] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
 ....
+01:19:30.311 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:1
+01:19:30.317 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for HeartbeatManager service
+01:19:30.318 [JobManager-2] INFO  startup - Instance: 30@virag-cdc has successfully claimed ownership of JobId: {connect}:task:partition:initial_load:1
+01:19:30.318 [JobManager-2] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+01:19:30.322 [JobManager-2] INFO  startup - JobId: {connect}:task:partition:initial_load:1 claim request with ID: 1640049540105-0 has been fully processed and all metadata has been updated
+01:19:30.323 [JobManager-2] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:1","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:19:30.324 [lettuce-epollEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:1","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:19:30.349 [EventProducer-2] INFO  redisconnect - Instance: 30@virag-cdc completed JobId: {connect}:task:partition:initial_load:1 from StartRecord: 1 to EndRecord: 220
+01:19:40.354 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:task:partition:initial_load:1
+01:19:40.354 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:task:partition:initial_load:1
+01:19:40.354 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
+01:19:40.355 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully removed JobId: {connect}:task:partition:initial_load:1
 ....
-05:04:42.224 [JobManager-1] INFO  startup - JobId: {connect}:job:initial_load claim request with ID: 1637211839157-0 has been fully processed and all metadata has been updated
-05:04:42.265 [lettuce-nioEventLoop-4-1] INFO  startup - Instance: 30@docker-desktop consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@docker-desktop","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
-05:04:42.267 [JobManager-1] INFO  startup - Instance: 30@docker-desktop published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@docker-desktop","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:19:59.302 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:2
+01:19:59.302 [JobManager-2] INFO  startup - Instance: 30@virag-cdc has successfully claimed ownership of JobId: {connect}:task:partition:initial_load:2
+01:19:59.302 [JobManager-2] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+01:19:59.305 [JobManager-2] INFO  startup - JobId: {connect}:task:partition:initial_load:2 claim request with ID: 1640049540109-0 has been fully processed and all metadata has been updated
+01:19:59.306 [lettuce-epollEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:2","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:19:59.306 [JobManager-2] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:2","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:19:59.313 [EventProducer-1] INFO  redisconnect - Instance: 30@virag-cdc completed JobId: {connect}:task:partition:initial_load:2 from StartRecord: 221 to EndRecord: 440
+01:20:09.317 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:task:partition:initial_load:2
+01:20:09.317 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:task:partition:initial_load:2
+01:20:09.317 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
+01:20:09.317 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully removed JobId: {connect}:task:partition:initial_load:2
 ....
+01:20:29.308 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:3
+01:20:29.308 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has successfully claimed ownership of JobId: {connect}:task:partition:initial_load:3
+01:20:29.308 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+01:20:29.311 [JobManager-1] INFO  startup - JobId: {connect}:task:partition:initial_load:3 claim request with ID: 1640049540113-0 has been fully processed and all metadata has been updated
+01:20:29.312 [JobManager-1] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:3","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:20:29.312 [lettuce-epollEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:3","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:20:29.316 [EventProducer-2] INFO  redisconnect - Instance: 30@virag-cdc completed JobId: {connect}:task:partition:initial_load:3 from StartRecord: 441 to EndRecord: 660
+01:20:39.319 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:task:partition:initial_load:3
+01:20:39.320 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:task:partition:initial_load:3
+01:20:39.320 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
+01:20:39.320 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully removed JobId: {connect}:task:partition:initial_load:3
 ....
+01:20:59.303 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:4
+01:20:59.303 [JobManager-2] INFO  startup - Instance: 30@virag-cdc has successfully claimed ownership of JobId: {connect}:task:partition:initial_load:4
+01:20:59.303 [JobManager-2] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+01:20:59.305 [JobManager-2] INFO  startup - JobId: {connect}:task:partition:initial_load:4 claim request with ID: 1640049540117-0 has been fully processed and all metadata has been updated
+01:20:59.306 [JobManager-2] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:4","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:20:59.306 [lettuce-epollEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:4","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:20:59.310 [EventProducer-1] INFO  redisconnect - Instance: 30@virag-cdc completed JobId: {connect}:task:partition:initial_load:4 from StartRecord: 661 to EndRecord: 880
+01:21:09.313 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:task:partition:initial_load:4
+01:21:09.314 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:task:partition:initial_load:4
+01:21:09.314 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
+01:21:09.314 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully removed JobId: {connect}:task:partition:initial_load:4
+....
+01:21:29.298 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:5
+01:21:29.298 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has successfully claimed ownership of JobId: {connect}:task:partition:initial_load:5
+01:21:29.298 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+01:21:29.301 [JobManager-1] INFO  startup - JobId: {connect}:task:partition:initial_load:5 claim request with ID: 1640049540119-0 has been fully processed and all metadata has been updated
+01:21:29.302 [JobManager-1] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:5","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:21:29.302 [lettuce-epollEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:task:partition:initial_load:5","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+01:21:29.305 [EventProducer-2] INFO  redisconnect - Instance: 30@virag-cdc completed JobId: {connect}:task:partition:initial_load:5 from StartRecord: 881 to EndRecord: 1104
+01:21:39.308 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:task:partition:initial_load:5
+01:21:39.309 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:task:partition:initial_load:5
+01:21:39.309 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
+01:21:39.309 [EventProducer-2] INFO  startup - Instance: 30@virag-cdc successfully removed JobId: {connect}:task:partition:initial_load:5
 ```
 
 </p>
@@ -381,7 +449,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 -------------------------------
 
 ### CDC Steps
-<details><summary><b>Stage pre configured cdc job</b></summary>
+<details><summary><b>Stage pre-configured cdc job</b></summary>
 <p>
 
 ```bash
@@ -390,15 +458,24 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/oracle \
--e REDISCONNECT_SOURCE1_USERNAME=c##rcuser \
--e REDISCONNECT_SOURCE1_PASSWORD=rcpwd \
--e REDISCONNECT_SOURCE2_USERNAME=hr \
--e REDISCONNECT_SOURCE2_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
+-e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
+-e REDISCONNECT_SOURCE_PORT=1521 \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_CDBNAME=ORCLCDB \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_USERNAME=c##rcuser \
+-e REDISCONNECT_SOURCE_PASSWORD=rcpwd \
+-e REDISCONNECT_SOURCE_METADATA_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_METADATA_USERNAME=hr \
+-e REDISCONNECT_SOURCE_METADATA_PASSWORD=hr \
+-e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
+-e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine stage
+redislabs/redis-connect-oracle:latest stage
 ```
 
 </p>
@@ -409,37 +486,39 @@ redislabs/redis-connect-oracle:pre-release-alpine stage
 
 ```bash
 -------------------------------
-Staging Redis Connect redis-connect-oracle v0.4.0.26 job using Java 11.0.13 on docker-desktop started by root in /opt/redislabs/redis-connect-oracle/bin
+-------------------------------
+Staging Redis Connect redis-connect-oracle v0.6.1.1 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-oracle/bin
 Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/redis-connect-oracle/config/samples/oracle
-04:33:27,136 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
+01:36:12,511 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
 ....
-....
-04:33:27.750 [main] INFO  startup - ##################################################################
-04:33:27.757 [main] INFO  startup -
-04:33:27.758 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
+01:36:12.769 [main] INFO  startup - ##################################################################
+01:36:12.772 [main] INFO  startup -
+01:36:12.772 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
 
-04:33:27.759 [main] INFO  startup -
-04:33:27.760 [main] INFO  startup - ##################################################################
+01:36:12.772 [main] INFO  startup -
+01:36:12.772 [main] INFO  startup - ##################################################################
+01:36:13.490 [main] INFO  startup - Instance: 30@virag-cdc will attempt to delete (clean) all the metadata related to Redis Connect
+01:36:14.235 [main] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for INIT service
+01:36:14.251 [main] INFO  startup - Instance: 30@virag-cdc successfully completed flush (clean) of all the metadata related to Redis Connect
 ....
-....
-04:33:31.592 [main] INFO  startup - ##################################################################
-04:33:31.597 [main] INFO  startup -
-04:33:31.597 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
-04:33:31.598 [main] INFO  startup -
-04:33:31.600 [main] INFO  startup - ##################################################################
-04:33:32.854 [main] INFO  startup - Instance: 57@docker-desktop will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
-04:33:34.185 [main] INFO  startup - Instance: 57@docker-desktop successfully established Redis connection for INIT service
-04:33:34.220 [main] INFO  startup - Instance: 57@docker-desktop successfully created Job Claim Assignment Stream and Consumer Group
-04:33:34.358 [main] INFO  startup - Instance: 57@docker-desktop successfully seeded Job related metadata
-04:33:34.943 [main] INFO  startup - Instance: 57@docker-desktop successfully seeded Metrics related metadata
-04:33:34.943 [main] INFO  startup - Instance: 57@docker-desktop successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+01:36:15.179 [main] INFO  startup - ##################################################################
+01:36:15.181 [main] INFO  startup -
+01:36:15.181 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+01:36:15.182 [main] INFO  startup -
+01:36:15.182 [main] INFO  startup - ##################################################################
+01:36:15.911 [main] INFO  startup - Instance: 94@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
+01:36:16.653 [main] INFO  startup - Instance: 94@virag-cdc successfully established Redis connection for INIT service
+01:36:16.656 [main] INFO  startup - Instance: 94@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+01:36:16.669 [main] INFO  startup - Instance: 94@virag-cdc successfully seeded Job related metadata
+01:36:16.834 [main] INFO  startup - Instance: 94@virag-cdc successfully seeded Metrics related metadata
+01:36:16.834 [main] INFO  startup - Instance: 94@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
 -------------------------------
 ```
 
 </p>
 </details>
 
-<details><summary><b>Start pre configured cdc job</b></summary>
+<details><summary><b>Start pre-configured cdc job</b></summary>
 <p>
 
 ```bash
@@ -448,17 +527,24 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/oracle \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE1_USERNAME=c##rcuser \
--e REDISCONNECT_SOURCE1_PASSWORD=rcpwd \
--e REDISCONNECT_SOURCE2_USERNAME=hr \
--e REDISCONNECT_SOURCE2_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
+-e REDISCONNECT_SOURCE_PORT=1521 \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_CDBNAME=ORCLCDB \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_USERNAME=c##rcuser \
+-e REDISCONNECT_SOURCE_PASSWORD=rcpwd \
+-e REDISCONNECT_SOURCE_METADATA_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_METADATA_USERNAME=hr \
+-e REDISCONNECT_SOURCE_METADATA_PASSWORD=hr \
+-e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
+-e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine start
+redislabs/redis-connect-oracle:latest start
 ```
 
 </p>
@@ -469,41 +555,46 @@ redislabs/redis-connect-oracle:pre-release-alpine start
 
 ```bash
 -------------------------------
-Starting Redis Connect redis-connect-oracle v0.4.0.26 instance using Java 11.0.13 on docker-desktop started by root in /opt/redislabs/redis-connect-oracle/bin
+Starting Redis Connect redis-connect-oracle v0.6.1.1 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-oracle/bin
 Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/redis-connect-oracle/config/samples/oracle
-04:48:47,014 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
+01:45:09,344 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-oracle/config/logback.xml] at [file:/opt/redislabs/redis-connect-oracle/config/logback.xml]
 ....
+01:45:09.653 [main] INFO  startup -
+01:45:09.657 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+01:45:09.657 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+01:45:09.657 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+01:45:09.658 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+01:45:09.658 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+01:45:09.658 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+01:45:09.658 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+01:45:09.658 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+01:45:09.658 [main] INFO  startup -
+01:45:09.659 [main] INFO  startup - ##################################################################
+01:45:09.659 [main] INFO  startup -
+01:45:09.659 [main] INFO  startup - Initializing Redis Connect Instance
+01:45:09.659 [main] INFO  startup -
+01:45:09.659 [main] INFO  startup - ##################################################################
 ....
-04:48:47.710 [main] INFO  startup -
-04:48:47.730 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
-04:48:47.734 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
-04:48:47.737 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
-04:48:47.741 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
-04:48:47.742 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
-04:48:47.743 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
-04:48:47.745 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
-04:48:47.750 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
-04:48:47.751 [main] INFO  startup -
-04:48:47.757 [main] INFO  startup - ##################################################################
-04:48:47.757 [main] INFO  startup -
-04:48:47.757 [main] INFO  startup - Initializing Redis Connect Instance
-04:48:47.757 [main] INFO  startup -
-04:48:47.757 [main] INFO  startup - ##################################################################
+01:45:26.352 [JobManager-1] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for HeartbeatManager service
+01:45:26.353 [JobManager-1] INFO  startup - Instance: 29@virag-cdc was successfully elected Redis Connect cluster leader
+01:45:36.422 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_WRITER
+01:45:36.447 [JobManager-1] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
+01:45:36.451 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_CHECKPOINT_WRITER
+01:45:36.451 [JobManager-1] WARN  startup - metricsKey not set - Metrics collection will be disabled
+01:45:36.461 [JobManager-1] INFO  startup - Instance: 29@virag-cdc successfully established Redis connection for RedisCheckpointReader service
+01:45:37.025 [JobManager-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-oracle/config/samples/oracle/mappers
+01:45:37.041 [JobManager-1] INFO  redisconnect - Loaded Config for : HR.EMPLOYEES
+01:45:37.041 [JobManager-1] INFO  redisconnect - Loaded Config for : HR.JOBS
+01:45:37.369 [JobManager-1] INFO  i.d.connector.common.BaseSourceTask - Starting OracleConnectorTask with configuration:
 ....
+01:45:37.598 [JobManager-1] INFO  startup - Instance: 29@virag-cdc successfully started job execution for JobId: {connect}:job:RedisConnect-Oracle
+01:45:37.599 [JobManager-1] INFO  startup - Instance: 29@virag-cdc has successfully claimed ownership of JobId: {connect}:job:RedisConnect-Oracle
+01:45:37.599 [JobManager-1] INFO  startup - Instance: 29@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
 ....
-04:49:17.436 [JobManager-1] INFO  startup - Instance: 30@docker-desktop successfully established Redis connection for RedisCheckpointReader service
-04:49:19.591 [JobManager-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-oracle/config/samples/oracle/mappers
-04:49:19.667 [JobManager-1] INFO  redisconnect - Loaded Config for : HR.EMPLOYEES
-04:49:19.669 [JobManager-1] INFO  redisconnect - Loaded Config for : HR.JOBS
-04:49:19.672 [JobManager-1] INFO  redisconnect - Loaded Config for : HR.EMP
-04:49:20.707 [JobManager-1] INFO  redisconnect - Commit SCN : 0
-04:49:20.709 [JobManager-1] INFO  redisconnect - Log Miner will start at new position SCN : 1627357 with fetch size : 1
-04:49:20.758 [JobManager-1] INFO  startup - Instance: 30@docker-desktop successfully started job execution for JobId: {connect}:job:ORACLE-HR
-04:49:20.758 [EventProducer-1] INFO  redisconnect - Mining for changes .. Processing will start when mining encounters first change
-04:49:20.760 [JobManager-1] INFO  startup - Instance: 30@docker-desktop has successfully claimed ownership of JobId: {connect}:job:ORACLE-HR
-04:49:20.761 [JobManager-1] INFO  startup - Instance: 30@docker-desktop has claimed 1 job(s) from its 2 max allowable capacity
-....
-....
+01:45:39.712 [debezium-oracleconnector-RedisConnect-change-event-source-coordinator] INFO  i.d.p.s.AbstractSnapshotChangeEventSource - Snapshot - Final stage
+01:45:39.715 [debezium-oracleconnector-RedisConnect-change-event-source-coordinator] INFO  i.d.p.ChangeEventSourceCoordinator - Snapshot ended with SnapshotResult [status=COMPLETED, offset=OracleOffsetContext [scn=7469456]]
+01:45:39.718 [debezium-oracleconnector-RedisConnect-change-event-source-coordinator] INFO  i.d.p.m.StreamingChangeEventSourceMetrics - Connected metrics set to 'true'
+01:45:39.719 [debezium-oracleconnector-RedisConnect-change-event-source-coordinator] INFO  i.d.p.ChangeEventSourceCoordinator - Starting streaming
 ```
 
 </p>
@@ -517,6 +608,10 @@ Insert data using [insert sql scripts](load_sql.sh):
 * 12c
 ```bash
 docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh insert1k"
+```
+* 19c
+```bash
+docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh insert1k"
 ```
 </p>
 </summary>
@@ -537,6 +632,16 @@ docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "/tmp/load_sql.sh delete"
 
 </details>
 
+<details><summary><b>19c</b></summary>
+
+```bash
+docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh update"
+
+docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh delete"
+```
+
+</details>
+
 -------------------------------
 
 ### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
@@ -549,7 +654,7 @@ Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom St
     CustomStage:
       handlerId: TO_UPPER_CASE
 ```
-<details><summary><b>Stage pre configured loader job with Custom Stage</b></summary>
+<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -558,19 +663,26 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/loader \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
+-e REDISCONNECT_SOURCE_PORT=1521 \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
+-e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
+-e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine stage
+redislabs/redis-connect-oracle:latest stage
 ```
 
 </p>
 </details>
 
-<details><summary><b>Start pre configured loader job with Custom Stage</b></summary>
+<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -579,15 +691,20 @@ docker run \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/loader \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
+-e REDISCONNECT_SOURCE_PORT=1521 \
 -e REDISCONNECT_SOURCE_USERNAME=hr \
 -e REDISCONNECT_SOURCE_PASSWORD=hr \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
+-e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
+-e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
-redislabs/redis-connect-oracle:pre-release-alpine start
+redislabs/redis-connect-oracle:latest start
 ```
 
 </p>

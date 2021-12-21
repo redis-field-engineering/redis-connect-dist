@@ -5,7 +5,7 @@
 - [Redis Connect Overview](#technical-overview)
   * [Using redis-connect-cassandra](#connectors/cassandra#redis-connect-cassandra)
   * [Using redis-connect-db2](connectors/db2#redis-connect-db2)
-  * [Using redis-connect-gemfire](#connectors/gemfire#redis-connect-gemfire)
+  * [Using redis-connect-gemfire](connectors/gemfire#redis-connect-gemfire)
   * [Using redis-connect-mysql](connectors/mysql#redis-connect-mysql)
   * [Using redis-connect-oracle](connectors/oracle#redis-connect-oracle)
   * [Using redis-connect-postgres](connectors/postgres#redis-connect-postgres)

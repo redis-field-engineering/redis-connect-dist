@@ -1,8 +1,8 @@
-<h1>rediscdc-cassandra-connector</h1>
+<h1>redis-connect-cassandra</h1>
 
-rediscdc-cassandra-connector is a connector framework for capturing row level changes (INSERT, UPDATE and DELETE) from Cassandra nodes (source) and writing them to a Redis Enterprise database (Target).
+redis-connect-cassandra is a connector framework for capturing row level changes (INSERT, UPDATE and DELETE) from Cassandra nodes (source) and writing them to a Redis Enterprise database (Target).
 <p>
-The first time the connector connects to a Cassandra node, it performs a snapshot of all CDC-enabled tables in all keyspaces. The connector will also read the changes that are written to Cassandra commit logs and generates corresponding insert, update, and delete events. All events for each table are recorded in a separate Redis data structure, where they can be consumed easily by applications and services.
+The first time the connector connects to a Cassandra node, it performs a snapshot of all CDC-enabled tables in all key spaces. The connector will also read the changes that are written to Cassandra commit logs and generates corresponding insert, update, and delete events. All events for each table are recorded in a separate Redis data structure, where they can be consumed easily by applications and services.
 
 ## Overview
 
@@ -16,8 +16,8 @@ As the connector reads commit logs and produces events, it records each commit l
 
 ## Architecture
 
-![RedisCDC high-level Architecture](/docs/images/RedisCDC_Architecture.png)
-<b>RedisCDC high-level Architecture Diagram</b>
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_Arch.png)
+<b>Redis Connect high-level Architecture Diagram</b>
 
 RedisCDC has a cloud-native shared-nothing architecture which allows any cluster node (RedisCDC Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing RedisCDC instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of RedisCDC will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
 <p>
@@ -198,8 +198,6 @@ job:
       variables:
         source: "expiry:cdc_test.customer"
         keyPrefix: "customer:"
-        source: "expiry:cdc_test.customer1"
-        keyPrefix: "customer1:"
 ```
 
 </p>
