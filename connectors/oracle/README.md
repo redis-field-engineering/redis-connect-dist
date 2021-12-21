@@ -1,6 +1,6 @@
 # redis-connect-oracle
 
-redis-connect-oracle is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from Oracle (source) and writing them to a Redis Enterprise database (Target). redis-connect-postgres cdc connector implementation is based on <a href="https://debezium.io/documentation/reference/stable/connectors/oracle.html" target="_blank">Debezium</a>, which is an open source distributed platform for change data capture.
+redis-connect-oracle is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from Oracle (source) and writing them to a Redis Enterprise database (Target). redis-connect-oracle cdc connector implementation is based on <a href="https://debezium.io/documentation/reference/stable/connectors/oracle.html" target="_blank">Debezium</a>, which is an open source distributed platform for change data capture.
 
 <p>
 The first time redis-connect-oracle connects to an Oracle database, it reads a consistent snapshot of all the schemas.
