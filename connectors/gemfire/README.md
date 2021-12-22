@@ -108,9 +108,28 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 #### logging configuration file.
 ### Sample logback.xml under redis-connect-gemfire/config folder
 ```xml
-<configuration debug="true" scan="true" scanPeriod="30 seconds">
-    <property name="LOG_PATH" value="logs/cdc-1.log"/>
-    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<configuration debug="true" scan="true" scanPeriod="15 seconds">
+
+    <property name="START_UP_PATH" value="logs/redis-connect-startup.log"/>
+    <property name="LOG_PATH" value="logs/redis-connect.log"/>
+
+    <appender name="STARTUP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${START_UP_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/startup.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="REDISCONNECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
@@ -126,18 +145,47 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
         </encoder>
     </appender>
 
-    <logger name="com.ivoyant" level="INFO" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
-    </logger>
-    <logger name="io.netty" level="INFO" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
-    </logger>
-    <logger name="io.lettuce" level="INFO" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="startup" level="INFO" additivity="false">
+        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="CONSOLE" />
     </logger>
 
-    <root level="error">
-        <appender-ref ref="FILE-ROLLING"/>
+    <logger name="redisconnect" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+
+    <logger name="com.redislabs" level="INFO" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="io.netty" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="io.lettuce" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.apache" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.springframework" level="OFF" additivity="false">
+        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root>
+        <appender-ref ref="STARTUP"/>
+        <appender-ref ref="REDISCONNECT"/>
     </root>
 
 </configuration>
@@ -156,12 +204,15 @@ Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/
 ### Sample env.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
 ```yml
 connections:
-  jobConfigConnection:
-    redisUrl: redis://127.0.0.1:12011
-  srcConnection:
-      redisUrl: redis://127.0.0.1:14000
-  metricsConnection:
-      redisUrl: redis://127.0.0.1:12011
+  - id: jobConfigConnection
+    type: Redis
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
+  - id: targetConnection
+    type: Redis
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14000
+  - id: metricsConnection
+    type: Redis
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
 ```
 
 </p>
@@ -175,9 +226,6 @@ connections:
 ```yml
 connectionId: jobConfigConnection
 job:
-  stream: jobStream
-  configSet: jobConfigs
-  consumerGroup: jobGroup
   metrics:
     connectionId: metricsConnection
     retentionInHours: 12
@@ -204,7 +252,7 @@ job:
       config: JobConfig.yml
       variables:
         durableClientTimeout: "3000" #This is string value, not a number
-        gemfireConnectionProvider: com.ivoyant.cdc.connector.gemfire.GemfireConnectionProviderImpl
+        gemfireConnectionProvider: GemfireConnectionProvider
         gemfireConnectionId: gemfireConnection
 ```
 
@@ -217,28 +265,9 @@ job:
 #### Configuration for Job Reaper and Job Claimer processes.
 ### Sample JobManager.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
 ```yml
-connectionId: jobConfigConnection # This refers to connectionId from env.yml for Job Config Redis
-jobTypeId: jobType1
-jobStream: jobStream
-jobConfigSet: jobConfigs
-initialDelay: 10000
-numManagementThreads: 2
-metricsReporter: 
+connectionId: jobConfigConnection
+metricsReporter:
   - REDIS_TS_METRICS_REPORTER
-heartBeatConfig:
-  key: hb-jobManager
-  expiry: 30000
-jobHeartBeatKeyPrefix: "hb-job:"
-jobHeartbeatCheckInterval: 45000
-jobClaimerConfig:
-  initialDelay: 10000
-  claimInterval: 60000
-  heartBeatConfig:
-    key: "hb-job:"
-    expiry: 30000 
-  maxNumberOfJobs: 2
-  consumerGroup: jobGroup
-  batchSize: 1
 ```
 
 </p>
@@ -251,14 +280,13 @@ jobClaimerConfig:
 ### Sample JobConfig.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
 You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<region_type>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 ```yml
-jobId: ${jobId} #Unique Job Identifier. This value is the job name from Setup.yml
+jobId: ${jobId}
 producerConfig:
   producerId: GEMFIRE_EVENT_PRODUCER
   connectionProvider: "${gemfireConnectionProvider}"
   connectionId: "${gemfireConnectionId}"
   clientId: ${jobId}
   clientTimeout: "${durableClientTimeout}" #this has to be quoted, to force the value to be string
-  metricsKey: "${jobId}:PendingMessageCount"
   durable: true
   metricsEnabled: false
   regions:
@@ -266,20 +294,20 @@ producerConfig:
   pollingInterval: 100
 pipelineConfig:
   bufferSize: 1024
-  eventTranslator: ENTRY_EVENT_2_OP_TRANSLATOR
+  eventTranslator: GEMFIRE_TRANSLATOR
   checkpointConfig:
-    providerId: STRING_CHECKPOINT_READER
-    connectionId: srcConnection
+    providerId: GEMFIRE_STRING_CHECKPOINT_READER
+    connectionId: targetConnection
     checkpoint: "${jobId}"
   stages:
-    StringhWriteStage:
-      handlerId: KV_2_STRING_WRITER
-      connectionId: srcConnection
+    StringWriteStage:
+      handlerId: REDIS_KV_TO_STRING_WRITER
+      connectionId: targetConnection
       metricsEnabled: true
       async: true
     CheckpointStage:
-      handlerId: STRING_CP_WRITER
-      connectionId: srcConnection
+      handlerId: REDIS_STRING_CHECKPOINT_WRITER
+      connectionId: targetConnection
       metricEnabled: false
       async: true
       checkpoint: "${jobId}"
@@ -331,14 +359,14 @@ pipelineConfig:
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://geode.apache.org/schema/cache http://geode.apache.org/schema/cache/cache-1.0.xsd"
         version="1.0">
-    <cache-server port="11111" max-connections="16"/>
-    
+    <cache-server bind-address="127.0.0.1" port="11111" max-connections="16"/>
+
     <pdx read-serialized="true">
         <pdx-serializer>
             <class-name>org.apache.geode.pdx.ReflectionBasedAutoSerializer</class-name>
         </pdx-serializer>
     </pdx>
-    
+
     <region name="checkpoint">
         <region-attributes refid="PARTITION">
             <key-constraint>java.lang.String</key-constraint>
@@ -377,8 +405,8 @@ pipelineConfig:
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://geode.apache.org/schema/cache http://geode.apache.org/schema/cache/cache-1.0.xsd"
         version="1.0">
-    <cache-server port="21111" max-connections="16"/>
-    
+    <cache-server bind-address="127.0.0.1" port="21111" max-connections="16"/>
+
     <region name="checkpoint">
         <region-attributes refid="PARTITION">
             <key-constraint>java.lang.String</key-constraint>
