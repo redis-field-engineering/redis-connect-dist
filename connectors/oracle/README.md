@@ -289,7 +289,7 @@ metricsReporter:
 <details><summary>Configure JobConfig.yml</summary>
 <p>
 
-#### Job level details. Please see [writers](../../docs/writers) for other write stage usages.
+#### Job level details. Please see [writers](../../docs/writers.md) for other write stage usages.
 
 ### Sample JobConfig.yml under redis-connect-oracle/config/samples/oracle folder
 
