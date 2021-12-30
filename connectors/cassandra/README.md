@@ -1,8 +1,8 @@
 # redis-connect-cassandra
 
 redis-connect-cassandra is a connector framework for capturing row level changes (INSERT, UPDATE and DELETE) from Cassandra nodes (source) and writing them to a Redis Enterprise database (Target).
-<p>
-The first time the connector connects to a Cassandra node, it performs a snapshot of all CDC-enabled tables in all key spaces. The connector will also read the changes that are written to Cassandra commit logs and generates corresponding insert, update, and delete events. All events for each table are recorded in a separate Redis data structure, where they can be consumed easily by applications and services.
+
+The first time the connector connects to a Cassandra node, it performs a snapshot of all CDC-enabled tables in all key spaces. The connector will also read the changes that are written to Cassandra commit logs and generates corresponding insert, update, and delete events. All events for each table are recorded in a separate [Redis data structure or module](../../docs/writers.md) of your choice, where they can be consumed easily by applications and services.
 
 ## Overview
 

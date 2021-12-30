@@ -2,10 +2,9 @@
 
 redis-connect-sqlserver is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from MS SQL Server (source) and writing them to a Redis Enterprise database (Target). redis-connect-sqlserver cdc connector implementation is based on <a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html" target="_blank">Debezium</a>, which is an open source distributed platform for change data capture.
 
-<p>
 The first time redis-connect-sqlserver connects to a SQL Server database/cluster, it reads a consistent snapshot of all the schemas.
 When that snapshot is complete, the connector continuously streams the changes that were committed to SQL Server and generates a corresponding insert, update or delete event.
-All the events for each table(s) are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
+All the events for each table(s) are recorded in a separate [Redis data structure or module](../../docs/writers.md) of your choice, where they can be easily consumed by applications and services.
 
 ## Overview
 
@@ -13,7 +12,7 @@ The functionality of the connector is based upon [change data capture](https://d
 Using this mechanism, a SQL Server capture process monitors all databases and tables the user is interested in and stores the changes into specifically created _CDC_ tables that have a stored procedure facade.
 
 The database operator must [enable](https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-2017) _CDC_ for the table(s) that should be captured by the connector.
-The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, while recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as [Hashes](https://redis.io/topics/data-types#hashes).
+The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, while recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as [Hashes](https://redis.io/topics/data-types#hashes). Please see a list of supported data structures [here](../../docs/writers.md), and it's usage examples.
 
 The connector is also tolerant of failures.
 As the connector reads changes and produces events, it records the position i.e. [(_LSN / Log Sequence Number_)](https://docs.microsoft.com/en-us/sql/relational-databases/sql-server-transaction-log-architecture-and-management-guide?view=sql-server-ver15#Logical_Arch) in the target Redis Enterprise database that is associated with _CDC_ record with each event.

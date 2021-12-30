@@ -9,6 +9,7 @@ The functionality of the connector is based upon [Durable Client/Server Messagin
 
 The connector is also tolerant of failures. As the connector reads changes and produces events, it records the Checkpoint i.e. <i>DURABLE_CLIENT_ID</i> in the target Redis Enterprise database that is associated with _CDC_ record with each event.
 If the connector stops for any reason (including communication failures, network problems, or crashes), upon restart it simply continues reading the Regions where it last left off.
+The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, while recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as [Hashes](https://redis.io/topics/data-types#hashes). Please see a list of supported data structures [here](../../docs/writers.md), and it's usage examples.
 
 ## Architecture
 

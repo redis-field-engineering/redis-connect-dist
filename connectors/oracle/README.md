@@ -2,10 +2,9 @@
 
 redis-connect-oracle is a Redis Connect connector for capturing changes (INSERT, UPDATE and DELETE) from Oracle (source) and writing them to a Redis Enterprise database (Target). redis-connect-oracle cdc connector implementation is based on <a href="https://debezium.io/documentation/reference/stable/connectors/oracle.html" target="_blank">Debezium</a>, which is an open source distributed platform for change data capture.
 
-<p>
 The first time redis-connect-oracle connects to an Oracle database, it reads a consistent snapshot of all the schemas.
 When that snapshot is complete, the connector continuously streams the changes that were committed to Oracle and generates a corresponding insert, update or delete event.
-All the events for each table(s) are recorded in a separate Redis data structure or module of your choice, where they can be easily consumed by applications and services.
+All the events for each table(s) are recorded in a separate [Redis data structure or module](../../docs/writers.md) of your choice, where they can be easily consumed by applications and services.
 
 ## Architecture
 
@@ -293,7 +292,7 @@ metricsReporter:
 
 ### Sample JobConfig.yml under redis-connect-oracle/config/samples/oracle folder
 
-You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
+You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<table_name>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more, and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 
 ```yml
 jobId: ${jobId}
