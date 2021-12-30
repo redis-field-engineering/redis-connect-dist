@@ -106,6 +106,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 <p>
 
 #### logging configuration file.
+
 ### Sample logback.xml under redis-connect-gemfire/config folder
 ```xml
 <configuration debug="true" scan="true" scanPeriod="15 seconds">
@@ -276,7 +277,8 @@ metricsReporter:
 <details><summary>Configure JobConfig.yml</summary>
 <p>
 
-#### Job level details.
+#### Job level details. Please see [writers](../../docs/writers) for other write stage usages.
+
 ### Sample JobConfig.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
 You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<region_type>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 ```yml

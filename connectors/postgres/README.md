@@ -284,7 +284,7 @@ metricsReporter:
 <details><summary>Configure JobConfig.yml</summary>
 <p>
 
-#### Job level details.
+#### Job level details. Please see [writers](../../docs/writers) for other write stage usages.
 
 ### Sample JobConfig.yml under redis-connect-postgres/config/samples/postgres folder
 
