@@ -108,7 +108,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
 -e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine
 ```
@@ -181,7 +181,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=root \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine stage
 ```
@@ -239,7 +239,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=root \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine start
 ```
@@ -323,7 +323,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
 -e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine stage
 ```
@@ -385,7 +385,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
 -e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine start
 ```
@@ -488,8 +488,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=root \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-mysql/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine stage
 ```
@@ -511,8 +511,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=sa \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-mysql/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-mysql/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
 --net host \
 redislabs/redis-connect-mysql:pre-release-alpine start
 ```

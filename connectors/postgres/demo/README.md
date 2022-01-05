@@ -70,7 +70,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine
 ```
@@ -140,7 +140,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine stage
 ```
@@ -178,7 +178,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine start
 ```
@@ -289,7 +289,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine stage
 ```
@@ -327,7 +327,7 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine start
 ```
@@ -490,8 +490,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-postgres/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-postgres/extlib \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine stage
 ```
@@ -513,8 +513,8 @@ docker run \
 -e REDISCONNECT_SOURCE_USERNAME=redisconnect \
 -e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-postgres/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-postgres/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-postgres/extlib \
 --net host \
 redislabs/redis-connect-postgres:pre-release-alpine start
 ```

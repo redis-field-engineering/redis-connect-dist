@@ -71,7 +71,7 @@ docker run \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-db2/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 --net host \
 redislabs/redis-connect-db2:pre-release-alpine
 ```
@@ -136,7 +136,7 @@ docker run \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-db2/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 --net host \
 redislabs/redis-connect-db2:pre-release-alpine stage
 ```
@@ -174,7 +174,7 @@ docker run \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-db2/config \
+-v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 --net host \
 redislabs/redis-connect-db2:pre-release-alpine start
 ```
@@ -453,8 +453,8 @@ docker run \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-db2/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-db2/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-db2/extlib \
 --net host \
 redislabs/redis-connect-db2:pre-release-alpine stage
 ```
@@ -476,8 +476,8 @@ docker run \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/../config:/opt/redislabs/redis-connect-db2/config \
--v $(pwd)/../extlib:/opt/redislabs/redis-connect-db2/extlib \
+-v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect-db2/extlib \
 --net host \
 redislabs/redis-connect-db2:pre-release-alpine start
 ```
