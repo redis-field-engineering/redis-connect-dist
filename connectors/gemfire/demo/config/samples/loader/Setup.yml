@@ -1,20 +1,8 @@
 connectionId: jobConfigConnection
 job:
-  stream: loaderJobStream
-  configSet: loaderJobConfigs
-  completedJobsSet: loadercompletedJobs
-  consumerGroup: loaderJobGroup
   jobConfig:
-    - name: batchtaskcreator
+    - name: initial_load
       config: TaskCreator.yml
       variables:
         connectionProvider: GemfireConnectionProvider
         connectionId: gemfireConnection
-   
-
-
-        
-
-
-
-

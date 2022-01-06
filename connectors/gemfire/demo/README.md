@@ -40,13 +40,13 @@ Start locator
 gfsh>start locator --name=locator1 --bind-address=127.0.0.1
 
 Start server1
-gfsh>start server --name=server1 --bind-address=127.0.0.1 --cache-xml-file=~/redis-connect-gemfire/config/samples/cdc/gemfire2redis/cache.xml
+gfsh>start server --name=server1 --bind-address=127.0.0.1 --cache-xml-file=/home/viragtripathi/redis-connect-gemfire/demo/config/samples/cdc/gemfire2redis/cache.xml
 
 Start server2
-gfsh>start server --name=server2 --bind-address=127.0.0.1 --cache-xml-file=~/redis-connect-gemfire/config/samples/cdc/gemfire2redis/cache1.xml
+gfsh>start server --name=server2 --bind-address=127.0.0.1 --cache-xml-file=/home/viragtripathi/redis-connect-gemfire/demo/config/samples/cdc/gemfire2redis/cache1.xml
 
 Deploy jar for the initial loader process
-gfsh>deploy --jar=~/redis-connect-gemfire/lib/connector-gemfire-fn-0.8.0.jar
+gfsh>deploy --jar=/home/viragtripathi/redis-connect-gemfire/demo/extlib/connector-gemfire-fn-0.8.0.jar
 ```
 
 ## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
@@ -80,7 +80,7 @@ redislabs/redis-connect-gemfire:latest
 
 <details><summary>Expected output:</summary>
 <p>
-  
+
 ```bash
 -------------------------------
 Redis Connect startup script.
@@ -99,97 +99,7 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 </p>
 </details>
 
--------------------------------
-
-### Initial Loader Steps
-<details><summary><b>INSERT few records into gemfire table (source)</b></summary>
-<p>
-
-```bash
-
-```
-
-</p>
-</details>
-
-<details><summary><b>Stage pre-configured loader job</b></summary>
-<p>
-
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-gemfire \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-gemfire/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME= \
--e REDISCONNECT_SOURCE_PASSWORD= \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/config:/opt/redislabs/redis-connect-gemfire/config \
---net host \
-redislabs/redis-connect-gemfire:latest stage
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
--------------------------------
-Staging Redis Connect redis-connect-gemfire v1.0.2.151 job using Java 11.0.12 on 16229e5715a1 started by root in /opt/redislabs/redis-connect-gemfire/bin
-Loading Redis Connect redis-connect-gemfire Configurations from /opt/redislabs/redis-connect-gemfire/config/samples/loader
-.....
-.....
-12:31:38.726 [main] INFO  startup - Setup Completed.
--------------------------------
-```
-
-</p>
-</details>
-
-<details><summary><b>Start pre configured loader job</b></summary>
-<p>
-
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-gemfire \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-gemfire/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/loader \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/config:/opt/redislabs/redis-connect-gemfire/config \
---net host \
-redislabs/redis-connect-gemfire:latest start
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
-
-```
-
-</p>
-</details>
-
-<details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
-<p>
-
-```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000'
-
-```
-
-</p>
-</details>
-
--------------------------------
+----
 
 ### CDC Steps
 <details><summary><b>Stage pre-configured cdc job</b></summary>
@@ -200,7 +110,7 @@ docker run \
 -it --rm --privileged=true \
 --name redis-connect-gemfire \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-gemfire/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/gemfire2redis \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/cdc/gemfire2redis \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-gemfire/config \
 --net host \
@@ -215,11 +125,24 @@ redislabs/redis-connect-gemfire:latest stage
 
 ```bash
 -------------------------------
-Staging Redis Connect redis-connect-gemfire v1.0.2.151 job using Java 11.0.12 on virag-cdc started by root in /opt/redislabs/redis-connect-gemfire/bin.
-Loading Redis Connect redis-connect-gemfire Configurations from /opt/redislabs/redis-connect-gemfire/config/samples/gemfire.
-.....
-.....
-20:15:06.819 [main] INFO  startup - Setup Completed.
+Staging Redis Connect redis-connect-gemfire v0.5.0.135 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-gemfire/bin
+Loading Redis Connect redis-connect-gemfire Configurations from /opt/redislabs/redis-connect-gemfire/config/samples/cdc/gemfire2redis
+....
+17:39:43.212 [main] INFO  startup - ##################################################################
+17:39:43.214 [main] INFO  startup -
+17:39:43.214 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
+
+17:39:43.214 [main] INFO  startup -
+17:39:43.214 [main] INFO  startup - ##################################################################
+....
+17:39:45.566 [main] INFO  startup - ##################################################################
+17:39:45.569 [main] INFO  startup -
+17:39:45.569 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
+17:39:45.569 [main] INFO  startup -
+17:39:45.569 [main] INFO  startup - ##################################################################
+....
+17:39:47.250 [main] INFO  startup - Instance: 100@virag-cdc successfully seeded Metrics related metadata
+17:39:47.250 [main] INFO  startup - Instance: 100@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
 -------------------------------
 ```
 
@@ -234,7 +157,7 @@ docker run \
 -it --rm --privileged=true \
 --name redis-connect-gemfire \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-gemfire/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/gemfire2redis \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/cdc/gemfire2redis \
 -e REDISCONNECT_REST_API_ENABLED=true \
 -e REDISCONNECT_REST_API_PORT=8282 \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
@@ -250,16 +173,52 @@ redislabs/redis-connect-gemfire:latest start
 <p>
 
 ```bash
+-------------------------------
+Starting Redis Connect redis-connect-gemfire v0.5.0.135 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-gemfire/bin
+Loading Redis Connect redis-connect-gemfire Configurations from /opt/redislabs/redis-connect-gemfire/config/samples/gemfire2redis
+17:40:09,940 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-gemfire/config/logback.xml] at [file:/opt/redislabs/redis-connect-gemfire/config/logback.xml]
+....
+17:40:10.222 [main] INFO  startup -
+17:40:10.225 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
+17:40:10.225 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
+17:40:10.226 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
+17:40:10.226 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
+17:40:10.226 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
+17:40:10.226 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
+17:40:10.227 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
+17:40:10.227 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+17:40:10.227 [main] INFO  startup -
+17:40:10.227 [main] INFO  startup - ##################################################################
+17:40:10.227 [main] INFO  startup -
+17:40:10.227 [main] INFO  startup - Initializing Redis Connect Instance
+17:40:10.227 [main] INFO  startup -
+17:40:10.227 [main] INFO  startup - ##################################################################
+....
+17:40:26.854 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for HeartbeatManager service
+17:40:26.855 [JobManager-1] INFO  startup - Instance: 30@virag-cdc was successfully elected Redis Connect cluster leader
+17:40:36.901 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_KV_TO_STRING_WRITER
+17:40:36.919 [JobManager-1] WARN  startup - metricsKey not set - Metrics collection will be disabled
+17:40:36.929 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
+17:40:36.933 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_STRING_CHECKPOINT_WRITER
+17:40:36.933 [JobManager-1] WARN  startup - metricsKey not set - Metrics collection will be disabled
+17:40:36.943 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisCheckpointReader service
+17:40:38.237 [JobManager-1] INFO  startup - Client with clientId : {connect}:job:job1 connecting for the first time
+17:40:38.240 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:job:job1
+17:40:38.241 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has successfully claimed ownership of JobId: {connect}:job:job1
+17:40:38.241 [JobManager-1] INFO  startup - Instance: 30@virag-cdc has claimed 1 job(s) from its 2 max allowable capacity
+17:40:38.254 [JobManager-1] INFO  startup - JobId: {connect}:job:job1 claim request with ID: 1641490787024-0 has been fully processed and all metadata has been updated
+17:40:38.258 [JobManager-1] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:job1","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
+17:40:38.258 [lettuce-nioEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:job1","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
 ```
 
 </p>
 </details>
 
-<details><summary><b>INSERT a record into gemfire table (source)</b></summary>
+<details><summary><b>INSERT a record into gemfire region (source)</b></summary>
 <p>
 
 ```bash
-
+gfsh> put --key='redis123' --value='Hello Redis!!' --region=/session
 ```
 
 </p>
@@ -269,8 +228,8 @@ redislabs/redis-connect-gemfire:latest start
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000'
-
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 get redis123'
+"Hello Redis!!"
 ```
 
 </p>
@@ -278,60 +237,22 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000'
 
 Similarly `UPDATE` and `DELETE` records on Gemfire source and see Redis target getting updated in near real-time.
 
--------------------------------
-
-### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
-
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#initial-loader-steps) and [CDC Steps](#cdc-steps).
-
-Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
-```yml
-  stages:
-    CustomStage:
-      handlerId: TO_UPPER_CASE
-```
-<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
+<details><summary><b>UPDATE a record into gemfire region (source)</b></summary>
 <p>
 
 ```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-gemfire \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-gemfire/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=redisconnect \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/config:/opt/redislabs/redis-connect-gemfire/config \
--v $(pwd)/extlib:/opt/redislabs/redis-connect-gemfire/extlib \
---net host \
-redislabs/redis-connect-gemfire:latest stage
+gfsh> put --key='redis123' --value='Hello World!!' --region=/session
 ```
 
 </p>
 </details>
 
-<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
+<details><summary><b>DELETE a record from gemfire region (source)</b></summary>
 <p>
 
 ```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-gemfire \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-gemfire/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-gemfire/config/samples/loader \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE_USERNAME= \
--e REDISCONNECT_SOURCE_PASSWORD= \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/config:/opt/redislabs/redis-connect-gemfire/config \
--v $(pwd)/extlib:/opt/redislabs/redis-connect-gemfire/extlib \
---net host \
-redislabs/redis-connect-gemfire:latest start
+gfsh> remove --region=/session --key='redis123'
 ```
 
 </p>
 </details>
-
-Validate the output after CustomStage run and make sure that `fname` and `lname` values in Redis has been updated to UPPER CASE.
