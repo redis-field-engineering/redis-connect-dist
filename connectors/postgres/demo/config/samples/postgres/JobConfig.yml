@@ -4,7 +4,6 @@ producerConfig:
   connectionId: RDBConnection
   tables:
     - public.emp #schema.table
-    #- public.heartbeat # heartbeat table to keep postgres active
   metricsEnabled: false
 pipelineConfig:
   eventTranslator: "${sourceValueTranslator}"

@@ -130,12 +130,16 @@ spec:
             path: env.yml
           - key: mapper1.yml
             path: mappers/mapper1.yml
-      - name: custom-stage-volume  
-        configMap:
-          name: redis-connect-postgres-config
-          items:  # define as many custom stages as you have here
-          - key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
-            path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+# #### uncomment the following six lines if you have custom
+#  transformation implementation and replace the jar with
+#  your own.
+# ####
+      #- name: custom-stage-volume
+      #configMap:
+      #name: redis-connect-postgres-config
+      #items:  # define as many custom stages as you have here
+      #- key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      #path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
       - name: tmpfsdir
         emptyDir:  # node-ephemeral volume
           medium: Memory

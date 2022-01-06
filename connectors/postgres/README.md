@@ -75,7 +75,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 #### Configuration files
 
-<details><summary>Configure logback.xml</summary>
+<details><summary>Configure logback.xml [OPTIONAL]</summary>
 <p>
 
 #### logging configuration file.
@@ -177,7 +177,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 </p>
 </details>
 
-<details><summary>Configure env.yml</summary>
+<details><summary>Configure env.yml [MANDATORY]</summary>
 <p>
 
 #### Environment configuration file with source and target connection information.
@@ -187,7 +187,7 @@ Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/
 ### Sample env.yml under redis-connect-postgres/config/samples/[postgres|loader] folder. Any of these fields (values) can be replaced by environment variables.
 | :memo:        |
 |---------------|
-If you encounter <a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-wal-disk-space" target="_blank">WAL disk space consumption</a> issue with Postgres then <a href="https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/postgres/demo/postgres_cdc.sql#L18-L20" target="_blank">Create a heartbeat table</a> and uncomment the `heartbeat.interval.ms` and `heartbeat.action.query` properties below and enable the producer's pipeline for the `heartbeat` table by uncommenting `#- public.heartbeat # heartbeat table to keep postgres active` in `JobConfig.yml`.
+If you encounter <a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-wal-disk-space" target="_blank">WAL disk space consumption</a> issue with Postgres then <a href="https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/postgres/demo/postgres_cdc.sql#L18-L20" target="_blank">Create a heartbeat table</a> and uncomment the `heartbeat.interval.ms` and `heartbeat.action.query` properties below.
 
 ```yml
 connections:
@@ -216,7 +216,7 @@ connections:
 </p>
 </details>
 
-<details><summary>Configure Setup.yml</summary>
+<details><summary>Configure Setup.yml [MANDATORY]</summary>
 <p>
 
 #### Environment level configurations.
@@ -264,7 +264,7 @@ job:
 </p>
 </details>
 
-<details><summary>Configure JobManager.yml</summary>
+<details><summary>Configure JobManager.yml [OPTIONAL]</summary>
 <p>
 
 #### Configuration for Job Reaper and Job Claimer processes.
@@ -280,7 +280,7 @@ metricsReporter:
 </p>
 </details>
 
-<details><summary>Configure JobConfig.yml</summary>
+<details><summary>Configure JobConfig.yml [MANDATORY]</summary>
 <p>
 
 #### Job level details. Please see [writers](../../docs/writers.md) for other write stage usages.
@@ -296,7 +296,6 @@ producerConfig:
   connectionId: RDBConnection
   tables:
     - public.emp #schema.table
-    #- public.heartbeat # heartbeat table to keep postgres active
   metricsEnabled: false
 pipelineConfig:
   eventTranslator: "${sourceValueTranslator}"
@@ -324,7 +323,7 @@ pipelineConfig:
 </p>
 </details>
 
-<details><summary>Configure mapper.yml</summary>
+<details><summary>Configure mapper.yml [MANDATORY]</summary>
 <p>
 
 #### mapper configuration file.
@@ -366,16 +365,6 @@ tables:
         - src: dept
           target: Department
           type: INT
-  #- table: heartbeat
-    #mapper:
-        #id: heartbeat
-        #processorID: heartbeat
-        #publishBefore: false
-        #passThrough: true
-        #columns:
-          #- src: id
-          #target: id
-          #publishBefore: false
 ```
 
 If you don't need any transformation of source columns then you can simply use passThrough option and you don't need to explicitly map each source columns to Redis target data structure.
