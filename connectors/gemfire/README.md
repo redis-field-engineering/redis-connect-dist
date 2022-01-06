@@ -9,7 +9,7 @@ The functionality of the connector is based upon [Durable Client/Server Messagin
 
 The connector is also tolerant of failures. As the connector reads changes and produces events, it records the Checkpoint i.e. <i>DURABLE_CLIENT_ID</i> in the target Redis Enterprise database that is associated with _CDC_ record with each event.
 If the connector stops for any reason (including communication failures, network problems, or crashes), upon restart it simply continues reading the Regions where it last left off.
-The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, while recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as [Hashes](https://redis.io/topics/data-types#hashes). Please see a list of supported data structures [here](../../docs/writers.md), and it's usage examples.
+The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, while recording all the change events for each table in a Redis Enterprise Database.
 
 ## Architecture
 
@@ -164,7 +164,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
     </logger>
 
 
-    <logger name="com.redislabs" level="INFO" additivity="false">
+    <logger name="com.redis" level="INFO" additivity="false">
         <appender-ref ref="REDISCONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
@@ -470,3 +470,8 @@ Once staging is done, execute the same script with <i>start</i> option to start 
 ```bash
 redis-connect-gemfire/bin$ ./redisconnect.sh start
 ```
+
+| ℹ️                                         |
+|:-------------------------------------------|
+| Quick Start: Follow the [demo](demo)       |
+| K8s Setup: Follow the [k8s-docs](k8s-docs) |

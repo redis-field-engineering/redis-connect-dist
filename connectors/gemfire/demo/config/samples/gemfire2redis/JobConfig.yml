@@ -1,0 +1,32 @@
+jobId: ${jobId}
+producerConfig:
+  producerId: GEMFIRE_EVENT_PRODUCER
+  connectionProvider: "${gemfireConnectionProvider}"
+  connectionId: "${gemfireConnectionId}"
+  clientId: ${jobId}
+  clientTimeout: "${durableClientTimeout}" #this has to be quoted, to force the value to be string
+  durable: true
+  metricsEnabled: false
+  regions:
+    - session
+  pollingInterval: 100
+pipelineConfig:
+  bufferSize: 1024
+  eventTranslator: GEMFIRE_TRANSLATOR
+  checkpointConfig:
+    providerId: GEMFIRE_STRING_CHECKPOINT_READER
+    connectionId: targetConnection
+    checkpoint: "${jobId}"
+  stages:
+    StringWriteStage:
+      handlerId: REDIS_KV_TO_STRING_WRITER
+      connectionId: targetConnection
+      metricsEnabled: true
+      async: true
+    CheckpointStage:
+      handlerId: REDIS_STRING_CHECKPOINT_WRITER
+      connectionId: targetConnection
+      metricEnabled: false
+      async: true
+      checkpoint: "${jobId}"
+

@@ -1,0 +1,31 @@
+connectionId: jobConfigConnection
+job:
+  metrics:
+    connectionId: metricsConnection
+    retentionInHours: 12
+    keys:
+      - key: "session:I:Throughput"
+        retentionInHours: 4
+        labels:
+          region: session
+          op: I
+      - key: "session:U:Throughput"
+        retentionInHours: 4
+        labels:
+          region: session
+          op: U
+      - key: "session:D:Throughput"
+        retentionInHours: 4
+        labels:
+          region: session
+          op: D
+      - key: "job1:PendingMessageCount"
+        retentionInHours: 4
+  jobConfig:
+    - name: job1
+      config: JobConfig.yml
+      variables:
+        durableClientTimeout: "3000" #This is string value, not a number
+        gemfireConnectionProvider: GemfireConnectionProvider
+        gemfireConnectionId: gemfireConnection
+   

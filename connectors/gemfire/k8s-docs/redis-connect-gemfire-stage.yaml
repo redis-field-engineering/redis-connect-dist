@@ -1,0 +1,162 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: redis-connect-gemfire-stage # deployment name
+  labels:
+    app: redis-connect-gemfire-stage # deployment label
+spec:
+  backOffLimit: 3 # try this many times before declaring failure
+  template: # pod template
+    metadata:
+      labels:
+        app: redis-connect-gemfire-stage 
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name:  redis-connect-gemfire # Container name 
+        image: redislabs/redis-connect-gemfire:pre-release-alpine #repo/image:tag
+# #### uncomment the following two lines for troubleshooting 
+#         command: [ "/bin/bash", "-c", "--" ]
+#         args: [ "while true; do sleep 30; done;" ]
+# ####
+        command: [ "/opt/redislabs/redis-connect-gemfire/bin/redisconnect.sh", "stage"] 
+        imagePullPolicy: Always # IfNotPresent # Always pull image
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+        ports:  
+        - containerPort: 8282 # exposed container port to the REST API 
+          protocol: TCP
+        env:
+          - name: REDISCONNECT_LOGBACK_CONFIG
+            value: "/opt/redislabs/redis-connect-gemfire/config/logs/logback.xml"
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_LOGBACK_CONFIG
+            #     name: redis-connect-gemfire-config
+          - name: REDISCONNECT_CONFIG
+            value: "/opt/redislabs/redis-connect-gemfire/config/fromconfigmap"
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_CONFIG
+            #     name: redis-connect-gemfire-config
+          - name: REDISCONNECT_REST_API_ENABLED
+            value: "false"
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_REST_API_ENABLED
+            #     name: redis-connect-gemfire-config
+          - name: REDISCONNECT_REST_API_PORT
+            value: "8282"
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_REST_API_PORT
+            #     name: redis-connect-gemfire-config
+          - name: REDISCONNECT_SOURCE_USERNAME
+            value: postgres
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_SOURCE_USERNAME
+            #     name: redis-connect-gemfire-config
+            # valueFrom:
+            #   secretKeyRef:
+            #     key: username
+            #     name: redis-connect-secret
+          - name: REDISCONNECT_SOURCE_PASSWORD
+            value: admin123
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_SOURCE_PASSWORD
+            #     name: redis-connect-gemfire-config
+            # valueFrom:
+            #   secretKeyRef:
+            #     key: password
+            #     name: redis-connect-secret
+          - name: REDISCONNECT_JAVA_OPTIONS
+            value: "-XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx1g"
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_JAVA_OPTIONS
+            #     name: redis-connect-gemfire-config
+          - name: REDISCONNECT_TARGET_PASSWORD
+            value: test
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_TARGET_PASSWORD
+            #     name: redis-connect-gemfire-config
+          - name: REDISCONNECT_TARGET_USERNAME
+            value: test
+            # valueFrom:
+            #   configMapKeyRef:
+            #     key: REDISCONNECT_TARGET_USERNAME
+            #     name: redis-connect-gemfire-config            
+        volumeMounts:
+        # - name: redis-connect-gemfire-pv
+        #   mountPath: "/opt/redislabs/redis-connect-gemfire"
+        - name: tmpfsdir # Pod volumes to mount into the container's filesystem. Cannot be updated.
+          mountPath: /tmpfs
+        - name: config-volume
+          mountPath: /opt/redislabs/redis-connect-gemfire/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG
+        - name: custom-stage-volume
+          mountPath: /opt/redislabs/redis-connect-gemfire/extlib  # Redis Connect expects the custom stage jars here
+      volumes:
+      - name: config-volume
+        configMap:
+          name: redis-connect-gemfire-config
+          items:
+          - key: JobConfig.yml
+            path: JobConfig.yml
+          - key: JobManager.yml
+            path: JobManager.yml
+          - key: Setup.yml
+            path: Setup.yml
+          - key: env.yml
+            path: env.yml
+          - key: mapper1.yml
+            path: mappers/mapper1.yml
+        # #### uncomment the following six lines if you have custom
+        #  transformation implementation and replace the jar with
+        #  your own.
+        # ####
+      #- name: custom-stage-volume
+        #configMap:
+          #name: redis-connect-gemfire-config
+          #items:  # define as many custom stages as you have here
+          #- key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+            #path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      - name: tmpfsdir
+        emptyDir:  # node-ephemeral volume
+          medium: Memory
+      # - name: redis-connect-gemfire-pv
+      #   persistentVolumeClaim:
+      #     claimName: redis-connect-gemfire-pvc                 
+---
+# RedisConnect service with name 'redis-connect-service'
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: redis-connect-service       # name should not be 'redis-connect' 
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 80
+#       targetPort: 8282
+#   selector:
+#     app: redis-connect
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: redis-connect-gemfire-pvc 
+# spec:
+#   storageClassName: gp2
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 20Gi
+# ---

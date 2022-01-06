@@ -1,0 +1,18 @@
+jobId: ${jobId}
+jobType: TASK_CREATOR
+producerConfig:
+  producerId: GEODE_TASK_CREATOR
+  jobs:
+    - region: session
+      jobPrefix: session-
+      numJobs: 5
+      batchSize: 500
+      #loadQuery: "select * from /session" - If load Query is not provided, then entries will be published instead of values
+      config: JobConfig.yml
+      variables:
+        connectionProvider: GemfireConnectionProvider
+        connectionId: gemfireConnection
+
+
+
+

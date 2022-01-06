@@ -1,0 +1,22 @@
+connectionId: jobConfigConnection
+jobTypeId: jobType1 #optional
+jobQueue: jobStream #optional
+jobSet: jobs #optional
+startDelay: 10000 #optional
+numManagementThreads: 2 #optional
+metricsReporter:
+  - REDIS_TS_METRICS_REPORTER
+heartbeatConfig: #optional
+  key: hb-jobManager #optional
+  ttl: 30000 #optional
+jobHeartbeatCheckInterval: 45000 #optional
+jobClaimerConfig: #optional
+  initialClaimDelay: 10000 #optional
+  claimInterval: 30000 #optional
+  heartbeatConfig: #optional
+    key: "hb-job:"
+    ttl: 30000
+  maxJobs: 2 #optional
+  claimGroup: connect:claimGroup #optional
+  claimSize: 1 #optional
+

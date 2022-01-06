@@ -1,0 +1,28 @@
+jobId: ${jobId}
+producerConfig:
+  producerId: GEODE_BATCH_EVENT_PRODUCER
+  connectionProvider: "${connectionProvider}"
+  connectionId: "${connectionId}"
+  clientId: ${jobId}
+  loadJobArgs: "${loadJobArgs}"
+  metricsEnabled: false
+pipelineConfig:
+  bufferSize: 1024
+  eventTranslator: GEMFIRE_BUCKET_TRANSLATOR
+  checkpointConfig:
+    providerId: GEMFIRE_STRING_CHECKPOINT_READER
+    connectionId: targetConnection
+    checkpoint: "${jobId}"
+  stages:
+    StringWriteStage:
+      handlerId: REDIS_KV_TO_STRING_WRITER
+      connectionId: targetConnection
+      metricsEnabled: true
+      async: true
+    CheckpointStage:
+      handlerId: REDIS_STRING_CHECKPOINT_WRITER
+      connectionId: targetConnection
+      metricEnabled: false
+      async: true
+      checkpoint: "${jobId}"
+
