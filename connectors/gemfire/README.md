@@ -99,7 +99,7 @@ Contents of redis-connect-gemfire
 
 ## Redis Connect Setup and Job Management Configurations
 
-Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` redis-connect-gemfire$ cp -R  config/samples/gemfire2redis config/<project_name>/gemfire2redis``` or reuse sample folder as is and edit/update the configuration values according to your setup.
+Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and templates folder under _config_ directory to the name of your choice e.g. ``` redis-connect-gemfire$ cp -R  config/samples/cdc/gemfire2redis config/<project_name>/gemfire2redis``` or reuse sample folder as is and edit/update the configuration values according to your setup.
 
 #### Configuration files
 
@@ -203,7 +203,7 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax).
 
-### Sample env.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
+### Sample env.yml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
 ```yml
 connections:
   - id: jobConfigConnection
@@ -224,7 +224,7 @@ connections:
 <p>
 
 #### Environment level configurations.
-### Sample Setup.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
+### Sample Setup.yml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
 ```yml
 connectionId: jobConfigConnection
 job:
@@ -265,7 +265,7 @@ job:
 <p>
 
 #### Configuration for Job Reaper and Job Claimer processes.
-### Sample JobManager.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
+### Sample JobManager.yml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
 ```yml
 connectionId: jobConfigConnection
 metricsReporter:
@@ -280,8 +280,8 @@ metricsReporter:
 
 #### Job level details
 
-### Sample JobConfig.yml under redis-connect-gemfire/config/samples/gemfire2redis folder
-You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<region_type>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
+### Sample JobConfig.yml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
+You can have one or more JobConfig.yml (or with any name e.g. JobConfig-<region_type>.yml) and specify them in the Setup.yml under jobConfig: tag. If specifying more than one table (as below) then make sure maxNumberOfJobs: tag under JobManager.yml is set accordingly e.g. if maxNumberOfJobs: tag is set to 2 then Redis Connect will start 2 cdc jobs under the same JVM instance. If the workload is more, and you want to spread out (scale) the cdc jobs then create multiple JobConfig's and specify them in the Setup.yml under jobConfig: tag.
 ```yml
 jobId: ${jobId}
 producerConfig:
@@ -323,7 +323,7 @@ pipelineConfig:
 <p>
 
 #### cache client configuration file.
-### Sample cache-client.xml under redis-connect-gemfire/config/samples/gemfire2redis folder
+### Sample cache-client.xml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -353,7 +353,7 @@ pipelineConfig:
 <p>
 
 #### cache configuration file.
-### Sample cache.xml under redis-connect-gemfire/config/samples/gemfire2redis folder
+### Sample cache.xml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -399,7 +399,7 @@ pipelineConfig:
 <p>
 
 #### cache1 configuration file.
-### Sample cache1.xml under redis-connect-gemfire/config/samples/gemfire2redis folder
+### Sample cache1.xml under redis-connect-gemfire/config/samples/cdc/gemfire2redis folder
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
