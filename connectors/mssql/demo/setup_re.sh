@@ -16,17 +16,49 @@ echo ""
 # Test the cluster
 sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/rladmin info cluster"
 
-echo "Creating databases..."
-rm create_demodb.sh
-tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_id": "9f8e4b44fbd28838190dbee7935e964d", "module_name": "search", "semantic_version": "2.0.11"}, {"module_args": "", "module_id": "4942f870bcd96678dd92cd55ae5d2801", "module_name": "ReJSON", "semantic_version": "1.0.8"} ] }' https://localhost:9443/v1/bdbs
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_id": "6715acd18978c330bb2fb3f4193f070c", "module_name": "timeseries", "semantic_version": "1.4.10"}]}' https://localhost:9443/v1/bdbs
+# Get the module info to be used for database creation
+tee -a list_modules.sh <<EOF
+curl -s -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-Type: application/json" -X GET https://localhost:9443/v1/modules | python -c 'import sys, json; modules = json.load(sys.stdin);
+modulelist = open("./module_list.txt", "a")
+for i in modules:
+     lines = i["display_name"], " ", i["module_name"], " ", i["uid"], " ", i["semantic_version"], "\n"
+     modulelist.writelines(lines)
+modulelist.close()'
 EOF
+
+sudo docker cp list_modules.sh re-node1:/opt/list_modules.sh
+sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/list_modules.sh"
+sudo docker exec --user root -it re-node1 bash -c "/opt/list_modules.sh"
+
+json_module_name=$(sudo docker exec --user root -it re-node1 bash -c "grep -i json /opt/module_list.txt | cut -d ' ' -f 2")
+json_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c "grep -i json /opt/module_list.txt | cut -d ' ' -f 4")
+search_module_name=$(sudo docker exec --user root -it re-node1 bash -c "grep -i search /opt/module_list.txt | cut -d ' ' -f 3")
+search_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c "grep -i search /opt/module_list.txt | cut -d ' ' -f 5")
+timeseries_module_name=$(sudo docker exec --user root -it re-node1 bash -c "grep -i timeseries /opt/module_list.txt | cut -d ' ' -f 2")
+timeseries_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c "grep -i timeseries /opt/module_list.txt | cut -d ' ' -f 4")
+
+echo "Creating databases..."
+tee -a create_demodb.sh <<EOF
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "$search_module_name", "semantic_version": "$search_semantic_version"}, {"module_args": "", "module_name": "$json_module_name", "semantic_version": "$json_semantic_version"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_name": "$timeseries_module_name", "semantic_version": "$timeseries_semantic_version"} ] }' https://localhost:9443/v1/bdbs
+EOF
+
 sleep 20
+
 sudo docker cp create_demodb.sh re-node1:/opt/create_demodb.sh
 sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/create_demodb.sh"
+//g" /opt/create_demodb.sh"t -it re-node1 bash -c "sed -i "s/
 sudo docker exec -it re-node1 bash -c "/opt/create_demodb.sh"
 echo ""
+
+echo Created RedisConnect-Target-db with
+echo $search_module_name
+echo $search_semantic_version
+echo $json_module_name
+echo $json_semantic_version
+echo Created RedisConnect-JobConfig-Metrics-db with
+echo $timeseries_module_name
+echo $timeseries_semantic_version
 
 echo "Creating idx:emp index for search.."
 sleep 10
@@ -47,3 +79,10 @@ sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-data
 echo "You can open a browser and access RedisInsight client UI at http://127.0.0.1:18001 (replace localhost with your ip/host) and add databases to monitor."
 echo "Please visit, https://docs.redis.com/latest/ri/using-redisinsight/add-instance/ for steps to add these databases to RedisInsight."
 echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redis.com/latest/rs/getting-started/getting-started-docker"
+
+# Cleanup
+rm list_modules.sh
+sudo docker exec --user root -it re-node1 bash -c "rm /opt/list_modules.sh"
+sudo docker exec --user root -it re-node1 bash -c "rm /opt/module_list.txt"
+rm create_demodb.sh
+sudo docker exec --user root -it re-node1 bash -c "rm /opt/create_demodb.sh"
