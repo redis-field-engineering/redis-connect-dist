@@ -47,7 +47,8 @@ sleep 20
 
 sudo docker cp create_demodb.sh re-node1:/opt/create_demodb.sh
 sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/create_demodb.sh"
-sudo docker exec --user root -it re-node1 bash -c "sed -i "s/^M//g" /opt/create_demodb.sh"
+sudo docker exec --user root -it re-node1 bash -c "sed -i "s/
+//g" /opt/create_demodb.sh"
 sudo docker exec -it re-node1 bash -c "/opt/create_demodb.sh"
 echo ""
 
