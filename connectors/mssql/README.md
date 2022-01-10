@@ -66,6 +66,14 @@ Before using the SQL Server connector (redis-connect-sqlserver) to capture the c
 
 ---
 
+### Minimum Hardware Requirements
+
+* 1GB of RAM
+* 4 CPU cores
+* 20GB of disk space
+* 1G Network
+* JRE 8+ (JRE 11 is preferred)
+
 **NOTE**
 
 The current [release](https://github.com/redis-field-engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
