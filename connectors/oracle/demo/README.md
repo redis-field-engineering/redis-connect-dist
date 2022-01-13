@@ -252,6 +252,7 @@ redis-connect-crud-loader/bin$ ./start.sh crudloader
 <details><summary><b>Stage pre-configured loader job</b></summary>
 <p>
 
+Please update the Oracle database port according to your setup e.g. In this demo setup port `1521` is used with Oracle `12c` and port `1522` is used with Oracle `19c`.
 ```bash
 docker run \
 -it --rm --privileged=true \
@@ -316,6 +317,7 @@ Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/re
 <details><summary><b>Start pre-configured loader job</b></summary>
 <p>
 
+Please update the Oracle database port according to your setup e.g. In this demo setup port `1521` is used with Oracle `12c` and port `1522` is used with Oracle `19c`.
 ```bash
 docker run \
 -it --rm --privileged=true \
@@ -452,6 +454,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 <details><summary><b>Stage pre-configured cdc job</b></summary>
 <p>
 
+Please update the Oracle database port according to your setup e.g. In this demo setup port `1521` is used with Oracle `12c` and port `1522` is used with Oracle `19c`.
 ```bash
 docker run \
 -it --rm --privileged=true \
@@ -521,6 +524,7 @@ Loading Redis Connect redis-connect-oracle Configurations from /opt/redislabs/re
 <details><summary><b>Start pre-configured cdc job</b></summary>
 <p>
 
+Please update the Oracle database port according to your setup e.g. In this demo setup port `1521` is used with Oracle `12c` and port `1522` is used with Oracle `19c`.
 ```bash
 docker run \
 -it --rm --privileged=true \

@@ -213,7 +213,7 @@ connections:
     url: "jdbc:oracle:thin:@127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true"
     host: 127.0.0.1
     port: 1521
-    username: c##rcuser
+    username: c##rcuser #LogMiner user
     password: rcpwd
   - id: RDBMetadataConnection
     type: RDB
@@ -222,7 +222,7 @@ connections:
     url: "jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1"
     host: 127.0.0.1
     port: 1521
-    username: hr
+    username: hr #Schema user
     password: hr
 ```
 
