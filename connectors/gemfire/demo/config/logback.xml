@@ -1,12 +1,13 @@
 <configuration debug="true" scan="true" scanPeriod="15 seconds">
 
-    <property name="START_UP_PATH" value="logs/redis-connect-startup.log"/>
-    <property name="LOG_PATH" value="logs/redis-connect.log"/>
+    <property name="LOG_REDIS_CONNECT_PATH" value="logs/redis-connect.log"/>
+    <property name="LOG_REDIS_CONNECT_MANAGER_PATH" value="logs/redis-connect-manager.log"/>
+    <property name="LOG_REDIS_CONNECT_HEARTBEAT_PATH" value="logs/redis-connect-heartbeat.log"/>
 
-    <appender name="STARTUP" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${START_UP_PATH}</file>
+    <appender name="REDIS_CONNECT_HEARTBEAT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_REDIS_CONNECT_HEARTBEAT_PATH}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/archived/startup.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>logs/archived/redis-connect-heartbeat.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- each archived file, size max 10MB -->
             <maxFileSize>10MB</maxFileSize>
             <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
@@ -18,9 +19,23 @@
             <pattern>%d %p %c{1.} [%t] %m%n</pattern>
         </encoder>
     </appender>
-
-    <appender name="REDISCONNECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}</file>
+    <appender name="REDIS_CONNECT_MANAGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_REDIS_CONNECT_MANAGER_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/redis-connect-manager.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="REDIS_CONNECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_REDIS_CONNECT_PATH}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- each archived file, size max 10MB -->
@@ -34,48 +49,54 @@
             <pattern>%d %p %c{1.} [%t] %m%n</pattern>
         </encoder>
     </appender>
-
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="startup" level="INFO" additivity="false">
-        <appender-ref ref="STARTUP"/>
+    <logger name="redis-connect-heartbeat" level="INFO" additivity="false">
+        <appender-ref ref="REDIS_CONNECT_HEARTBEAT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
-
-    <logger name="redisconnect" level="INFO" additivity="false">
-        <appender-ref ref="REDISCONNECT"/>
+    <logger name="redis-connect-manager" level="INFO" additivity="false">
+        <appender-ref ref="REDIS_CONNECT_MANAGER"/>
         <appender-ref ref="CONSOLE" />
     </logger>
-
-
-    <logger name="com.redis" level="INFO" additivity="false">
-        <appender-ref ref="REDISCONNECT"/>
+    <logger name="redis-connect" level="INFO" additivity="false">
+        <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="io.netty" level="OFF" additivity="false">
-        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="io.lettuce" level="OFF" additivity="false">
-        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="org.apache" level="OFF" additivity="false">
-        <appender-ref ref="REDISCONNECT"/>
+    <logger name="com.zaxxer" level="OFF" additivity="false">
+        <appender-ref ref="REDIS_CONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="io.debezium" level="INFO" additivity="false">
+        <appender-ref ref="REDIS_CONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.apache.kafka" level="OFF" additivity="false">
+        <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
     <logger name="org.springframework" level="OFF" additivity="false">
-        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 
     <root>
-        <appender-ref ref="STARTUP"/>
-        <appender-ref ref="REDISCONNECT"/>
+        <appender-ref ref="REDIS_CONNECT"/>
+        <appender-ref ref="REDIS_CONNECT_MANAGER"/>
+        <appender-ref ref="REDIS_CONNECT_HEARTBEAT"/>
     </root>
 
 </configuration>
