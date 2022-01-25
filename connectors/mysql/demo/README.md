@@ -87,8 +87,8 @@ demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT._LIST"
 </p>
 </details>
 
----
-**NOTE**
+| :memo:        |
+|---------------|
 
 The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
@@ -487,8 +487,8 @@ docker run \
 --name redis-connect-mysql \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=root \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
+-e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
@@ -510,8 +510,8 @@ docker run \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
 -e REDISCONNECT_REST_API_ENABLED=false \
 -e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE_USERNAME=sa \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
+-e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \

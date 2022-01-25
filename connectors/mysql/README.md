@@ -61,8 +61,8 @@ Before using the MySQL connector (redis-connect-mysql) to capture the changes co
 * 1G Network
 * JRE 8+ (JRE 11 is preferred)
 
-**NOTE**
-
+| :memo:        |
+|---------------|
 The current [release](https://github.com/RedisLabs-Field-Engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
 
 ---
@@ -83,12 +83,75 @@ Copy the _sample_ directory and it's contents i.e. _yml_ files, _mappers_ and te
 
 #### Configuration files
 
-<details><summary>Configure logback.xml</summary>
+<details><summary>Configure redisconnect.conf/cmd</summary>
+<p>
+
+| :memo:        |
+|---------------|
+For [*nixOS](https://en.wikipedia.org/wiki/Unix-like)
+
+### Configuration file for the startup script located under redis-connect-mysql/bin/redisconnect.conf
+
+```bash
+set -o allexport
+
+REDISCONNECT_MIN_JAVA_VERSION="8"
+REDISCONNECT_HOME="${pwd}.."
+REDISCONNECT_CONFIG="$REDISCONNECT_HOME/config/samples" #prepend the correct path to loader or cdc config folder e.g. "$REDISCONNECT_HOME/config/samples/mysql" or "$REDISCONNECT_HOME/config/samples/loader" or path of your choice
+REDISCONNECT_LOGBACK_CONFIG="$REDISCONNECT_HOME/config/logback.xml" #Location of the pre-packaged logback config
+REDISCONNECT_BANNER_MODE="off"
+REDISCONNECT_JAVA_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx1g" #edit or pass any JVM options here. Default is ok in most cases.
+REDISCONNECT_EXTLIB_DIR="$REDISCONNECT_HOME/extlib" #All external libraries e.g. custom transformation jars, client jar etc can go here.
+REDISCONNECT_LIB_DIR="$REDISCONNECT_HOME/lib/*:$REDISCONNECT_EXTLIB_DIR/*"
+REDISCONNECT_REST_API_ENABLED="false" #This is to enable embedded REST_API support
+REDISCONNECT_REST_API_PORT="8282" #update REST_API port to an available port if 8282 is taken.
+REDISCONNECT_SOURCE_USERNAME="" #Source username can be set here or directly in the env.yml or it can also come from environment variable / system properties
+REDISCONNECT_SOURCE_PASSWORD="" #Source password can be set here or directly in the env.yml or it can also come from environment variable / system properties
+REDISCONNECT_TARGET_USERNAME="" #Target username can be set here or directly in the env.yml or it can also come from environment variable / system properties
+REDISCONNECT_TARGET_PASSWORD="" #Target password can be set here or directly in the env.yml or it can also come from environment variable / system properties
+REDISCONNECT_SECRET="secret" #This is used for encrypting any passwords using the CLI and can be left blank after the encryption 
+
+set +o allexport
+```
+
+| :memo:        |
+|---------------|
+For [WindowsOS](https://en.wikipedia.org/wiki/Microsoft_Windows)
+
+### Configuration file for the startup script located under redis-connect-mysql/bin/redisconnect.cmd
+
+```bat
+set REDISCONNECT_HOME=%cd%\..
+set REDISCONNECT_CONFIG=%REDISCONNECT_HOME%\config\samples
+set REDISCONNECT_LOGBACK_CONFIG=%REDISCONNECT_HOME%\config\logback.xml
+set REDISCONNECT_BANNER_MODE="off"
+set REDISCONNECT_JAVA_OPTIONS=-XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx1g
+set REDISCONNECT_EXTLIB_DIR=%REDISCONNECT_HOME%\extlib
+set REDISCONNECT_LIB_DIR=%REDISCONNECT_HOME%\lib\*;%REDISCONNECT_EXTLIB_DIR%\*
+set CLASSPATH=.
+set CLASSPATH="%CLASSPATH%;%REDISCONNECT_LIB_DIR%"
+set REDISCONNECT_REST_API_ENABLED=false
+set REDISCONNECT_REST_API_PORT=8282
+set REDISCONNECT_SOURCE_USERNAME=""
+set REDISCONNECT_SOURCE_PASSWORD=""
+set REDISCONNECT_TARGET_USERNAME=""
+set REDISCONNECT_TARGET_PASSWORD=""
+set REDISCONNECT_SECRET="secret"
+```
+
+</p>
+</details>
+
+<details><summary>Configure logback.xml [OPTIONAL]</summary>
 <p>
 
 #### logging configuration file.
 
 ### Sample logback.xml under redis-connect-mysql/config folder
+
+| :memo:        |
+|---------------|
+No need to edit this file unless you want to change the log levels (for debugging purposes) or the log location.
 
 ```xml
 <configuration debug="true" scan="true" scanPeriod="15 seconds">
@@ -211,20 +274,20 @@ Redis URI syntax is described [here](https://github.com/lettuce-io/lettuce-core/
 connections:
   - id: jobConfigConnection
     type: Redis
-    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001 #if no value is passed to the username and/or password then "" is assumed. You can also parameterize the whole url e.g. ${REDISCONNECT_JOBCONFIG_REDIS_URL} and set the value in the redisconnect.conf file or through environment variable / system property
   - id: targetConnection
     type: Redis
-    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14000
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14000 #if no value is passed to the username and/or password then "" is assumed. You can also parameterize the whole url e.g. ${REDISCONNECT_TARGET_REDIS_URL} and set the value in the redisconnect.conf file or through environment variable / system property
   - id: metricsConnection
     type: Redis
-    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
+    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001 #if no value is passed to the username and/or password then "" is assumed. You can also parameterize the whole url e.g. ${REDISCONNECT_METRICS_REDIS_URL} and set the value in the redisconnect.conf file or through environment variable / system property
   - id: RDBConnection
     type: RDB
     name: RedisConnect #database pool name
     database: RedisConnect #database
-    url: "jdbc:mysql://127.0.0.1:3306/RedisConnect?useInformationSchema=true"
-    host: 127.0.0.1
-    port: 3306
+    url: "jdbc:mysql://127.0.0.1:3306/RedisConnect?useInformationSchema=true" #You can also parameterize the whole url e.g. ${REDISCONNECT_SOURCE_URL} and set the value in the redisconnect.conf file or through environment variable / system property
+    host: 127.0.0.1 #You can also parameterize the host e.g. ${REDISCONNECT_SOURCE_HOST} and set the value in the redisconnect.conf file or through environment variable / system property
+    port: 3306 #You can also parameterize the port e.g. ${REDISCONNECT_SOURCE_PORT} and set the value in the redisconnect.conf file or through environment variable / system property
     username: ${REDISCONNECT_SOURCE_USERNAME}
     password: ${REDISCONNECT_SOURCE_PASSWORD}
 ```
