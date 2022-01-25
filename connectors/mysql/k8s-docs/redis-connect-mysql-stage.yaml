@@ -5,7 +5,7 @@ metadata:
   labels:
     app: redis-connect-mysql-stage # deployment label
 spec:
-  backOffLimit: 3 # try this many times before declaring failure
+  backoffLimit: 3 # try this many times before declaring failure
   template: # pod template
     metadata:
       labels:
@@ -14,7 +14,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name:  redis-connect-mysql # Container name 
-        image: redislabs/redis-connect-mysql:pre-release-alpine #repo/image:tag
+        image: redislabs/redis-connect-mysql:latest #repo/image:tag
 # #### uncomment the following two lines for troubleshooting 
 #         command: [ "/bin/bash", "-c", "--" ]
 #         args: [ "while true; do sleep 30; done;" ]

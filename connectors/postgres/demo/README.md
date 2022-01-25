@@ -72,7 +72,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine
+redislabs/redis-connect-postgres:latest
 ```
 
 </p>
@@ -142,7 +142,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine stage
+redislabs/redis-connect-postgres:latest stage
 ```
 
 </p>
@@ -180,7 +180,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine start
+redislabs/redis-connect-postgres:latest start
 ```
 
 </p>
@@ -291,7 +291,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine stage
+redislabs/redis-connect-postgres:latest stage
 ```
 
 </p>
@@ -329,7 +329,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine start
+redislabs/redis-connect-postgres:latest start
 ```
 
 </p>
@@ -470,15 +470,17 @@ Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target 
 
 ### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
 
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#initial-loader-steps) and [CDC Steps](#cdc-steps).
+Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library and follow [Initial Loader Steps](#initial-loader-steps) or [CDC Steps](#cdc-steps).
 
-Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
+* Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
 ```yml
   stages:
     CustomStage:
       handlerId: TO_UPPER_CASE
 ```
-<details><summary><b>Stage pre configured loader job with Custom Stage</b></summary>
+* Please make sure the columns that are going to be used for this custom stage has the same value at the source and target i.e. it is not mapped to another name in Redis. For this example `fname` and `lname` are the default values for `col1` and `col2` and if you want to change this then pass a different column names to `REDISCONNECT_JAVA_OPTIONS` e.g. `-Dcol1=fname -Dcol2=job`
+
+<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -493,13 +495,13 @@ docker run \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-postgres/extlib \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine stage
+redislabs/redis-connect-postgres:latest stage
 ```
 
 </p>
 </details>
 
-<details><summary><b>Start pre configured loader job with Custom Stage</b></summary>
+<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -516,7 +518,7 @@ docker run \
 -v $(pwd)/config:/opt/redislabs/redis-connect-postgres/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-postgres/extlib \
 --net host \
-redislabs/redis-connect-postgres:pre-release-alpine start
+redislabs/redis-connect-postgres:latest start
 ```
 
 </p>
