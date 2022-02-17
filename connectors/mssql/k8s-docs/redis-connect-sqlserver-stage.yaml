@@ -1,25 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: redis-connect-mysql-stage # deployment name
+  name: redis-connect-sqlserver-stage # deployment name
   labels:
-    app: redis-connect-mysql-stage # deployment label
+    app: redis-connect-sqlserver-stage # deployment label
 spec:
-  backOffLimit: 3 # try this many times before declaring failure
+  backoffLimit: 3 # try this many times before declaring failure
   template: # pod template
     metadata:
       labels:
-        app: redis-connect-mysql-stage 
+        app: redis-connect-sqlserver-stage 
     spec:
       restartPolicy: OnFailure
       containers:
-      - name:  redis-connect-mysql # Container name 
-        image: redislabs/redis-connect-mysql:pre-release-alpine #repo/image:tag
+      - name:  redis-connect-sqlserver # Container name 
+        image: redislabs/redis-connect-sqlserver:latest #repo/image:tag
 # #### uncomment the following two lines for troubleshooting 
 #         command: [ "/bin/bash", "-c", "--" ]
 #         args: [ "while true; do sleep 30; done;" ]
 # ####
-        command: [ "/opt/redislabs/redis-connect-mysql/bin/redisconnect.sh", "stage"] 
+        command: [ "/opt/redislabs/redis-connect-sqlserver/bin/redisconnect.sh", "stage"] 
         imagePullPolicy: Always # IfNotPresent # Always pull image
         resources:
           limits:
@@ -33,35 +33,35 @@ spec:
           protocol: TCP
         env:
           - name: REDISCONNECT_LOGBACK_CONFIG
-            value: "/opt/redislabs/redis-connect-mysql/config/logs/logback.xml"
+            value: "/opt/redislabs/redis-connect-sqlserver/config/logs/logback.xml"
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_LOGBACK_CONFIG
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
           - name: REDISCONNECT_CONFIG
-            value: "/opt/redislabs/redis-connect-mysql/config/fromconfigmap"
+            value: "/opt/redislabs/redis-connect-sqlserver/config/fromconfigmap"
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_CONFIG
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
           - name: REDISCONNECT_REST_API_ENABLED
             value: "false"
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_REST_API_ENABLED
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
           - name: REDISCONNECT_REST_API_PORT
             value: "8282"
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_REST_API_PORT
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
           - name: REDISCONNECT_SOURCE_USERNAME
             value: redisconnectuser
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_SOURCE_USERNAME
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
             # valueFrom:
             #   secretKeyRef:
             #     key: username
@@ -71,7 +71,7 @@ spec:
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_SOURCE_PASSWORD
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
             # valueFrom:
             #   secretKeyRef:
             #     key: password
@@ -81,32 +81,32 @@ spec:
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_JAVA_OPTIONS
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
           - name: REDISCONNECT_TARGET_PASSWORD
             value: test
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_TARGET_PASSWORD
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-sqlserver-config
           - name: REDISCONNECT_TARGET_USERNAME
             value: test
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_TARGET_USERNAME
-            #     name: redis-connect-mysql-config            
+            #     name: redis-connect-sqlserver-config            
         volumeMounts:
-        # - name: redis-connect-mysql-pv
-        #   mountPath: "/opt/redislabs/redis-connect-mysql"
+        # - name: redis-connect-sqlserver-pv
+        #   mountPath: "/opt/redislabs/redis-connect-sqlserver"
         - name: tmpfsdir # Pod volumes to mount into the container's filesystem. Cannot be updated.
           mountPath: /tmpfs
         - name: config-volume
-          mountPath: /opt/redislabs/redis-connect-mysql/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG
+          mountPath: /opt/redislabs/redis-connect-sqlserver/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG
         - name: custom-stage-volume
-          mountPath: /opt/redislabs/redis-connect-mysql/extlib  # Redis Connect expects the custom stage jars here
+          mountPath: /opt/redislabs/redis-connect-sqlserver/extlib  # Redis Connect expects the custom stage jars here
       volumes:
       - name: config-volume
         configMap:
-          name: redis-connect-mysql-config
+          name: redis-connect-sqlserver-config
           items:
           - key: JobConfig.yml
             path: JobConfig.yml
@@ -120,16 +120,16 @@ spec:
             path: mappers/mapper1.yml
       - name: custom-stage-volume  
         configMap:
-          name: redis-connect-mysql-config
+          name: redis-connect-sqlserver-config
           items:  # define as many custom stages as you have here
           - key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
             path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
       - name: tmpfsdir
         emptyDir:  # node-ephemeral volume
           medium: Memory
-      # - name: redis-connect-mysql-pv
+      # - name: redis-connect-sqlserver-pv
       #   persistentVolumeClaim:
-      #     claimName: redis-connect-mysql-pvc                 
+      #     claimName: redis-connect-sqlserver-pvc                 
 ---
 # RedisConnect service with name 'redis-connect-service'
 # apiVersion: v1
@@ -147,7 +147,7 @@ spec:
 # apiVersion: v1
 # kind: PersistentVolumeClaim
 # metadata:
-#   name: redis-connect-mysql-pvc 
+#   name: redis-connect-sqlserver-pvc 
 # spec:
 #   storageClassName: gp2
 #   accessModes:

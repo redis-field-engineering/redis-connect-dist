@@ -73,7 +73,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 --net host \
-redislabs/redis-connect-db2:pre-release-alpine
+redislabs/redis-connect-db2:latest
 ```
 
 </p>
@@ -138,7 +138,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 --net host \
-redislabs/redis-connect-db2:pre-release-alpine stage
+redislabs/redis-connect-db2:latest stage
 ```
 
 </p>
@@ -176,7 +176,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 --net host \
-redislabs/redis-connect-db2:pre-release-alpine start
+redislabs/redis-connect-db2:latest start
 ```
 
 </p>
@@ -456,7 +456,7 @@ docker run \
 -v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-db2/extlib \
 --net host \
-redislabs/redis-connect-db2:pre-release-alpine stage
+redislabs/redis-connect-db2:latest stage
 ```
 
 </p>
@@ -479,7 +479,7 @@ docker run \
 -v $(pwd)/config:/opt/redislabs/redis-connect-db2/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-db2/extlib \
 --net host \
-redislabs/redis-connect-db2:pre-release-alpine start
+redislabs/redis-connect-db2:latest start
 ```
 
 </p>

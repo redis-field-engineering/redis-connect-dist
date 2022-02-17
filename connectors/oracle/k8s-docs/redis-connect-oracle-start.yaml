@@ -26,7 +26,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"    
       containers:
       - name:  redis-connect-oracle # Container name 
-        image: redislabs/redis-connect-oracle:pre-release-alpine #repo/image:tag
+        image: redislabs/redis-connect-oracle:latest #repo/image:tag
 #### uncomment the following two lines while you are setting up your 
         # command: [ "/bin/bash", "-c", "--" ]
         # args: [ "while true; do sleep 30; done;" ]

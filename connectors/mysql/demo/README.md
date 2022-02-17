@@ -87,8 +87,8 @@ demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT._LIST"
 </p>
 </details>
 
----
-**NOTE**
+| :memo:        |
+|---------------|
 
 The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
@@ -110,7 +110,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine
+redislabs/redis-connect-mysql:latest
 ```
 
 </p>
@@ -120,8 +120,8 @@ redislabs/redis-connect-mysql:pre-release-alpine
 <p>
 
 ```bash
-Unable to find image 'redislabs/redis-connect-mysql:pre-release-alpine' locally
-pre-release-alpine: Pulling from redislabs/redis-connect-mysql
+Unable to find image 'redislabs/redis-connect-mysql:latest' locally
+latest: Pulling from redislabs/redis-connect-mysql
 a0d0a0d46f8b: Already exists
 44537f359f3a: Pull complete
 9aaa9874ae7f: Pull complete
@@ -131,7 +131,7 @@ bfc29d6a129c: Pull complete
 249c85a8a900: Pull complete
 ffe4c573e59c: Pull complete
 Digest: sha256:da7987fd874c50bc858b3ba2d3affde3e2f8506b7a3a5f7d42c6feb1bc9d8621
-Status: Downloaded newer image for redislabs/redis-connect-mysql:pre-release-alpine
+Status: Downloaded newer image for redislabs/redis-connect-mysql:latest
 -------------------------------
 Redis Connect startup script.
 *******************************
@@ -183,7 +183,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine stage
+redislabs/redis-connect-mysql:latest stage
 ```
 
 </p>
@@ -225,7 +225,7 @@ Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/red
 </p>
 </details>
 
-<details><summary><b>Start pre configured loader job</b></summary>
+<details><summary><b>Start pre-configured loader job</b></summary>
 <p>
 
 ```bash
@@ -241,7 +241,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine start
+redislabs/redis-connect-mysql:latest start
 ```
 
 </p>
@@ -311,7 +311,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 -------------------------------
 
 ### CDC Steps
-<details><summary><b>Stage pre configured cdc job</b></summary>
+<details><summary><b>Stage pre-configured cdc job</b></summary>
 <p>
 
 ```bash
@@ -325,7 +325,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine stage
+redislabs/redis-connect-mysql:latest stage
 ```
 
 </p>
@@ -371,7 +371,7 @@ Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/red
 </p>
 </details>
 
-<details><summary><b>Start pre configured cdc job</b></summary>
+<details><summary><b>Start pre-configured cdc job</b></summary>
 <p>
 
 ```bash
@@ -387,7 +387,7 @@ docker run \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine start
+redislabs/redis-connect-mysql:latest start
 ```
 
 </p>
@@ -468,15 +468,17 @@ Similarly `UPDATE` and `DELETE` records on SQL Server source using queries on th
 
 ### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
 
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#initial-loader-steps) and [CDC Steps](#cdc-steps).
+Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library and follow [Initial Loader Steps](#initial-loader-steps) or [CDC Steps](#cdc-steps).
 
-Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
+* Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
 ```yml
   stages:
     CustomStage:
       handlerId: TO_UPPER_CASE
 ```
-<details><summary><b>Stage pre configured loader job with Custom Stage</b></summary>
+* Please make sure the columns that are going to be used for this custom stage has the same value at the source and target i.e. it is not mapped to another name in Redis. For this example `fname` and `lname` are the default values for `col1` and `col2` and if you want to change this then pass a different column names to `REDISCONNECT_JAVA_OPTIONS` e.g. `-Dcol1=fname -Dcol2=job`
+
+<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -485,19 +487,19 @@ docker run \
 --name redis-connect-mysql \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=root \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
+-e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine stage
+redislabs/redis-connect-mysql:latest stage
 ```
 
 </p>
 </details>
 
-<details><summary><b>Start pre configured loader job with Custom Stage</b></summary>
+<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -508,13 +510,13 @@ docker run \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
 -e REDISCONNECT_REST_API_ENABLED=false \
 -e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE_USERNAME=sa \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
+-e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
+-e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
 --net host \
-redislabs/redis-connect-mysql:pre-release-alpine start
+redislabs/redis-connect-mysql:latest start
 ```
 
 </p>

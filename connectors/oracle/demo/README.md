@@ -650,15 +650,17 @@ docker exec -it oracle-19.3.0-ee-$(hostname) bash -c "/tmp/load_sql.sh delete"
 
 ### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
 
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library then follow the same [Initial Loader Steps](#initial-loader-steps) and [CDC Steps](#cdc-steps).
+Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library and follow [Initial Loader Steps](#initial-loader-steps) or [CDC Steps](#cdc-steps).
 
-Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
+* Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
 ```yml
   stages:
     CustomStage:
       handlerId: TO_UPPER_CASE
 ```
-<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
+* Please make sure the columns that are going to be used for this custom stage has the same value at the source and target i.e. it is not mapped to another name in Redis. For this example `FIRST_NAME` and `LAST_NAME` are used as `col1` and `col2` values and if you want to change this then pass a different column names to `REDISCONNECT_JAVA_OPTIONS` as shown below in the start.
+
+<details><summary><b>Stage pre-configured cdc job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -666,13 +668,17 @@ docker run \
 -it --rm --privileged=true \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/loader \
--e REDISCONNECT_PDBNAME=ORCLPDB1 \
--e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/oracle \
 -e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
 -e REDISCONNECT_SOURCE_PORT=1521 \
--e REDISCONNECT_SOURCE_USERNAME=hr \
--e REDISCONNECT_SOURCE_PASSWORD=hr \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_CDBNAME=ORCLCDB \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_USERNAME=c##rcuser \
+-e REDISCONNECT_SOURCE_PASSWORD=rcpwd \
+-e REDISCONNECT_SOURCE_METADATA_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_METADATA_USERNAME=hr \
+-e REDISCONNECT_SOURCE_METADATA_PASSWORD=hr \
 -e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
 -e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
 -e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
@@ -686,7 +692,7 @@ redislabs/redis-connect-oracle:latest stage
 </p>
 </details>
 
-<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
+<details><summary><b>Start pre-configured cdc job with Custom Stage</b></summary>
 <p>
 
 ```bash
@@ -694,17 +700,21 @@ docker run \
 -it --rm --privileged=true \
 --name redis-connect-oracle \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-oracle/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/loader \
--e REDISCONNECT_PDBNAME=ORCLPDB1 \
--e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-oracle/config/samples/oracle \
 -e REDISCONNECT_SOURCE_HOST=127.0.0.1 \
 -e REDISCONNECT_SOURCE_PORT=1521 \
--e REDISCONNECT_SOURCE_USERNAME=hr \
--e REDISCONNECT_SOURCE_PASSWORD=hr \
+-e REDISCONNECT_PDBNAME=ORCLPDB1 \
+-e REDISCONNECT_CDBNAME=ORCLCDB \
+-e REDISCONNECT_SOURCE_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_USERNAME=c##rcuser \
+-e REDISCONNECT_SOURCE_PASSWORD=rcpwd \
+-e REDISCONNECT_SOURCE_METADATA_URL=jdbc:oracle:thin:@127.0.0.1:1521/ORCLPDB1?oracle.net.disableOob=true \
+-e REDISCONNECT_SOURCE_METADATA_USERNAME=hr \
+-e REDISCONNECT_SOURCE_METADATA_PASSWORD=hr \
 -e REDISCONNECT_JOBCONFIG_REDIS_URL=redis://127.0.0.1:14001 \
 -e REDISCONNECT_TARGET_REDIS_URL=redis://127.0.0.1:14000 \
 -e REDISCONNECT_METRICS_REDIS_URL=redis://127.0.0.1:14001 \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true" \
+-e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m -Doracle.net.disableOob=true -Dcol1=FIRST_NAME -Dcol2=LAST_NAME" \
 -v $(pwd)/config:/opt/redislabs/redis-connect-oracle/config \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect-oracle/extlib \
 --net host \
@@ -714,4 +724,25 @@ redislabs/redis-connect-oracle:latest start
 </p>
 </details>
 
-Validate the output after CustomStage run and make sure that `fname` and `lname` values in Redis has been updated to UPPER CASE.
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+....
+CustomStageDemo::onEvent Processor, jobId: {connect}:job:RedisConnect-Oracle, table: EMPLOYEES, operationType: C
+Original Virag : Virag
+Original King : King
+Updated Virag : VIRAG
+Updated King : KING
+CustomStageDemo::onEvent Processor, jobId: {connect}:job:RedisConnect-Oracle, table: EMPLOYEES, operationType: C
+Original Neena : Neena
+Original Kochhar : Kochhar
+Updated Neena : NEENA
+Updated Kochhar : KOCHHAR
+....
+```
+
+</p>
+</details>
+
+Validate the output after CustomStage run and make sure that `FIRST_NAME` and `LAST_NAME` values in Redis has been updated to UPPER CASE.
