@@ -6,7 +6,7 @@ metadata:
     app: redis-connect-postgres # deployment label
 
 spec:
-  replicas: 1 # replicas for HA
+  replicas: 2 # replicas for HA
   selector:
     matchLabels:
       app: redis-connect-postgres # which pods is the deployment managing, as defined by the pod template
@@ -47,8 +47,8 @@ spec:
       - name:  redis-connect-postgres # Container name 
         image: redislabs/redis-connect-postgres:latest
         # The following `command` can be leveraged for troubleshooting
-        command: ["/bin/bash", "-c", "echo $REDISCONNECT_JAVA_OPTIONS; /opt/redislabs/redis-connect-postgres/bin/redisconnect.sh start; while true; do sleep 30; done;"] 
-        # command: ["/opt/redislabs/redis-connect-postgres/bin/redisconnect.sh", "start"] 
+        # command: ["/bin/bash", "-c", "echo $REDISCONNECT_JAVA_OPTIONS; /opt/redislabs/redis-connect-postgres/bin/redisconnect.sh start; while true; do sleep 30; done;"]
+        command: ["/opt/redislabs/redis-connect-postgres/bin/redisconnect.sh", "start"]
         imagePullPolicy: Always # IfNotPresent # Always pull image
         resources:
           limits:
