@@ -1,0 +1,109 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: redis-connect-postgres-stage # deployment name
+  labels:
+    app: redis-connect-postgres-stage # deployment label
+spec:
+  backoffLimit: 10 # try this many times before declaring failure
+  template: # pod template
+    metadata:
+      labels:
+        app: redis-connect-postgres-stage 
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-pre-populate-only: "true"
+        vault.hashicorp.com/role: "redis-connect"
+        vault.hashicorp.com/secret-volume-path: "/vault/secrets"
+        vault.hashicorp.com/agent-inject-file-redis-connect: "redisconnect_credentials_RedisConnect-postgres"
+        vault.hashicorp.com/agent-inject-secret-redis-connect: 'database/creds/redis-connect'
+        vault.hashicorp.com/agent-inject-template-redis-connect: |
+          {{ with secret "database/creds/redis-connect" -}}
+          sourceUsername={{ .Data.username }}
+          sourcePassword={{ .Data.password }}
+          targetUsername=asdf
+          targetPassword=asdf
+          jobConfigUsername=asdf
+          jobConfigPassword=asdf
+          metricsUsername=asdf
+          metricsPassword=asdf
+          {{- end }}
+    spec:
+      serviceAccountName: redis-connect
+      restartPolicy: OnFailure
+      containers:
+      - name:  redis-connect-postgres # Container name 
+        image: redislabs/redis-connect-postgres:latest #repo/image:tag
+        # The following `command` can be leveraged for troubleshooting
+        # command: ["/bin/bash", "-c", "/opt/redislabs/redis-connect-postgres/bin/redisconnect.sh stage; while true; do sleep 30; done;"] 
+        command: ["/opt/redislabs/redis-connect-postgres/bin/redisconnect.sh", "stage"] 
+        imagePullPolicy: Always # IfNotPresent # Always pull image
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "256Mi"
+          requests:
+            cpu: "1000m"
+            memory: "256Mi"
+        ports:  
+        - containerPort: 8282 # exposed container port to the REST API 
+          protocol: TCP
+        env:
+          - name: REDISCONNECT_LOGBACK_CONFIG
+            value: "/opt/redislabs/redis-connect-postgres/config/logback.xml"
+          - name: REDISCONNECT_CONFIG
+            value: "/opt/redislabs/redis-connect-postgres/config/fromconfigmap"
+          - name: REDISCONNECT_REST_API_ENABLED
+            value: "false"
+          - name: REDISCONNECT_REST_API_PORT
+            value: "8282"
+          - name: REDISCONNECT_JAVA_OPTIONS
+            value: "-Xms256m -Xmx1g -Dredis.connect.credentials.rotation.eventlistener.enabled=true \
+                  -Dredis.connect.credentials.filename=/vault/secrets/redisconnect_credentials_RedisConnect-postgres \
+                  -DsourceUsername=sourceUsername -DsourcePassword=sourcePassword \
+                  -DjobConfigUsername=jobConfigUsername -DjobConfigPassword=jobConfigPassword \
+                  -DtargetUsername=targetUsername -DtargetPassword=targetPassword \
+                  -DmetricsUsername=metricsUsername -DmetricsPassword=metricsPassword"         
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/redislabs/redis-connect-postgres/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG
+        # - name: custom-stage-volume
+        #   mountPath: /opt/redislabs/redis-connect-postgres/extlib  # Redis Connect expects the custom stage jars here
+      volumes:
+      - name: config-volume
+        configMap:
+          name: redis-connect-postgres-config
+          items:
+          - key: JobConfig.yml
+            path: JobConfig.yml
+          - key: JobManager.yml
+            path: JobManager.yml
+          - key: Setup.yml
+            path: Setup.yml
+          - key: env.yml
+            path: env.yml
+          - key: mapper1.yml
+            path: mappers/mapper1.yml
+        # #### uncomment the following six lines if you have custom
+        #  transformation implementation and replace the jar with
+        #  your own.
+        # ####
+      #- name: custom-stage-volume
+        #configMap:
+          #name: redis-connect-postgres-config
+          #items:  # define as many custom stages as you have here
+          #- key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+            #path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar              
+---
+# RedisConnect service with name 'redis-connect-service'
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: redis-connect-service       # name should not be 'redis-connect' 
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 80
+#       targetPort: 8282
+#   selector:
+#     app: redis-connect

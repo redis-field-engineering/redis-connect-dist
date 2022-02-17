@@ -1,0 +1,19 @@
+connections:
+  - id: jobConfigConnection
+    type: Redis
+    url: redis://<redis_jobconfig_service>:14000
+  - id: targetConnection
+    type: Redis
+    url: redis://<redis_target_service>:14001
+  - id: metricsConnection
+    type: Redis
+    url: redis://<redis_metrics_service>:14002
+  - id: RDBConnection
+    type: RDB
+    name: RedisConnect   # database pool name
+    database: <database_name>   # database name
+    url: "jdbc:postgresql://<your_db_hostname>:5432/<database_name>"
+    host: <your_db_hostname>
+    port: 5432
+    heartbeat.interval.ms: 10000
+    heartbeat.action.query: "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;"
