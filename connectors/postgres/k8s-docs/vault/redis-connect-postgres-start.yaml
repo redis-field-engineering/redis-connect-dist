@@ -18,7 +18,7 @@ spec:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "redis-connect"
         vault.hashicorp.com/secret-volume-path: "/vault/secrets"
-        vault.hashicorp.com/agent-inject-file-redis-connect: "redisconnect_credentials_RedisConnect-postgres"
+        vault.hashicorp.com/agent-inject-file-redis-connect: "redisconnect_credentials_postgres-job"
         vault.hashicorp.com/agent-inject-secret-redis-connect: 'database/creds/redis-connect'
         vault.hashicorp.com/agent-inject-template-redis-connect: |
           {{ with secret "database/creds/redis-connect" -}}
