@@ -212,26 +212,30 @@ If you encounter <a href="https://debezium.io/documentation/reference/stable/con
 
 ```yml
 connections:
-  - id: jobConfigConnection
+  - id: jobManagerConnection #Redis Connect Job Metadata connection
     type: Redis
-    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
-  - id: targetConnection
+    url: redis://127.0.0.1:14001 #this is based on lettuce uri syntax
+    jobmanager.username: ${REDISCONNECT_JOBMANAGER_USERNAME} #this can be overridden by an env variable or a property file
+    jobmanager.password: ${REDISCONNECT_JOBMANAGER_PASSWORD} #this can be overridden by an env variable or a property file
+    #credentials.file.path: <path to <redisconnect_credentials_jobmanager_<job_name> e.g. /var/secrets/jobmanager> when username and password are not provided here
+  - id: targetConnection #target Redis connection
     type: Redis
-    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14000
-  - id: metricsConnection
-    type: Redis
-    url: redis://${REDISCONNECT_TARGET_USERNAME}:${REDISCONNECT_TARGET_PASSWORD}@127.0.0.1:14001
+    url: redis://127.0.0.1:14000 #this is based on lettuce uri syntax
+    target.username: ${REDISCONNECT_TARGET_USERNAME} #this can be overridden by an env variable or a property file
+    target.password: ${REDISCONNECT_TARGET_PASSWORD} #this can be overridden by an env variable or a property file
+    #credentials.file.path: <path to <redisconnect_credentials_redis_<job_name> e.g. /var/secrets/redis> when username and password are not provided here
   - id: RDBConnection
     type: RDB
     name: RedisConnect #database pool name
     database: RedisConnect #database
-    url: "jdbc:postgresql://127.0.0.1:5432/RedisConnect"
+    url: "jdbc:postgresql://127.0.0.1:5432/RedisConnect" #this is jdbc client driver specific, and it can contain any supported parameters
     host: 127.0.0.1
     port: 5432
-    username: ${REDISCONNECT_SOURCE_USERNAME}
-    password: ${REDISCONNECT_SOURCE_PASSWORD}
-    #heartbeat.interval.ms: 10000
-    #heartbeat.action.query: "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;"
+    source.username: ${REDISCONNECT_SOURCE_USERNAME} #this can be overridden by an env variable or a property file
+    source.password: ${REDISCONNECT_SOURCE_PASSWORD} #this can be overridden by an env variable or a property file
+    #credentials.file.path: <path to <redisconnect_credentials_postgresql_<job_name> e.g. /var/secrets/postgresql> when username and password are not provided here
+    #heartbeat.interval.ms: 10000 #Workaround for AWS RDS PG WAL space issue
+    #heartbeat.action.query: "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;" #Workaround for AWS RDS PG WAL space issue    
 ```
 
 </p>
@@ -245,37 +249,37 @@ connections:
 ### Sample Setup.yml under redis-connect-postgres/config/samples/postgres folder
 
 ```yml
-connectionId: jobConfigConnection
+connectionId: jobManagerConnection
 job:
-  metrics:
-    connectionId: metricsConnection
-    retentionInHours: 12
-    keys:
-      - key: "public:emp:C:Throughput"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
-          op: C
-      - key: "public:emp:U:Throughput"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
-          op: U
-      - key: "public:emp:D:Throughput"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
-          op: D
-      - key: "public:emp:Latency"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
+  #metrics:
+    #connectionId: metricsConnection
+    #retentionInHours: 12
+    #keys:
+      #- key: "public:emp:C:Throughput"
+        #retentionInHours: 4
+        #labels:
+          #schema: public
+          #table: emp
+          #op: C
+      #- key: "public:emp:U:Throughput"
+        #retentionInHours: 4
+        #labels:
+          #schema: public
+          #table: emp
+          #op: U
+      #- key: "public:emp:D:Throughput"
+        #retentionInHours: 4
+        #labels:
+          #schema: public
+          #table: emp
+          #op: D
+      #- key: "public:emp:Latency"
+        #retentionInHours: 4
+        #labels:
+          #schema: public
+          #table: emp
   jobConfig:
-    - name: RedisConnect-postgres
+    - name: postgres-job
       config: JobConfig.yml
       variables:
         database: RedisConnect
@@ -293,9 +297,9 @@ job:
 ### Sample JobManager.yml under redis-connect-postgres/config/samples/postgres folder
 
 ```yml
-connectionId: jobConfigConnection
-metricsReporter:
-  - REDIS_TS_METRICS_REPORTER
+connectionId: jobManagerConnection
+#metricsReporter:
+  #- REDIS_TS_METRICS_REPORTER
 ```
 
 </p>

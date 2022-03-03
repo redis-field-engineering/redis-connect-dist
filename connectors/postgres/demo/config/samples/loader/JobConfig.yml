@@ -2,7 +2,7 @@ jobId: ${jobId}
 producerConfig:
   producerId: RDB_INITIAL_LOAD_PRODUCER
   connectionId: RDBConnection
-  batchSize: 5000
+  batchSize: 500
   startRecord: ${startRecord}
   endRecord: ${endRecord}
   loadQuery: ${loadQuery}
@@ -27,3 +27,5 @@ pipelineConfig:
       metricEnabled: false
       async: true
       checkpoint: "${jobId}"
+
+

@@ -1,19 +1,19 @@
 connections:
-  - id: jobConfigConnection
+  - id: jobManagerConnection
     type: Redis
-    url: redis://<redis_jobconfig_service>:14000
+    url: redis://<redis_jobconfig_service>:14001
+    credentials.file.path: /var/secrets/jobmanager
   - id: targetConnection
     type: Redis
-    url: redis://<redis_target_service>:14001
-  - id: metricsConnection
-    type: Redis
-    url: redis://<redis_metrics_service>:14002
+    url: redis://<redis_target_service>:14000
+    credentials.file.path: /var/secrets/redis
   - id: RDBConnection
     type: RDB
     name: RedisConnect   # database pool name
     database: <database_name>   # database name
     url: "jdbc:postgresql://<your_db_hostname>:5432/<database_name>"
+    credentials.file.path: /var/secrets/pgsql
     host: <your_db_hostname>
     port: 5432
-    heartbeat.interval.ms: 10000
-    heartbeat.action.query: "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;"
+    #heartbeat.interval.ms: 10000 #Workaround for AWS RDS PG WAL space issue
+    #heartbeat.action.query: "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;" #Workaround for AWS RDS PG WAL space issue

@@ -89,7 +89,7 @@ spec:
             #     key: password
             #     name: redis-connect-secret
           - name: REDISCONNECT_JAVA_OPTIONS
-            value: "-XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx1g"
+            value: "-XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx1g -Dcredentials.rotation.eventlistener.enabled=false"
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_JAVA_OPTIONS

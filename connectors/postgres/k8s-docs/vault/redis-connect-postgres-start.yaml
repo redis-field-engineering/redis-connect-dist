@@ -22,14 +22,12 @@ spec:
         vault.hashicorp.com/agent-inject-secret-redis-connect: 'database/creds/redis-connect'
         vault.hashicorp.com/agent-inject-template-redis-connect: |
           {{ with secret "database/creds/redis-connect" -}}
-          sourceUsername={{ .Data.username }}
-          sourcePassword={{ .Data.password }}
-          targetUsername=asdf
-          targetPassword=asdf
-          jobConfigUsername=asdf
-          jobConfigPassword=asdf
-          metricsUsername=asdf
-          metricsPassword=asdf
+          source.username={{ .Data.username }}
+          source.password={{ .Data.password }}
+          target.username=asdf
+          target.password=asdf
+          jobmanager.username=asdf
+          jobmanager.password=asdf
           {{- end }}
     spec:
       serviceAccountName: redis-connect
@@ -71,12 +69,7 @@ spec:
           - name: REDISCONNECT_REST_API_PORT
             value: "8282"
           - name: REDISCONNECT_JAVA_OPTIONS
-            value: "-Xms256m -Xmx1g -Dredis.connect.credentials.rotation.eventlistener.enabled=true \
-                  -Dredis.connect.credentials.filename=/vault/secrets/redisconnect_credentials_RedisConnect-postgres \
-                  -DsourceUsername=sourceUsername -DsourcePassword=sourcePassword \
-                  -DjobConfigUsername=jobConfigUsername -DjobConfigPassword=jobConfigPassword \
-                  -DtargetUsername=targetUsername -DtargetPassword=targetPassword \
-                  -DmetricsUsername=metricsUsername -DmetricsPassword=metricsPassword"         
+            value: "-Xms256m -Xmx1g -Dcredentials.rotation.eventlistener.enabled=true"
         volumeMounts:
         - name: config-volume
           mountPath: /opt/redislabs/redis-connect-postgres/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG in this file.

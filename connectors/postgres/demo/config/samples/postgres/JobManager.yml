@@ -1,3 +1,2 @@
 connectionId: jobConfigConnection
-metricsReporter:
-  - REDIS_TS_METRICS_REPORTER
+

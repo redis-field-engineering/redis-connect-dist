@@ -1,34 +1,7 @@
-connectionId: jobConfigConnection
+connectionId: jobManagerConnection
 job:
-  metrics:
-    connectionId: metricsConnection
-    retentionInHours: 12
-    keys:
-      - key: "public:emp:C:Throughput"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
-          op: C
-      - key: "public:emp:U:Throughput"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
-          op: U
-      - key: "public:emp:D:Throughput"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
-          op: D
-      - key: "public:emp:Latency"
-        retentionInHours: 4
-        labels:
-          schema: public
-          table: emp
   jobConfig:
-    - name: RedisConnect-postgres
+    - name: postgres-job
       config: JobConfig.yml
       variables:
         database: RedisConnect
