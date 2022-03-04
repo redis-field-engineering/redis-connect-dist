@@ -59,7 +59,12 @@ Before using the Oracle connector (redis-connect-oracle) to capture the changes 
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
+
+### Runtime Requirements
+
 * JRE 8+ (JRE 11 is preferred)
+* Oracle 12c or 19c with LogMiner (see [12c](https://docs.oracle.com/en/database/oracle/oracle-database/12.2/sutil/oracle-logminer-utility.html), [19c](https://docs.oracle.com/en/database/oracle/oracle-database/19/sutil/oracle-logminer-utility.html#GUID-3417B738-374C-4EE3-B15C-3A66E01AE2B5) or [Debezium's doc](https://debezium.io/documentation/reference/stable/connectors/oracle.html#setting-up-oracle) or an example [here](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/oracle/demo/setup_logminer.sh))
+* Oracle JDBC driver (ojdbc8.jar)
 
 **NOTE**
 
@@ -67,7 +72,7 @@ The current [release](https://github.com/redis-field-engineering/redis-connect-d
 
 ---
 
-Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-oracle-`<version>.<build>`.tar.gz archive.
+Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and un-tar redis-connect-oracle-`<version>.<build>`.tar.gz archive.
 
 All the contents would be extracted under redis-connect-oracle
 
