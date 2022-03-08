@@ -86,9 +86,14 @@ Before using the Gemfire connector to capture the changes committed on Gemfire i
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
-* JRE 8+ (JRE 11 is preferred)
 
-**NOTE**
+### Runtime Requirements
+
+* JRE 11+
+* Gemfire 9.10 (Apache Geode version 1.12) (see [Gemfire's doc](https://gemfire.docs.pivotal.io/910/gemfire/getting_started/installation/install_intro.html))
+
+| :memo:        |
+|---------------|
 
 The current [release](https://github.com/redis-field-engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
 

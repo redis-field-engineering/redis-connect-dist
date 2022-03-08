@@ -59,7 +59,11 @@ Before using the PostgreSQL connector (redis-connect-postgres) to capture the ch
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
-* JRE 8+ (JRE 11 is preferred)
+
+### Runtime Requirements
+
+* JRE 11+
+* PostgreSQL 10+ (see [Debezium's doc](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-pgoutput) or an example [here](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/postgres/demo/setup_postgres.sh))
 
 **NOTE**
 

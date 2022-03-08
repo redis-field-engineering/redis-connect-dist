@@ -9,4 +9,4 @@ redis-connect-db2 is a Redis Connect connector for intra-day real-time ETL. In t
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
-* JRE 8+ (JRE 11 is preferred)
+* JRE 11+

@@ -72,9 +72,14 @@ Before using the SQL Server connector (redis-connect-sqlserver) to capture the c
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
-* JRE 8+ (JRE 11 is preferred)
 
-**NOTE**
+### Runtime Requirements
+
+* JRE 11+
+* SQL Server 2017, 2019 (see [Debezium's doc](https://debezium.io/documentation/reference/stable/connectors/sqlserver.html#setting-up-sqlserver) or an example [here](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/mssql/demo/setup_mssql.sh))
+
+| :memo:        |
+|---------------|
 
 The current [release](https://github.com/redis-field-engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
 

@@ -59,7 +59,11 @@ Before using the MySQL connector (redis-connect-mysql) to capture the changes co
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
-* JRE 8+ (JRE 11 is preferred)
+
+### Runtime Requirements
+
+* JRE 11+
+* MySQL 5.7, 8.0.x (see [Debezium's doc](https://debezium.io/documentation/reference/stable/connectors/mysql.html#setting-up-mysql) or an example [here](https://github.com/redis-field-engineering/redis-connect-dist/blob/main/connectors/mysql/demo/setup_mysql.sh))
 
 | :memo:        |
 |---------------|

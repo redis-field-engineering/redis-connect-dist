@@ -6,7 +6,7 @@ The first time the connector connects to a Cassandra node, it performs a snapsho
 
 ## Overview
 
-The functionality of the connector is based upon [change data capture](https://cassandra.apache.org/doc/latest/operating/cdc.html#enabling-or-disabling-cdc-on-a-table) feature provided by Cassandra since [Cassandra 3.x](https://cassandra.apache.org/doc/3.11.3/operating/cdc.html) where CDC was introduced.
+The functionality of the connector is based upon [change data capture](https://cassandra.apache.org/doc/latest/operating/cdc.html#enabling-or-disabling-cdc-on-a-table) feature provided by Cassandra since [Cassandra 3.x](https://cassandra.apache.org/doc/3.11/cassandra/operating/cdc.html) where CDC was introduced.
 
 The database operator must [enable](https://cassandra.apache.org/doc/latest/operating/cdc.html#enabling-or-disabling-cdc-on-a-table) _CDC_ for the table(s) that should be captured by the connector.
 The connector then produces a _change event_ for every row-level insert, update, and delete operation that was published via the _CDC API_, while recording all the change events for each table in a Redis Enterprise Database with a choice of your data structure such as [Hashes](https://redis.io/topics/data-types#hashes).
@@ -65,9 +65,14 @@ Before using the Cassandra connector (redis-connect-cassandra) to capture the ch
 * 4 CPU cores
 * 20GB of disk space
 * 1G Network
-* JRE 8+ (JRE 11 is preferred)
 
-**NOTE**
+### Runtime Requirements
+
+* JRE 11+
+* Cassandra 3.x (see [Cassandra's doc](https://cassandra.apache.org/doc/3.11/cassandra/operating/cdc.html))
+
+| :memo:        |
+|---------------|
 
 The current [release](https://github.com/redis-field-engineering/redis-connect-dist/releases) has been built with JDK 11 and tested with JRE 11 and above. Please have JRE 11+ installed prior to running this connector.
 
