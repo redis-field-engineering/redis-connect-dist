@@ -11,7 +11,7 @@ version="$1"
 db_port="$2"
 logminer="$3"
 db_pwd=Redis123
-[[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. 12.2.0.1-ee, 19.3.0-ee"; exit 1; }
+[[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. 12.2.0.1-ee, 19.3.0-ee, 21.3.0-ee"; exit 1; }
 [[ -z "$db_port" ]] && { echo "Error: Missing database port e.g. 1521"; exit 1; }
 #[[ -z "$https_port" ]] && { echo "Error: Missing https port e.g. 5500"; exit 1; }
 
