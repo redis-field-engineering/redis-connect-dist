@@ -23,28 +23,13 @@ config demo
 ```
 
 ## Setup IBM DB2 database (Source)
-<br>For this demo, an IBM DB2 LUW database has been created in the IBM cloud. You are free to use your own DB2 instance.</br>
-
-<details><summary><b>CREATE table SQL (source)</b></summary>
-<p>
-
-```sql
-CREATE TABLE EMP (
-       EMPNO    int         NOT NULL,
-       FNAME    VARCHAR(50) NULL,
-       LNAME    VARCHAR(50) NULL,
-       JOB      VARCHAR(50) NULL,
-       MGR      int         NULL,
-       HIREDATE date        NULL,
-       SAL      double      NULL,
-       COMM     double      NULL,
-       DEPT     int         NULL,
-       PRIMARY KEY (EMPNO)      
-       )
+<br>Execute [setup_db2.sh](setup_db2.sh)</br>
+```bash
+redis-connect-sqlserver$ cd demo
+demo$ ./setup_db2.sh latest 50000
 ```
-
-</p>
-</details>
+OR
+<br>Set up an IBM DB2 LUW database in the IBM cloud and create the [EMP](create_emp_table.sql) table.</br>
 
 ## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
 <br>Execute [setup_re.sh](setup_re.sh)</br>
@@ -66,8 +51,8 @@ docker run \
 --name redis-connect-db2 \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-db2/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-db2/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=jjd47182 \
--e REDISCONNECT_SOURCE_PASSWORD=xl+c84m9tmgg1q6v \
+-e REDISCONNECT_SOURCE_USERNAME=db2inst1 \
+-e REDISCONNECT_SOURCE_PASSWORD=rcdbpwd \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
@@ -107,16 +92,16 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 <p>
 
 ```sql
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('1', 'Basanth', 'Gowda', 'FOUNDER', '1', '2018-08-09 00:00:00.000', '200000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('2', 'Virag', 'Tripathi', 'SA', '1', '2018-08-06 00:00:00.000', '2000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('3', 'Drake', 'Albee', 'RSM', '1', '2017-08-09 00:00:00.000', '5000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('4', 'Nick', 'Doyle', 'DIR', '1', '2019-07-09 00:00:00.000', '10000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('5', 'Allen', 'Terleto', 'FieldCTO', '1', '2017-06-09 00:00:00.000', '500000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('6', 'Marco', 'Mankerious', 'SA', '1', '2018-06-09 00:00:00.000', '2000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('7', 'Brad', 'Barnes', 'SA', '1', '2018-07-09 00:00:00.000', '2000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('8', 'Quinton', 'Gingras', 'SDR', '1', '2019-07-09 00:00:00.000', '200000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('9', 'Yuval', 'Shkedi', 'SA', '1', '2019-07-09 00:00:00.000', '200000', '10', '1')
-INSERT INTO JJD47182.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('10', 'Greg', 'Muscatello', 'RSD', '1', '2019-07-09 00:00:00.000', '500000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('1', 'Basanth', 'Gowda', 'FOUNDER', '1', '2018-08-09 00:00:00.000', '200000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('2', 'Virag', 'Tripathi', 'SA', '1', '2018-08-06 00:00:00.000', '2000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('3', 'Drake', 'Albee', 'RSM', '1', '2017-08-09 00:00:00.000', '5000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('4', 'Nick', 'Doyle', 'DIR', '1', '2019-07-09 00:00:00.000', '10000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('5', 'Allen', 'Terleto', 'FieldCTO', '1', '2017-06-09 00:00:00.000', '500000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('6', 'Marco', 'Mankerious', 'SA', '1', '2018-06-09 00:00:00.000', '2000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('7', 'Brad', 'Barnes', 'SA', '1', '2018-07-09 00:00:00.000', '2000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('8', 'Quinton', 'Gingras', 'SDR', '1', '2019-07-09 00:00:00.000', '200000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('9', 'Yuval', 'Shkedi', 'SA', '1', '2019-07-09 00:00:00.000', '200000', '10', '1')
+INSERT INTO DB2INST1.EMP (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('10', 'Greg', 'Muscatello', 'RSD', '1', '2019-07-09 00:00:00.000', '500000', '10', '1')
 ```
 
 </p>
@@ -131,8 +116,8 @@ docker run \
 --name redis-connect-db2 \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-db2/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-db2/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=jjd47182 \
--e REDISCONNECT_SOURCE_PASSWORD=xl+c84m9tmgg1q6v \
+-e REDISCONNECT_SOURCE_USERNAME=db2inst1 \
+-e REDISCONNECT_SOURCE_PASSWORD=rcdbpwd \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
@@ -169,8 +154,8 @@ docker run \
 --name redis-connect-db2 \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-db2/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-db2/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=jjd47182 \
--e REDISCONNECT_SOURCE_PASSWORD=xl+c84m9tmgg1q6v \
+-e REDISCONNECT_SOURCE_USERNAME=db2inst1 \
+-e REDISCONNECT_SOURCE_PASSWORD=rcdbpwd \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
@@ -448,8 +433,8 @@ docker run \
 --name redis-connect-db2 \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-db2/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-db2/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=jjd47182 \
--e REDISCONNECT_SOURCE_PASSWORD=xl+c84m9tmgg1q6v \
+-e REDISCONNECT_SOURCE_USERNAME=db2inst1 \
+-e REDISCONNECT_SOURCE_PASSWORD=rcdbpwd \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
@@ -471,8 +456,8 @@ docker run \
 --name redis-connect-db2 \
 -e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-db2/config/logback.xml \
 -e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-db2/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=jjd47182 \
--e REDISCONNECT_SOURCE_PASSWORD=xl+c84m9tmgg1q6v \
+-e REDISCONNECT_SOURCE_USERNAME=db2inst1 \
+-e REDISCONNECT_SOURCE_PASSWORD=rcdbpwd \
 -e REDISCONNECT_TARGET_USERNAME="" \
 -e REDISCONNECT_TARGET_PASSWORD="" \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
