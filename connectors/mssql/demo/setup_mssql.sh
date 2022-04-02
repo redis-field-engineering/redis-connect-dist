@@ -6,7 +6,7 @@ db_pwd="Redis@123"
 [[ -z "$version" ]] && { echo "Error: Missing docker version tag e.g. 2017-latest, 2019-latest"; exit 1; }
 [[ -z "$db_port" ]] && { echo "Error: Missing database port e.g. 1433"; exit 1; }
 
-container_name="mysql-$version-$(hostname)-$db_port"
+container_name="mssql-$version-$(hostname)-$db_port"
 # delete the existing mssql container if it exist
 sudo docker kill $container_name;sudo docker rm $container_name;
 
