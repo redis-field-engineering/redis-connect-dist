@@ -15,7 +15,7 @@ db_pwd=Redis123
 [[ -z "$db_port" ]] && { echo "Error: Missing database port e.g. 1521"; exit 1; }
 #[[ -z "$https_port" ]] && { echo "Error: Missing https port e.g. 5500"; exit 1; }
 
-container_name="oracle-$version-$(hostname)"
+container_name="oracle-$version-$(hostname)-$db_port"
 # delete the existing container if it exist
 sudo docker kill $container_name;sudo docker rm $container_name;
 
