@@ -22,7 +22,6 @@ Integration with source and target databases is handled by an extendable connect
 ## Architecture
 
 ![Redis Connect high-level Architecture](/docs/images/RedisConnect_Architecture.png)
-<b>Redis Connect high-level Architecture Diagram</b>
 
 ## Capabilities
 
