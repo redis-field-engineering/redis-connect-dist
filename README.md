@@ -6,7 +6,7 @@
 
 - [Technical Overview](#technical-overview)
 - [Architecture](#architecture)
-- [Main Capabilities](#capabilities)
+- [Capabilities](#capabilities)
 - [Use Cases](#use-cases)
 
 ## Technical Overview
