@@ -8,6 +8,7 @@
 - [Architecture](#architecture)
 - [Capabilities](#capabilities)
 - [Use Cases](#use-cases)
+- [Download and Setup](#download-and-setup)
 - [Quick Start](/examples)
 
 ## Technical Overview
@@ -43,3 +44,28 @@ For one-time migrations, we commonly see customers attempting a blue-green deplo
 We’re also seeing a lot of demand within the analytics space, with customers that want to perform intra-day real-time ETL. In this case, Redis Connect is used more as an initial loader, which requires it to partition its consumption of source-side transactional data, so it can finish its ETL process within a thin SLA window. This is where another nice feature of Redis Connect is a value-add. For initial load jobs, Redis Connect can spawn child processes, which can in parallel consume partitioned data from the source. The partitioning strategy can be configured to fit the SLA window for the ETL job.
 
 Another interesting use-case within analytics is building denormalized views for real-time reporting, alerts, and visualization and in this case Redis Connect can continuously replicate changed-data events from a relational database to a Redis Hash or String or JSON model. Since relational databases rely on SQL, its not a surprise that users for this use-case predominantly rely on [RediSearch](https://redis.com/modules/redis-search/) for real-time SQL-like querying based on secondary indexes.
+
+## Download and Setup
+
+---
+### Minimum Hardware Requirements
+
+* 1GB of RAM
+* 4 CPU cores
+* 20GB of disk space
+* 1G Network
+
+### Runtime Requirements
+
+* JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
+---
+
+Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and un-tar redis-connect-`<version>.<build>`.tar.gz archive.
+
+All the contents would be extracted under redis-connect-postgres
+
+Contents of redis-connect-postgres
+<br>• bin – contains startup script files
+<br>• lib – contains java libraries
+<br>• config – contains jobmanager.properties, credentials and payload samples
+<br>• extlib – directory to copy any external dependencies such as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
