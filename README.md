@@ -2,15 +2,14 @@
 
 # Redis Connect (Continuous Replication and Initial Load to Redis Enterprise)
 
-- [Redis Connect Overview](#technical-overview)
-  * [Using redis-connect-cassandra](connectors/cassandra#redis-connect-cassandra)
-  * [Using redis-connect-db2](connectors/db2#redis-connect-db2)
-  * [Using redis-connect-gemfire](connectors/gemfire#redis-connect-gemfire)
-  * [Using redis-connect-mysql](connectors/mysql#redis-connect-mysql)
-  * [Using redis-connect-oracle](connectors/oracle#redis-connect-oracle)
-  * [Using redis-connect-postgres](connectors/postgres#redis-connect-postgres)
-  * [Using redis-connect-sqlserver](connectors/mssql#redis-connect-sqlserver)
-  * [Using redis-connect-files](#connectors/files#redis-connect-files)
+## Table of contents
+
+---
+
+- [Technical Overview](#technical-overview)
+- [Architecture](#architecture)
+- [Architecture](#main-capabilities)
+- [Architecture](#use-cases)
 
 ## Technical Overview
 
@@ -21,6 +20,13 @@ Redis Connect can also perform the function of event-sourcing, acting as both th
 Redis Connect has a cloud-native shared-nothing architecture which allows any cluster node (Redis Connect Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing Redis Connect instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of Redis Connect will only require the deployment of a few JVMs to handle Job Execution with high-availability.
 
 Integration with source and target databases is handled by an extendable connector framework. Each Redis Connect Connector uniquely interfaces with its source database’s supported and built-in change data capture process. While there are multiple patterns to implement change data capture (polling-publisher, dual-writes, transaction-log tailing, etc.), Redis Connect connectors prioritize integration with source-database transaction-logs (when supported) to avoid impacting performance and availability.
+
+## Architecture
+
+
+## Main Capabilities
+
+
 
 ## Use Cases
 
