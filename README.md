@@ -4,12 +4,10 @@
 
 ## Table of contents
 
----
-
 - [Technical Overview](#technical-overview)
 - [Architecture](#architecture)
-- [Architecture](#main-capabilities)
-- [Architecture](#use-cases)
+- [Main Capabilities](#capabilities)
+- [Use Cases](#use-cases)
 
 ## Technical Overview
 
@@ -23,12 +21,22 @@ Integration with source and target databases is handled by an extendable connect
 
 ## Architecture
 
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_Architecture.png)
+<b>Redis Connect high-level Architecture Diagram</b>
 
-## Main Capabilities
+## Capabilities
 
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_EaseOfUse.png)
 
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_MainCapabilities.png)
+
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_HA_Rcovery_Transformation.png)
+
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_RestCli_Security.png)
 
 ## Use Cases
+
+![Redis Connect high-level Architecture](/docs/images/RedisConnect_UseCases.png)
 
 For one-time migrations, we commonly see customers attempting a blue-green deployment, where for some period of time, both the new and old deployment are available in parallel. Once the customer is confident with their new system, they have a hard cutoff for the legacy deployment. Redis Connect is a good fit here, since it can maintain consistency across both blue and green deployments until eventually cutting off replication. Now in the case of multi-phased migrations, such as a [strangler application](https://martinfowler.com/bliki/StranglerFigApplication.html) where we are breaking microservices off a monolith legacy database, Redis Connect can maintain consistency between heterogenous databases, for years, until the monolith is eventually retired for good. 
 
