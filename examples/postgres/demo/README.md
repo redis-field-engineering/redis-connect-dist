@@ -6,19 +6,19 @@ i.e.</br>
 
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
-mkdir -p redis-connect-postgres/demo && \
-mkdir -p redis-connect-postgres/k8s-docs && \
-unzip main.zip "redis-connect-dist-main/connectors/postgres/*" -d redis-connect-postgres && \
-cp -R redis-connect-postgres/redis-connect-dist-main/connectors/postgres/demo/* redis-connect-postgres/demo && \
-cp -R redis-connect-postgres/redis-connect-dist-main/connectors/postgres/k8s-docs/* redis-connect-postgres/k8s-docs && \
+mkdir -p redis-connect/demo && \
+mkdir -p redis-connect/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/examples/postgres/*" -d redis-connect && \
+cp -R redis-connect/redis-connect-dist-main/examples/postgres/demo/* redis-connect/demo && \
+cp -R redis-connect-postgres/redis-connect-dist-main/examples/postgres/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect-postgres/redis-connect-dist-main && \
-cd redis-connect-postgres && \
+cd redis-connect && \
 chmod a+x demo/*.sh
 ```
 
 Expected output:
 ```bash
-redis-connect-postgres$ ls
+redis-connect$ ls
 config demo
 ```
 
@@ -27,7 +27,7 @@ config demo
 <br>Execute [setup_postgres.sh](setup_postgres.sh)</br>
 ```bash
 redis-connect-postgres$ cd demo
-demo$ ./setup_postgres.sh 12.5
+demo$ ./setup_postgres.sh 12.7 5432
 (or latest or any supported 10+ version from postgres dockerhub)
 ```
 
@@ -36,9 +36,9 @@ demo$ ./setup_postgres.sh 12.5
 
 ```bash
 demo$ sudo docker ps -a | grep postgres
-724aea897d12        postgres:12.5                                         "docker-entrypoint.s…"   10 days ago         Up 10 days          0.0.0.0:5432->5432/tcp                                                                                                                                                                                                                                                                                          postgres-12.5-virag-cdc
+b5adf162d133        postgres:12.7                                "docker-entrypoint.s…"   4 hours ago         Up 4 hours              0.0.0.0:5432->5432/tcp                                                                                                                                                                                                                                                                                          postgres-12.7-virag-cdc-5432
 
-demo$ docker exec -it postgres-12.5-$(hostname) bash -c 'psql -U"redisconnect" -d"RedisConnect" -c "select count(*) from emp;"'
+demo$ sudo docker exec -it postgres-12.7-$(hostname)-5432 bash -c 'psql -U"redisconnect" -d"RedisConnect" -c "select count(*) from emp;"'
  count
 -------
      0

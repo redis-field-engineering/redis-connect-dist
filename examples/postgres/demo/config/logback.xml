@@ -1,6 +1,6 @@
 <configuration debug="true" scan="true" scanPeriod="15 seconds">
 
-    <property name="LOG_REDIS_CONNECT_PATH" value="logs/redis-connect.log"/>
+    <property name="LOG_REDIS_CONNECT_PATH" value="logs/redis-connect"/>
     <property name="LOG_REDIS_CONNECT_MANAGER_PATH" value="logs/redis-connect-manager.log"/>
     <property name="LOG_REDIS_CONNECT_HEARTBEAT_PATH" value="logs/redis-connect-heartbeat.log"/>
 
@@ -35,9 +35,9 @@
         </encoder>
     </appender>
     <appender name="REDIS_CONNECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_REDIS_CONNECT_PATH}</file>
+        <file>${LOG_REDIS_CONNECT_PATH}-${PID}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>logs/archived/redis-connect-${PID}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- each archived file, size max 10MB -->
             <maxFileSize>10MB</maxFileSize>
             <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
@@ -50,9 +50,8 @@
         </encoder>
     </appender>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -92,6 +91,17 @@
         <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
+    <logger name="springfox" level="OFF" additivity="false">
+        <appender-ref ref="REDIS_CONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org" level="OFF" additivity="false">
+        <appender-ref ref="REDIS_CONNECT"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="Validator" level="OFF" additivity="false"/>
+    <logger name="_org.springframework.web.servlet.HandlerMapping" level="OFF" additivity="false"/>
+    <logger name="reactor.util" level="OFF" additivity="false"/>
 
     <root>
         <appender-ref ref="REDIS_CONNECT"/>

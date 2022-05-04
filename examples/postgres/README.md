@@ -17,14 +17,13 @@ redis-connect-postgres/bin$ ./redisconnect.sh
 -------------------------------
 Redis Connect startup script.
 *******************************
-Please ensure that the value of REDISCONNECT_CONFIG points to the correct config directory in /home/viragtripathi/redis-connect-postgres/bin/redisconnect.conf before executing any of the options below
+Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in redisconnect.conf before executing any of the options below
 *******************************
-Usage: [-h|cli|stage|start]
+Usage: [-h|cli|start]
 options:
 -h: Print this help message and exit.
-cli: starts redis-connect-cli.
-stage: clean and stage redis database with cdc or initial loader job configurations.
-start: start Redis Connect instance with provided cdc or initial loader job configurations.
+cli: starts redis-connect-cli
+start: init Redis Connect Instance
 -------------------------------
 ```
 

@@ -22,9 +22,9 @@ sudo docker run --name $container_name \
 	-c wal_level=logical \
 	-c max_wal_senders=10 \
 	-c max_replication_slots=10 \
+	-c max_connections=250 \
+	-c shared_buffers=512MB \
 	-c track_commit_timestamp=on
-	#-c wal_receiver_timeout=300s \
-	#-c wal_sender_timeout=0
 
 sleep 30s
 
