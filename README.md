@@ -8,6 +8,7 @@
 - [Architecture](#architecture)
 - [Capabilities](#capabilities)
 - [Use Cases](#use-cases)
+- [Quick Start](/examples)
 
 ## Technical Overview
 
@@ -41,4 +42,4 @@ For one-time migrations, we commonly see customers attempting a blue-green deplo
 
 We’re also seeing a lot of demand within the analytics space, with customers that want to perform intra-day real-time ETL. In this case, Redis Connect is used more as an initial loader, which requires it to partition its consumption of source-side transactional data, so it can finish its ETL process within a thin SLA window. This is where another nice feature of Redis Connect is a value-add. For initial load jobs, Redis Connect can spawn child processes, which can in parallel consume partitioned data from the source. The partitioning strategy can be configured to fit the SLA window for the ETL job.
 
-Another interesting use-case within analytics is building denormalized views for real-time reporting, alerts, and visualization and in this case Redis Connect can continuously replicate changed-data events from a relational database to a Redis Hash or String or JSON model. Since relational databases rely on SQL, its not a surprise that users for this use-case predominantly rely on [RediSearch](https://redislabs.com/modules/redis-search/) for real-time SQL-like querying based on secondary indexes.
+Another interesting use-case within analytics is building denormalized views for real-time reporting, alerts, and visualization and in this case Redis Connect can continuously replicate changed-data events from a relational database to a Redis Hash or String or JSON model. Since relational databases rely on SQL, its not a surprise that users for this use-case predominantly rely on [RediSearch](https://redis.com/modules/redis-search/) for real-time SQL-like querying based on secondary indexes.
