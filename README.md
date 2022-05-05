@@ -67,5 +67,5 @@ All the contents would be extracted under redis-connect directory
 Contents of redis-connect directory
 <br>• bin – contains startup script files
 <br>• lib – contains java libraries
-<br>• config – contains jobmanager.properties, credentials and payload samples
+<br>• config – contains jobmanager.properties, credentials files and job payload samples
 <br>• extlib – directory to copy any external dependencies such as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
