@@ -1,4 +1,4 @@
-<p align="left"><img src="/docs/images/RedisConnect.svg" alt="Redis Connect" height="100px"></p>
+<p align="left"><img src="/images/RedisConnect.svg" alt="Redis Connect" height="100px"></p>
 
 # Redis Connect (Continuous Replication and Initial Load to Redis Enterprise)
 
