@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-connect-postgres # deployment name
+  name: redis-connect # deployment name
   labels:
-    app: redis-connect-postgres # deployment label
+    app: redis-connect # deployment label
 
 spec:
   replicas: 2 # replicas for HA
   selector:
     matchLabels:
-      app: redis-connect-postgres # which pods is the deployment managing, as defined by the pod template
+      app: redis-connect # which pods is the deployment managing, as defined by the pod template
   template: # pod template
     metadata:
       labels:
-        app: redis-connect-postgres 
+        app: redis-connect 
       annotations:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "redis-connect"
@@ -39,14 +39,14 @@ spec:
               - key: app
                 operator: In
                 values:
-                - redis-connect-postgres # must match Deployment:metadata:labels:app
+                - redis-connect # must match Deployment:metadata:labels:app
             topologyKey: "kubernetes.io/hostname"    
       containers:
-      - name:  redis-connect-postgres # Container name 
-        image: redislabs/redis-connect-postgres:latest
+      - name:  redis-connect # Container name 
+        image: redislabs/redis-connect:latest
         # The following `command` can be leveraged for troubleshooting
-        # command: ["/bin/bash", "-c", "echo $REDISCONNECT_JAVA_OPTIONS; /opt/redislabs/redis-connect-postgres/bin/redisconnect.sh start; while true; do sleep 30; done;"]
-        command: ["/opt/redislabs/redis-connect-postgres/bin/redisconnect.sh", "start"]
+        # command: ["/bin/bash", "-c", "echo $REDISCONNECT_JAVA_OPTIONS; /opt/redislabs/redis-connect/bin/redisconnect.sh start; while true; do sleep 30; done;"]
+        command: ["/opt/redislabs/redis-connect/bin/redisconnect.sh", "start"]
         imagePullPolicy: Always # IfNotPresent # Always pull image
         resources:
           limits:
@@ -60,10 +60,10 @@ spec:
           protocol: TCP
         env:
           - name: REDISCONNECT_LOGBACK_CONFIG
-            value: "/opt/redislabs/redis-connect-postgres/config/logback.xml"
-            # value: "/opt/redislabs/redis-connect-postgres/config/fromconfigmap/logback.xml"
+            value: "/opt/redislabs/redis-connect/config/logback.xml"
+            # value: "/opt/redislabs/redis-connect/config/fromconfigmap/logback.xml"
           - name: REDISCONNECT_CONFIG
-            value: "/opt/redislabs/redis-connect-postgres/config/fromconfigmap"
+            value: "/opt/redislabs/redis-connect/config/fromconfigmap"
           - name: REDISCONNECT_REST_API_ENABLED
             value: "false"
           - name: REDISCONNECT_REST_API_PORT
@@ -72,13 +72,13 @@ spec:
             value: "-Xms256m -Xmx1g -Dcredentials.rotation.eventlistener.enabled=true"
         volumeMounts:
         - name: config-volume
-          mountPath: /opt/redislabs/redis-connect-postgres/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG in this file.
+          mountPath: /opt/redislabs/redis-connect/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG in this file.
         # - name: custom-stage-volume
-        #   mountPath: /opt/redislabs/redis-connect-postgres/extlib  # Redis Connect expects the custom stage jars here
+        #   mountPath: /opt/redislabs/redis-connect/extlib  # Redis Connect expects the custom stage jars here
       volumes:
       - name: config-volume
         configMap:
-          name: redis-connect-postgres-config
+          name: redis-connect-config
           items:
           - key: JobConfig.yml
             path: JobConfig.yml
@@ -96,16 +96,16 @@ spec:
 # ####
       #- name: custom-stage-volume
       #configMap:
-      #name: redis-connect-postgres-config
+      #name: redis-connect-config
       #items:  # define as many custom stages as you have here
       #- key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
       #path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
       # - name: tmpfsdir
       #   emptyDir:  # node-ephemeral volume
       #     medium: Memory
-      # - name: redis-connect-postgres-pv
+      # - name: redis-connect-pv
       #   persistentVolumeClaim:
-      #     claimName: redis-connect-postgres-pvc                 
+      #     claimName: redis-connect-pvc                 
 ---
 # RedisConnect service with name 'redis-connect-service'
 # apiVersion: v1
