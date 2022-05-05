@@ -62,9 +62,9 @@ Another interesting use-case within analytics is building denormalized views for
 
 Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and un-tar redis-connect-`<version>.<build>`.tar.gz archive.
 
-All the contents would be extracted under redis-connect-postgres
+All the contents would be extracted under redis-connect directory
 
-Contents of redis-connect-postgres
+Contents of redis-connect directory
 <br>• bin – contains startup script files
 <br>• lib – contains java libraries
 <br>• config – contains jobmanager.properties, credentials and payload samples
