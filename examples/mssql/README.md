@@ -21,7 +21,7 @@ This includes snapshots; if the snapshot was not completed when the connector is
 
 ## Architecture
 
-![Redis Connect high-level Architecture](/docs/images/RedisConnect_Arch.png)
+![Redis Connect high-level Architecture](/images/RedisConnect_Arch.png)
 <b>Redis Connect high-level Architecture Diagram</b>
 
 Redis Connect has a cloud-native shared-nothing architecture which allows any cluster node (Redis Connect Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing Redis Connect instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of Redis Connect will only require the deployment of a few JVMs to handle Job Execution and Job Management with high-availability.
