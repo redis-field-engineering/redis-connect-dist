@@ -69,7 +69,7 @@ The following subdirectories will be extracted under /redis-connect -
 
 ### Start Redis Connect
 
-**Execute** Redis Connect startup script to see all the options<br>
+_Review options by running Redis Connect startup script<br>_
 ```bash
 redis-connect/bin$ ./redisconnect.sh    
 -------------------------------
@@ -85,18 +85,12 @@ start: init Redis Connect Instance
 -------------------------------
 ```
 
-<br>_Start an Instance of Redis Connect cluster_<p>
+<br>_Start Redis Connect Instance_<p>
 `redis-connect/bin$ ./redisconnect.sh start`
 
 <br>_Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)_
-<table cellspacing="0" cellpadding="0">
-    <tr>
-        <td> <b>Redis Connect Swagger UI</b>
-        </td>
-        <td width="50%"><img src="/images/Redis_Connect_Swagger.png" style="float: right;" width="500" height="200"/>
-        </td>
-    </tr>
-</table>
+<img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 750px height = 375px/>
+
 <br>▶️ Save Job Configuration
 <table cellspacing="0" cellpadding="0">
     <tr>
