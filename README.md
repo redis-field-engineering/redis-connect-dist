@@ -77,10 +77,16 @@ cli: starts redis-connect-cli
 start: init Redis Connect Instance
 -------------------------------
 ```
-
 </p>
 </details>
 
-```bash
-redis-connect/bin$ ./redisconnect.sh start
-```
+<br>• `redis-connect/bin$ ./redisconnect.sh start`
+<br>• Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td> <b>Redis Connect Swagger UI</b> <br> Testing.</td>
+<td width="50%"><img src="/images/Redis_Connect_Swagger.png" style="float: right;" width="500" height="200"/></td>
+</tr>
+</table>
+<br>• Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See a sample job configuration payload [here](/examples/postgres/demo/config/samples/payloads/postgres-job.json)
+
