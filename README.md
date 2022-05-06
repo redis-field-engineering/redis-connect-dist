@@ -1,7 +1,7 @@
 <p align="center"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 650px height = 200px></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
-<br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenant :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
+<br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 350px"></p>
 
@@ -27,10 +27,10 @@
     </tr>
     <tr>
         <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. Users can configure, start, stop, migrate, and restart jobs via its built-in REST API and/or interactive CLI. Redis Connect also exposes a swagger UI to simplify the user and administration experience.</td>
-        <td width="50%"><img src="/images/Redis_Connect_Swagger_UI.png" style="float: right;" width="500" height="300"/></td>
+        <td width="50%"><img src="/images/Redis_Connect_Swagger_UI.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr>
-        <td width="50%"><img src="/images/Redis_Enterprise_ACL.png" style="float: right;" width="400" height="250"/></td>
+        <td width="50%"><img src="/images/Redis_Enterprise_ACL.png" style="float: right;" width="500" height="200"/></td>
         <td> <b>Enterprise-Grade Security</b> <br> Redis Connect jobs are stateless and therefore always execute changed-data events in-transit. Redis Connect benefits from Redis Enterprise’s enterprise-grade security capabilities including RBAC, TLS, and more. Credentials, secrets, and trust-store passwords are never persisted in Redis Connect and can be dynamically rotated including integration with HashiCorp Vault. </td>
     </tr>
 </table>
