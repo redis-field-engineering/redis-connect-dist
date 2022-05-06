@@ -91,7 +91,7 @@ start: init Redis Connect Instance
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
 
-<br>_Start Redis Connect Instance_<p>
+_Start Redis Connect Instance_
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
 ```
