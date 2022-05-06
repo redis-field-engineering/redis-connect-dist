@@ -1,7 +1,10 @@
 <p align="center"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 650px height = 200px></p>
 
-**Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
-<br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
+**Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and
+enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis
+Enterprise.
+<br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :
+white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 350px"></p>
 
@@ -37,6 +40,7 @@
 ## Download and Setup
 
 ---
+
 ### Minimum Production Hardware Requirements
 
 * 1GB of RAM
@@ -47,9 +51,11 @@
 ### Runtime Requirements
 
 * JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
+
 ---
 
-Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and un-tar redis-connect-`<version>.<build>`.tar.gz archive.
+Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and un-tar
+redis-connect-`<version>.<build>`.tar.gz archive.
 
 All the contents would be extracted under redis-connect directory
 
@@ -57,9 +63,11 @@ Contents of redis-connect directory
 <br>• bin – contains startup script files
 <br>• lib – contains java libraries
 <br>• config – contains jobmanager.properties, credentials files and job payload samples
-<br>• extlib – directory to copy any external dependencies such as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
+<br>• extlib – directory to copy any external dependencies such
+as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
 
 ### Start Redis Connect
+
 <details><summary>Execute Redis Connect startup script to see all the options</summary>
 <p>
 
@@ -77,18 +85,26 @@ cli: starts redis-connect-cli
 start: init Redis Connect Instance
 -------------------------------
 ```
+
 </p>
 </details>
 
 <br>• `redis-connect/bin$ ./redisconnect.sh start`
-
 <br>• Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)
 
 <table cellspacing="0" cellpadding="0">
-<tr>
-<td> <b>Redis Connect Swagger UI</b> <br> Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See a sample job configuration payload <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">here</a>.</td>
-<td width="50%"><img src="/images/Redis_Connect_Swagger.png" style="float: right;" width="500" height="200"/></td>
-</tr>
+    <tr>
+        <td> <b>Redis Connect Swagger UI</b>
+        </td>
+        <td width="50%"><img src="/images/Redis_Connect_Swagger.png" style="float: right;" width="500" height="200"/>
+        </td>
+    </tr>
+    <tr>
+        <td> <b>SAVE Job Configuration</b> <br> Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See a sample job configuration payload <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">here</a>.
+        </td>
+        <td width="50%"><img src="/images/Redis_Connect_SAVE_Job.png" style="float: right;" width="500" height="200"/>
+        </td>
+    </tr>
 </table>
 
 <!---
