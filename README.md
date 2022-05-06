@@ -1,9 +1,9 @@
-<p align="left"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 1000px height = 300px></p>
+<p align="left"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 750px height = 200px></p>
 
 # Redis Connect <br> _Event Streaming and Change Data Capture_ :rocket:
 Redis Connect is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
 <br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Enterprise Support
-<p align="left"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 1000px height = 750px"></p>
+<p align="left"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 500px height = 750px"></p>
 
 ## Table of contents
 - [Capabilities](#capabilities)
@@ -15,7 +15,7 @@ Redis Connect is a distributed platform that enables real-time event streaming, 
 
 <table style="width:100%">
     <tr>
-        <td style="width:40%"> **Cloud-Native Architecture** <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
+        <td style="width:40%"> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
         <td style="width:60%"> <img src="/images/Redis_Enterprise_Architecture.png" width = 500px height = 250px align="center" ></td>
     </tr>
     <tr>
