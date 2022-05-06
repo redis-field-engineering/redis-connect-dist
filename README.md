@@ -87,7 +87,7 @@ start: init Redis Connect Instance
 -------------------------------
 ```
 
-| :exclamation:                                                                                                                                                                                                                                                                               |
+| :exclamation: Prerequisite Configuration                                                                                                                                                                                                                                                                              |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
 
