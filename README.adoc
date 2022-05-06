@@ -61,7 +61,7 @@ Another interesting use-case within analytics is building denormalized views for
 
 === Runtime Requirements
 
-== * JRE 11+ e.g. https://www.azul.com/downloads/?package=jdk#download-openjdk[Azul OpenJDK]
+== JRE 11+ e.g. https://www.azul.com/downloads/?package=jdk#download-openjdk[Azul OpenJDK]
 
 Download the https://github.com/redis-field-engineering/redis-connect-dist/releases[latest release] and un-tar redis-connect-`&lt;version&gt;.&lt;build&gt;`.tar.gz archive.
 
