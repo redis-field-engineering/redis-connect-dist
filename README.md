@@ -8,8 +8,6 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 
 [![Redis Connect Demonstration](/images/Redis_Connect_Webinar.png)](https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise)
 
-https://redis.com/redis-enterprise-software/overview/
-
 <table>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
