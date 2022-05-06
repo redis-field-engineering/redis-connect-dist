@@ -1,5 +1,0 @@
-default:
-  formatter: FREEMARKER_FORMATTER
-  template: name-value.ftl
-dbo.emp:
-  template: pipe-delimited.ftl

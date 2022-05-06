@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-connect # deployment name
+  labels:
+    app: redis-connect # deployment label
+
+spec:
+  replicas: 2 # replicas for HA
+  selector:
+    matchLabels:
+      app: redis-connect # which pods is the deployment managing, as defined by the pod template
+  template: # pod template
+    metadata:
+      labels:
+        app: redis-connect 
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "redis-connect"
+        vault.hashicorp.com/secret-volume-path: "/vault/secrets"
+        vault.hashicorp.com/agent-inject-file-redis-connect: "redisconnect_credentials_postgres-job"
+        vault.hashicorp.com/agent-inject-secret-redis-connect: 'database/creds/redis-connect'
+        vault.hashicorp.com/agent-inject-template-redis-connect: |
+          {{ with secret "database/creds/redis-connect" -}}
+          source.username={{ .Data.username }}
+          source.password={{ .Data.password }}
+          target.username=asdf
+          target.password=asdf
+          jobmanager.username=asdf
+          jobmanager.password=asdf
+          {{- end }}
+    spec:
+      serviceAccountName: redis-connect
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - redis-connect # must match Deployment:metadata:labels:app
+            topologyKey: "kubernetes.io/hostname"    
+      containers:
+      - name:  redis-connect # Container name 
+        image: redislabs/redis-connect:latest
+        # The following `command` can be leveraged for troubleshooting
+        # command: ["/bin/bash", "-c", "echo $REDISCONNECT_JAVA_OPTIONS; /opt/redislabs/redis-connect/bin/redisconnect.sh start; while true; do sleep 30; done;"]
+        command: ["/opt/redislabs/redis-connect/bin/redisconnect.sh", "start"]
+        imagePullPolicy: Always # IfNotPresent # Always pull image
+        resources:
+          limits:
+            cpu: "4000m"
+            memory: "2048Mi"
+          requests:
+            cpu: "500m"
+            memory: "256Mi"
+        ports:  
+        - containerPort: 8282 # exposed container port to the REST API 
+          protocol: TCP
+        env:
+          - name: REDISCONNECT_LOGBACK_CONFIG
+            value: "/opt/redislabs/redis-connect/config/logback.xml"
+            # value: "/opt/redislabs/redis-connect/config/fromconfigmap/logback.xml"
+          - name: REDISCONNECT_CONFIG
+            value: "/opt/redislabs/redis-connect/config/fromconfigmap"
+          - name: REDISCONNECT_REST_API_ENABLED
+            value: "false"
+          - name: REDISCONNECT_REST_API_PORT
+            value: "8282"
+          - name: REDISCONNECT_JAVA_OPTIONS
+            value: "-Xms256m -Xmx1g -Dcredentials.rotation.eventlistener.enabled=true"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/redislabs/redis-connect/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG in this file.
+        # - name: custom-stage-volume
+        #   mountPath: /opt/redislabs/redis-connect/extlib  # Redis Connect expects the custom stage jars here
+      volumes:
+      - name: config-volume
+        configMap:
+          name: redis-connect-config
+          items:
+          - key: JobConfig.yml
+            path: JobConfig.yml
+          - key: JobManager.yml
+            path: JobManager.yml
+          - key: Setup.yml
+            path: Setup.yml
+          - key: env.yml
+            path: env.yml
+          - key: mapper1.yml
+            path: mappers/mapper1.yml
+# #### uncomment the following six lines if you have custom
+#  transformation implementation and replace the jar with
+#  your own.
+# ####
+      #- name: custom-stage-volume
+      #configMap:
+      #name: redis-connect-config
+      #items:  # define as many custom stages as you have here
+      #- key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      #path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      # - name: tmpfsdir
+      #   emptyDir:  # node-ephemeral volume
+      #     medium: Memory
+      # - name: redis-connect-pv
+      #   persistentVolumeClaim:
+      #     claimName: redis-connect-pvc                 
+---
+# RedisConnect service with name 'redis-connect-service'
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: redis-connect-api-service       # name should not be 'redis-connect' 
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 80
+#       targetPort: 8282
+#   selector:
+#     app: redis-connect-api-service

@@ -1,8 +1,0 @@
-connectionId: jobManagerConnection
-job:
-  jobConfig:
-    - name: postgres-job
-      config: JobConfig.yml
-      variables:
-        database: RedisConnect
-        sourceValueTranslator: SOURCE_RECORD_TO_OP_TRANSLATOR

@@ -1,31 +1,122 @@
-<p align="left"><img src="/docs/images/RedisConnect.svg" alt="Redis Connect" height="100px"></p>
+<p align="center"><img src="/images/Redis Connect Intro.jpg" alt="Redis Connect" width = 650px height = 200px></p>
 
-# Redis Connect (Continuous Replication and Initial Load to Redis Enterprise)
+**Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
+changed-data events from heterogeneous data platforms to multi-model [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/) and [Redis Stack](https://redis.io/docs/stack/).
+<br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
+<br><br>
+<p align="center"><img src="/images/Redis Connect Source Sink.jpg" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
-- [Redis Connect Overview](#technical-overview)
-  * [Using redis-connect-cassandra](connectors/cassandra#redis-connect-cassandra)
-  * [Using redis-connect-db2](connectors/db2#redis-connect-db2)
-  * [Using redis-connect-gemfire](connectors/gemfire#redis-connect-gemfire)
-  * [Using redis-connect-mysql](connectors/mysql#redis-connect-mysql)
-  * [Using redis-connect-oracle](connectors/oracle#redis-connect-oracle)
-  * [Using redis-connect-postgres](connectors/postgres#redis-connect-postgres)
-  * [Using redis-connect-sqlserver](connectors/mssql#redis-connect-sqlserver)
-  * [Using redis-connect-files](#connectors/files#redis-connect-files)
+<table>
+    <tr>
+        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
+    </tr>
+    <tr><td height="20" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
+        <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
+    </tr>
+    <tr><td height="20" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td width="50%"><img src="/images/Redis Insight.png" style="float: right;" width="500" height="200"/></td> 
+        <td> <b>Multi-Tenancy | Partitioning | Linear Scalability</b> <br> Redis Connect can manage multi-tenant (jobs) data replication pipelines end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster nodes.</td>
+    </tr>
+    <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the occurrence of node failure, or network split, a job would failover to another node and seamlessly begin replication from the last committed checkpoint. Data would not be lost, and order would be maintained. Redis Connect is supported on Kubernetes environments including OpenShift.</td>
+        <td width="50%"><img src="/images/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></td>
+    </tr>
+    <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td width="50%"><img src="/images/Redis Connect Pipeline.png" style="float: right;" width="500" height="150"/></td>
+        <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
+    </tr>
+    <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. Users can configure, start, stop, migrate, and restart jobs via its built-in REST API and/or interactive CLI. Redis Connect also exposes a swagger UI to simplify the user and administration experience.</td>
+        <td width="50%"><img src="/images/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200"/></td>
+    </tr>
+    <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td width="50%"><img src="/images/Redis Enterprise ACL.png" style="float: right;" width="500" height="200"/></td>
+        <td> <b>Enterprise-Grade Security</b> <br> Redis Connect jobs are stateless so changed-data events are always in-transit. Redis Connect benefits from Redis Enterprise’s enterprise-grade security capabilities including RBAC, TLS, and more. Credentials, secrets, and trust-store passwords are never stored within Redis Connect however can be dynamically rotated with minimal disruption to the replication pipeline. Vault integration is supported.</td>
+    </tr>
+</table>
 
-## Technical Overview
+## Requirements
 
-Redis Connect is a distributed platform that enables near real-time replication and transformation (data pipelines) of row-level change-data events (Create, Update, Delete operations) from heterogeneous platforms to Redis Enterprise databases/modules. Redis Connect Jobs migrate source-database operations in the same time-order they were committed using event-driven workflows. It has a modular, extendable, and configurable architecture which provides the flexibility to deploy in a variety of topologies and cover multiple use-cases.
+### Minimum Production Hardware Requirements
 
-Redis Connect can also perform the function of event-sourcing, acting as both the message broker and event-store, so time-ordered history of change-data events are captured for auditing and/or replay purposes. In the occurrence of target-database downtime, change-data events will not be lost but instead resume replication, upon recovery, from the last committed checkpoint.
+* 1GB of RAM
+* 4 CPU cores
+* 20GB of disk space
+* 1G Network
 
-Redis Connect has a cloud-native shared-nothing architecture which allows any cluster node (Redis Connect Instance) to perform either/both Job Management and Job Execution functions. It is implemented and compiled in JAVA, which deploys on a platform-independent JVM, allowing Redis Connect instances to be agnostic of the underlying operating system (Linux, Windows, Docker Containers, etc.) Its lightweight design and minimal use of infrastructure-resources avoids complex dependencies on other distributed platforms such as Kafka and ZooKeeper. In fact, most uses of Redis Connect will only require the deployment of a few JVMs to handle Job Execution with high-availability.
+### Runtime Requirements
 
-Integration with source and target databases is handled by an extendable connector framework. Each Redis Connect Connector uniquely interfaces with its source database’s supported and built-in change data capture process. While there are multiple patterns to implement change data capture (polling-publisher, dual-writes, transaction-log tailing, etc.), Redis Connect connectors prioritize integration with source-database transaction-logs (when supported) to avoid impacting performance and availability.
+* JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
 
-## Use Cases
+## Quick Start
 
-For one-time migrations, we commonly see customers attempting a blue-green deployment, where for some period of time, both the new and old deployment are available in parallel. Once the customer is confident with their new system, they have a hard cutoff for the legacy deployment. Redis Connect is a good fit here, since it can maintain consistency across both blue and green deployments until eventually cutting off replication. Now in the case of multi-phased migrations, such as a [strangler application](https://martinfowler.com/bliki/StranglerFigApplication.html) where we are breaking microservices off a monolith legacy database, Redis Connect can maintain consistency between heterogenous databases, for years, until the monolith is eventually retired for good. 
+### Download
 
-We’re also seeing a lot of demand within the analytics space, with customers that want to perform intra-day real-time ETL. In this case, Redis Connect is used more as an initial loader, which requires it to partition its consumption of source-side transactional data, so it can finish its ETL process within a thin SLA window. This is where another nice feature of Redis Connect is a value-add. For initial load jobs, Redis Connect can spawn child processes, which can in parallel consume partitioned data from the source. The partitioning strategy can be configured to fit the SLA window for the ETL job.
+Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive<br>
+```bash
+tar vxf <tarfile name>
+```
 
-Another interesting use-case within analytics is building denormalized views for real-time reporting, alerts, and visualization and in this case Redis Connect can continuously replicate changed-data events from a relational database to a Redis Hash or String or JSON model. Since relational databases rely on SQL, its not a surprise that users for this use-case predominantly rely on [RediSearch](https://redislabs.com/modules/redis-search/) for real-time SQL-like querying based on secondary indexes.
+The following subdirectories will be extracted under /redis-connect -
+<br>/bin – Startup scripts
+<br>/lib – Dependencies
+<br>/config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
+<br>/extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
+
+### Getting Started
+
+**Review options by running Redis Connect startup script** <br>
+```bash
+redis-connect/bin$ ./redisconnect.sh    
+-------------------------------
+Redis Connect startup script.
+*******************************
+Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in redisconnect.conf before executing any of the options below
+*******************************
+Usage: [-h|cli|start]
+options:
+-h: Print this help message and exit.
+cli: starts redis-connect-cli
+start: init Redis Connect Instance
+-------------------------------
+```
+
+| Prerequisite Configuration :exclamation:                                                                                                                                                                  |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
+
+**Start Redis Connect Instance**
+```bash
+redis-connect/bin$ ./redisconnect.sh start
+```
+<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
+
+**Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
+<br>_For quick start, use '**cdc_job**' as **jobName**_
+<br><br><img src="/images/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
+
+**Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
+<br>_For quick start, use a sample job configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>
+<br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+
+| Prerequisite Configuration :exclamation:                                                                                                                                                                           |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable  |
+
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>_For quick start, use '**stream**' as **jobType**_
+<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+
+**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
+<br>_For quick start, use '**all**' as **jobStatus**_
+<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
+
+**Insert some records to the source and confirm they have arrived in Redis. Enjoy!**

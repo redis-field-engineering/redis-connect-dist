@@ -1,0 +1,8 @@
+#mysql db configuration for RedisConnect
+[mysqld]
+log_bin=mysql-bin
+server-id=1
+binlog_format=row
+binlog_row_image=full
+binlog_rows_query_log_events=on
+performance_schema=ON
