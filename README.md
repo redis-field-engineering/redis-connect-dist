@@ -85,9 +85,9 @@ start: init Redis Connect Instance
 -------------------------------
 ```
 
-| :exclamation:                                                                                                                                                                         |
-|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Please update the configuration properties under `/redis-coonect/config/job<br/>manager.properties`. Mainly Redis connection details and `credentials.file.path` based on your setup. |
+| :exclamation:                                                                                                                                                                                                                                                                               |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Please update the configuration properties under `/redis-coonect/config/jobmanager.properties`.<br/> Mainly Redis connection details and `credentials.file.path` based on your setup. See a sample <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
 
 <br>_Start Redis Connect Instance_<p>
 ```bash
