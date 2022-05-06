@@ -6,33 +6,7 @@ Please see an example under [Demo](demo/setup_mssql.sh).
 
 ## Setting up Redis Enterprise Databases (Target)
 
-Before using the SQL Server connector (redis-connect-sqlserver) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by Redis Connect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
-
-## Start Redis Connect
-<details><summary>Execute Redis Connect startup script to see all the options</summary>
-<p>
-
-```bash
-redis-connect-postgres/bin$ ./redisconnect.sh    
--------------------------------
-Redis Connect startup script.
-*******************************
-Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in redisconnect.conf before executing any of the options below
-*******************************
-Usage: [-h|cli|start]
-options:
--h: Print this help message and exit.
-cli: starts redis-connect-cli
-start: init Redis Connect Instance
--------------------------------
-```
-
-</p>
-</details>
-
-```bash
-redis-connect-postgres/bin$ ./redisconnect.sh start
-```
+Before using the SQL Server connector to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by Redis Connect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
 
 | ℹ️                                          |
 |:--------------------------------------------|

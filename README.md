@@ -7,7 +7,7 @@ Enterprise.
 <br><br>
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
-**Demo >** https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise 🎯
+[![Redis Connect Demonstration](/images/Redis_Connect_Webinar.png)](https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise)
 
 <table>
     <tr>
