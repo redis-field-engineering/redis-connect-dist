@@ -100,19 +100,11 @@ redis-connect/bin$ ./redisconnect.sh start
 
 **Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}` <br>
 Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>
-<br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
-**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br><br>
-<br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
-
-**Create a Job Configuration -** /connect/api/vi/job/config/{jobName}<br><br>
-Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
-<br>
 | :exclamation:                                                                                                                                                                                                                  |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | To use one of the payload samples above, please update `credentialsFilePath`,<br/>`databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`<br/> and `columns` mapping based on your setup. |
 
-<img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
-
-**Start Job -** /connect/api/vi/job/transition/start/{jobName}/{jobType}<br>
-<img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br>
+<br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
