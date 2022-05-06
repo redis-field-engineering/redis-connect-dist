@@ -7,15 +7,11 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
 <table>
-    <tr><td height="20" colspan="2">&nbsp;</td></tr>
-    
-</table>
-
-<table>
     <tr>
         <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis_Connect_Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
         <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis_Connect_CLI.png" style="float: right;" width="500" height="200"/></a></td> 
-    </tr>    
+    </tr>
+    <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
         <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
