@@ -21,7 +21,7 @@ Enterprise.
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the occurrence of node failure, or network split, a job would failover to another node and seamlessly begin replication from the last committed checkpoint. Data would not be lost, and order would be maintained. It is supported on Kubernetes environments including OpenShift.</td>
+        <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the occurrence of node failure, or network split, a job would failover to another node and seamlessly begin replication from the last committed checkpoint. Data would not be lost, and order would be maintained. Redis Connect is supported on Kubernetes environments including OpenShift.</td>
         <td width="50%"><img src="/images/Redis_Connect_Cluster.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
@@ -58,17 +58,14 @@ Enterprise.
 
 ---
 
-Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and un-tar
-redis-connect-`<version>.<build>`.tar.gz archive.
+Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive.
+`tar vxf <tarfile name>`
 
-All the contents would be extracted under redis-connect directory
-
-Contents of redis-connect directory
-<br>• bin – contains startup script files
-<br>• lib – contains java libraries
-<br>• config – contains jobmanager.properties, credentials files and job payload samples
-<br>• extlib – directory to copy any external dependencies such
-as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
+The following subdirectories will be extracted under /redis-connect -
+<br>• /bin – Startup scripts
+<br>• /lib – Dependencies
+<br>• /config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
+<br>• /extlib – Custom/External dependencies as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
 
 ### Start Redis Connect
 
