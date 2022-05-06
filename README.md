@@ -100,7 +100,7 @@ start: init Redis Connect Instance
         </td>
     </tr>
     <tr>
-        <td> <b>SAVE Job Configuration</b> <br> Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See sample job configuration payloads for <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/postgres/oracle/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
+        <td> <b>SAVE Job Configuration</b> <br> Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See sample job configuration payloads for <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
         </td>
         <td width="50%"><img src="/images/Redis_Connect_SAVE_Job.png" style="float: right;" width="500" height="200"/>
         </td>
