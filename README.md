@@ -6,7 +6,13 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <br><br>
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
-[![Redis Connect Demonstration](/images/Redis_Connect_Webinar.png)](https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise)
+<table>
+    <tr><td height="20" colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td width="50%"><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis_Connect_Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis_Connect_CLI.png" style="float: right;" width="500" height="200"/></a></td> 
+    </tr>
+</table>
 
 <table>
     <tr>
