@@ -110,6 +110,6 @@ _Sample job configurations include:_ <a href="/examples/postgres/demo/config/sam
 _For quick start use '**stream**' as **jobType**_
 <br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
-**Confirm Job Claim -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br>
+**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}` <br>
 _For quick start use '**all**' as **jobStatus**_
-<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 200px/>
+<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
