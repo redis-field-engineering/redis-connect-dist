@@ -89,20 +89,16 @@ start: init Redis Connect Instance
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
 ```
-<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 1000px height = 250px/>
+<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 900px height = 250px/>
 
-<br>_Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html) (http://localhost:8282/swagger-ui/index.html)_
-<img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 620px height = 375px/>
+_Open a browser to access (http://localhost:8282/swagger-ui/index.html) [Swagger UI](http://localhost:8282/swagger-ui/index.html) _<br>
+<img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 615px height = 375px/>
 
-<br>▶️ Save Job Configuration
-<table cellspacing="0" cellpadding="0">
-    <tr>
-        <td> <b>SAVE Job Configuration</b> <br> Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See sample job configuration payloads for <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
-        </td>
-        <td width="50%"><img src="/images/Redis_Connect_SAVE_Job.png" style="float: right;" width="500" height="200"/>
-        </td>
-    </tr>
-</table>
+<br> Create a Job Configuration
+Under QUICK START, use /connect/api/vi/job/config/{jobName} to create a job configuration. Samples include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
+<img src="/images/Redis Connect Quick Start Create Job Config.png" style="float: right;" width = 615px height = 375px/>
+
+
 <br>▶️ Start a Redis Connect Job
 <table cellspacing="0" cellpadding="0">
     <tr>
