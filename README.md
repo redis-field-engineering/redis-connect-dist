@@ -96,7 +96,7 @@ _Open a browser to access Swagger UI -_ [http://localhost:8282/swagger-ui/index.
 
 _Create a Job Configuration -_ /connect/api/vi/job/config/{jobName}<br><br>
 Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
-<img src="/images/Redis Connect Save Job Config.png.png" style="float: right;" width = 615px height = 375px/>
+<img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 615px height = 375px/>
 
-_Start Job- _ /connect/api/vi/job/transition/start/{jobName}/{jobType}<br><br>
+_Start Job-_ /connect/api/vi/job/transition/start/{jobName}/{jobType}<br><br>
 <img src="/images/Redis Connect Start Job.png" style="float: right;" width = 615px height = 375px/>
