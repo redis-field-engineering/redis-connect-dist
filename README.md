@@ -84,9 +84,9 @@ start: init Redis Connect Instance
 -------------------------------
 ```
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                                                                                                                             |
-|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
+| Prerequisite Configuration :exclamation:                                                                                                                                                                  |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
 
 **Start Redis Connect Instance**
 ```bash
@@ -99,12 +99,12 @@ redis-connect/bin$ ./redisconnect.sh start
 <br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 700px height = 375px/>
 
 **Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}` <br>
-_Sample job configurations include:_ <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>
+_Sample job configurations include:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>
 <br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                                                                 |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable |
+| Prerequisite Configuration :exclamation:                                                                                                                                                                           |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable  |
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br>
 <br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
