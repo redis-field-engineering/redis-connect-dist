@@ -43,7 +43,7 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
     </tr>
 </table>
 
-## Quick Start
+## Requirements
 
 ### Minimum Production Hardware Requirements
 
@@ -55,6 +55,8 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 ### Runtime Requirements
 
 * JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
+
+## Quick Start
 
 ### Download
 
