@@ -89,16 +89,14 @@ start: init Redis Connect Instance
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
 ```
-<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 900px height = 250px/>
+<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 800px height = 250px/>
 
-_Open a browser to access SWAGGER UI -_ [http://localhost:8282/swagger-ui/index.html]()<br>
-<img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 615px height = 375px/>
+_Open a browser to access Swagger UI -_ [http://localhost:8282/swagger-ui/index.html]()
+<br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 615px height = 375px/>
 
-_Create a Job Configuration_<br>
-Navigate to QUICK START and use /connect/api/vi/job/config/{jobName}
+_Create a Job Configuration -_ /connect/api/vi/job/config/{jobName}<br><br>
 Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
-<img src="/images/Redis Connect Quick Start Create Job Config.png" style="float: right;" width = 615px height = 375px/>
+<img src="/images/Redis Connect Save Job Config.png.png" style="float: right;" width = 615px height = 375px/>
 
-_Start Job_<br>
-Use /connect/api/vi/job/transition/start/{jobName}/{jobType}
+_Start Job- _ /connect/api/vi/job/transition/start/{jobName}/{jobType}<br><br>
 <img src="/images/Redis Connect Start Job.png" style="float: right;" width = 615px height = 375px/>
