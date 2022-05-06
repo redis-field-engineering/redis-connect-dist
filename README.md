@@ -85,6 +85,10 @@ start: init Redis Connect Instance
 -------------------------------
 ```
 
+| :exclamation:                                                                                                                                                                         |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Please update the configuration properties under `/redis-coonect/config/job<br/>manager.properties`. Mainly Redis connection details and `credentials.file.path` based on your setup. |
+
 <br>_Start Redis Connect Instance_<p>
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
@@ -97,9 +101,9 @@ _Open a browser to access Swagger UI -_ [http://localhost:8282/swagger-ui/index.
 _Create a Job Configuration -_ /connect/api/vi/job/config/{jobName}<br><br>
 Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
 
-| :exclamation:                                                                                                                                                                                                         |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| To use one of the payload samples above, please update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName` and `columns` mapping based on your setup. |
+| :exclamation:                                                                                                                                                                                                                  |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| To use one of the payload samples above, please update `credentialsFilePath`,<br/>`databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`<br/> and `columns` mapping based on your setup. |
 
 <img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 615px height = 375px/>
 
