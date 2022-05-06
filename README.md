@@ -69,8 +69,7 @@ The following subdirectories will be extracted under /redis-connect -
 
 ### Start Redis Connect
 
-<details><summary>_Execute Redis Connect startup script to see all the options_</summary>
-<p>
+_Execute Redis Connect startup script to see all the options_
 
 ```bash
 redis-connect/bin$ ./redisconnect.sh    
@@ -86,9 +85,6 @@ cli: starts redis-connect-cli
 start: init Redis Connect Instance
 -------------------------------
 ```
-
-</p>
-</details>
 
 <br>_Start an Instance of Redis Connect cluster_<p>
 `redis-connect/bin$ ./redisconnect.sh start`
