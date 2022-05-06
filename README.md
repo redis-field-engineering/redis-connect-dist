@@ -99,10 +99,10 @@ redis-connect/bin$ ./redisconnect.sh start
 <br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 700px height = 375px/>
 
 **Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}` <br>
-Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>
+_Sample job configurations include:_ <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>
 <br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
-| :exclamation:                                                                                                                                                                                                                  |
+| Prerequisite Configuration :exclamation:                                                                                                                                                                                                                 |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | To use one of the payload samples above, please update `credentialsFilePath`,<br/>`databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`<br/> and `columns` mapping based on your setup. |
 
