@@ -1,8 +1,6 @@
 <p align="center"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 650px height = 200px></p>
 
-**Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and
-propagation of changed-data events from heterogeneous data platforms to the various data models supported by **Redis
-Enterprise**.
+**Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of changed-data events from heterogeneous data platforms to the various data models supported by **Redis Enterprise**.
 <br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
@@ -96,7 +94,7 @@ redis-connect/bin$ ./redisconnect.sh start
 <img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
 
 **Open a browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
-_For simplicity use cdc_job for jobName_
+<br>_For simplicity use cdc_job for jobName_
 <br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 700px height = 375px/>
 
 **Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}` <br>
