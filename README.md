@@ -5,15 +5,16 @@ enrichment of changed-data events from heterogeneous data platforms to the vario
 Enterprise.
 <br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
-<p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 400px"></p>
+<p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
-**Demo** https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise 🎯
+**Demo >** https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise 🎯
 
 <table cellspacing="0" cellpadding="0">
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
         <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
     </tr>
+    <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td width="50%"><img src="/images/Redis_Insight.png" style="float: right;" width="500" height="200"/></td> 
         <td> <b>Multi-Tenancy | Linear Scalability</b> <br> Redis Connect can manage multi-tenant data replication pipelines (jobs) end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster node(s).</td>
