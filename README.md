@@ -8,13 +8,14 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 
 <table>
     <tr><td height="20" colspan="2">&nbsp;</td></tr>
-    <tr>
-        <td width="50%"><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis_Connect_Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
-        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis_Connect_CLI.png" style="float: right;" width="500" height="200"/></a></td> 
-    </tr>
+    
 </table>
 
 <table>
+    <tr>
+        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis_Connect_Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis_Connect_CLI.png" style="float: right;" width="500" height="200"/></a></td> 
+    </tr>    
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
         <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
@@ -100,11 +101,11 @@ redis-connect/bin$ ./redisconnect.sh start
 ```
 <img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
 
-**Open a browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
+**Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
 <br>_For quick start, use '**cdc_job**' as **jobName**_
 <br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 700px height = 425px/>
 
-**Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}`
+**Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
 <br>_For quick start, use a sample job configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>
 <br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
