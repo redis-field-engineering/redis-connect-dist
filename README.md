@@ -1,4 +1,4 @@
-<p align="center"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 750px height = 200px></p>
+<p align="center"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 650px height = 200px></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
 <br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenant :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
