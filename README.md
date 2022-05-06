@@ -58,18 +58,18 @@ Enterprise.
 
 ---
 
-Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive.
+Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive.<br>
 `tar vxf <tarfile name>`
 
 The following subdirectories will be extracted under /redis-connect -
-<br>• /bin – Startup scripts
-<br>• /lib – Dependencies
-<br>• /config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
-<br>• /extlib – Custom/External dependencies as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
+<br>/bin – Startup scripts
+<br>/lib – Dependencies
+<br>/config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
+<br>/extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
 
 ### Start Redis Connect
 
-<details><summary>Execute Redis Connect startup script to see all the options</summary>
+<details><summary>_Execute Redis Connect startup script to see all the options_</summary>
 <p>
 
 ```bash
@@ -90,10 +90,10 @@ start: init Redis Connect Instance
 </p>
 </details>
 
-<br>▶️ Start an Instance of Redis Connect cluster <p>
+<br>_Start an Instance of Redis Connect cluster_<p>
 `redis-connect/bin$ ./redisconnect.sh start`
 
-<br>▶️ Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)
+<br>_Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)_
 <table cellspacing="0" cellpadding="0">
     <tr>
         <td> <b>Redis Connect Swagger UI</b>
