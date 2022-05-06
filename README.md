@@ -113,3 +113,5 @@ redis-connect/bin$ ./redisconnect.sh start
 **Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
 <br>_For quick start, use '**all**' as **jobStatus**_
 <br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
+
+**Insert some records to the source and confirm they have arrived in Redis. Enjoy!**
