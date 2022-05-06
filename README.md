@@ -58,3 +58,29 @@ Contents of redis-connect directory
 <br>• lib – contains java libraries
 <br>• config – contains jobmanager.properties, credentials files and job payload samples
 <br>• extlib – directory to copy any external dependencies such as [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source drivers etc.
+
+### Start Redis Connect
+<details><summary>Execute Redis Connect startup script to see all the options</summary>
+<p>
+
+```bash
+redis-connect-postgres/bin$ ./redisconnect.sh    
+-------------------------------
+Redis Connect startup script.
+*******************************
+Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in redisconnect.conf before executing any of the options below
+*******************************
+Usage: [-h|cli|start]
+options:
+-h: Print this help message and exit.
+cli: starts redis-connect-cli
+start: init Redis Connect Instance
+-------------------------------
+```
+
+</p>
+</details>
+
+```bash
+redis-connect-postgres/bin$ ./redisconnect.sh start
+```
