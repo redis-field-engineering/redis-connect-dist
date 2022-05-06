@@ -22,15 +22,15 @@
         <td width="50%"><img src="/images/Redis_Connect_Cluster.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr>
-        <td width="50%"><img src="/images/Redis_Connect_Pipeline.png" style="float: right;" width="500" height="250"/></td>
+        <td width="50%"><img src="/images/Redis_Connect_Pipeline.png" style="float: right;" width="500" height="150"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr>
         <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. Users can configure, start, stop, migrate, and restart jobs via its built-in REST API and/or interactive CLI. Redis Connect also exposes a swagger UI to simplify the user and administration experience.</td>
-        <td width="50%"><img src="/images/Redis_Connect_Swagger_UI.png" style="float: right;" width="500" height="150"/></td>
+        <td width="50%"><img src="/images/Redis_Connect_Swagger_UI.png" style="float: right;" width="500" height="300"/></td>
     </tr>
     <tr>
-        <td width="50%"><img src="/images/Redis_Enterprise_ACL.png" style="float: right;" width="400" height="150"/></td>
+        <td width="50%"><img src="/images/Redis_Enterprise_ACL.png" style="float: right;" width="400" height="250"/></td>
         <td> <b>Enterprise-Grade Security</b> <br> Redis Connect jobs are stateless and therefore always execute changed-data events in-transit. Redis Connect benefits from Redis Enterprise’s enterprise-grade security capabilities including RBAC, TLS, and more. Credentials, secrets, and trust-store passwords are never persisted in Redis Connect and can be dynamically rotated including integration with HashiCorp Vault. </td>
     </tr>
 </table>
