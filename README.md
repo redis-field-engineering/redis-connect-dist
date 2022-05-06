@@ -14,7 +14,7 @@ Enterprise.
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
         <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
     </tr>
-    <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
+    <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
         <td width="50%"><img src="/images/Redis_Insight.png" style="float: right;" width="500" height="200"/></td> 
         <td> <b>Multi-Tenancy | Linear Scalability</b> <br> Redis Connect can manage multi-tenant data replication pipelines (jobs) end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster node(s).</td>
