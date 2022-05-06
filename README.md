@@ -72,7 +72,7 @@ as [custom stage](https://github.com/redis-field-engineering/redis-connect-custo
 <p>
 
 ```bash
-redis-connect-postgres/bin$ ./redisconnect.sh    
+redis-connect/bin$ ./redisconnect.sh    
 -------------------------------
 Redis Connect startup script.
 *******************************
