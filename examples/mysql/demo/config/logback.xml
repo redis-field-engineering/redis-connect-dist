@@ -1,4 +1,4 @@
-<configuration debug="true" scan="true" scanPeriod="15 seconds">
+<configuration debug="false" scan="true" scanPeriod="15 seconds">
 
     <property name="LOG_REDIS_CONNECT_PATH" value="logs/redis-connect"/>
     <property name="LOG_REDIS_CONNECT_MANAGER_PATH" value="logs/redis-connect-manager.log"/>

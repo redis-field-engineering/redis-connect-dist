@@ -55,15 +55,15 @@
         </encoder>
     </appender>
 
-    <logger name="redis-connect-heartbeat" level="INFO" additivity="false">
+    <logger name="redis-connect-heartbeat" level="OFF" additivity="false">
         <appender-ref ref="REDIS_CONNECT_HEARTBEAT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="redis-connect-manager" level="INFO" additivity="false">
+    <logger name="redis-connect-manager" level="OFF" additivity="false">
         <appender-ref ref="REDIS_CONNECT_MANAGER"/>
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="redis-connect" level="INFO" additivity="false">
+    <logger name="redis-connect" level="OFF" additivity="false">
         <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE" />
     </logger>
@@ -79,7 +79,7 @@
         <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
-    <logger name="io.debezium" level="INFO" additivity="false">
+    <logger name="io.debezium" level="OFF" additivity="false">
         <appender-ref ref="REDIS_CONNECT"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
