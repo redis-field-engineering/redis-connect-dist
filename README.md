@@ -82,5 +82,5 @@ start: init Redis Connect Instance
 </details>
 
 ```bash
-redis-connect-postgres/bin$ ./redisconnect.sh start
+redis-connect/bin$ ./redisconnect.sh start
 ```
