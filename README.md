@@ -95,21 +95,21 @@ redis-connect/bin$ ./redisconnect.sh start
 <img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
 
 **Open a browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
-<br>_For quick start use '**cdc_job**' as **jobName**_
-<br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 700px height = 375px/>
+<br>_For quick start, use '**cdc_job**' as **jobName**_
+<br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 700px height = 425px/>
 
-**Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}` <br>
-_Sample job configurations include:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>
+**Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}`
+<br>_For quick start, use a sample job configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>
 <br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                           |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable  |
 
-**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br>
-_For quick start use '**stream**' as **jobType**_
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>_For quick start, use '**stream**' as **jobType**_
 <br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
-**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}` <br>
-_For quick start use '**all**' as **jobStatus**_
+**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
+<br>_For quick start, use '**all**' as **jobStatus**_
 <br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
