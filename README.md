@@ -104,7 +104,7 @@ _Sample job configurations include:_ <a href="/examples/postgres/demo/config/sam
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                                                                 |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| To use one of the payload samples above, please update `credentialsFilePath`,<br/>`databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`<br/> and `columns` mapping based on your setup. |
+| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`<br/> and `columns` within job config |
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br>
 <br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
