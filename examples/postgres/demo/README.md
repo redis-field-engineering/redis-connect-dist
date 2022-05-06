@@ -114,6 +114,7 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 ### Initial Loader Steps
 <details><summary><b>INSERT few records into postgres table (source)</b></summary>
 <p>
+You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to insert load large amount of data using a csv or sql file.
 
 ```bash
 demo$ sudo docker exec -it postgres-12.7-$(hostname)-5432 bash -c 'psql -U"redisconnect" -d"RedisConnect"'

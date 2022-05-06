@@ -88,6 +88,11 @@ start: init Redis Connect Instance
 ```
 
 <br>_Start Redis Connect Instance_<br>
+| :exclamation:                                                                                                                                                                                                                                                                               |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Please update the configuration properties under `/redis-coonect/config/jobmanager.properties`.<br/> Mainly Redis connection details and `credentials.file.path` based on your setup. See a sample <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
+
+<br>_Start Redis Connect Instance_<p>
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
 ```
@@ -102,3 +107,15 @@ Sample job configurations include: <a href="/examples/postgres/demo/config/sampl
 
 _Start Job -_ `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br><br>
 <img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+
+_Create a Job Configuration -_ /connect/api/vi/job/config/{jobName}<br><br>
+Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
+
+| :exclamation:                                                                                                                                                                                                                  |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| To use one of the payload samples above, please update `credentialsFilePath`,<br/>`databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`<br/> and `columns` mapping based on your setup. |
+
+<img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 615px height = 375px/>
+
+_Start Job-_ /connect/api/vi/job/transition/start/{jobName}/{jobType}<br><br>
+<img src="/images/Redis Connect Start Job.png" style="float: right;" width = 615px height = 375px/>
