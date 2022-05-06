@@ -1,9 +1,7 @@
-<p align="left"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 750px height = 200px></p>
-
-# Redis Connect <br> _Event Streaming and Change Data Capture_ :rocket:
+<p align="left"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 750px height = 200px></p> :rocket:
 Redis Connect is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
-<br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Enterprise Support
-<p align="left"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 500px height = 750px"></p>
+<br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenant :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
+<p align="left"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 350px"></p>
 
 ## Table of contents
 - [Capabilities](#capabilities)
