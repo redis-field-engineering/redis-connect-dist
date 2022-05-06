@@ -11,7 +11,7 @@
 <table>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
-        <td width="50%"><img src="/images/Redis_Enterprise_Architecture.png" style="float: right;" width="300" height="200"/></td>
+        <td width="50%"><img src="/images/Redis_Enterprise_Architecture.png" style="float: right;" width="500" height="250"/></td>
     </tr>
 </table>
 
