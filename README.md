@@ -1,15 +1,11 @@
-<p align="left"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 750px height = 200px></p> :rocket:
-Redis Connect is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
-<br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenant :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
-<p align="left"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 350px"></p>
+<p align="center"><img src="/images/Redis_Connect_Intro.JPG" alt="Redis Connect" width = 750px height = 200px></p>
+[Demo](https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise/)
+**Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and enrichment of changed-data events from heterogeneous data platforms to the various data models supported by Redis Enterprise.
+<br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenant :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
+<br><br>
+<p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 350px"></p>
 
-## Table of contents
-- [Capabilities](#capabilities)
-- [Download and Setup](#download-and-setup)
-- [Quick Start](/examples)
-- [Demo](https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise/)
-
-##  Capability Highlights
+##  Highlights
 
 <table style="width:100%">
     <tr>
