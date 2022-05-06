@@ -86,10 +86,13 @@ start: init Redis Connect Instance
 ```
 
 <br>_Start Redis Connect Instance_<p>
-`redis-connect/bin$ ./redisconnect.sh start`
+```bash
+redis-connect/bin$ ./redisconnect.sh start
+```
+<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 600px height = 375px/>
 
-<br>_Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)_
-<img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 750px height = 375px/>
+<br>_Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html) (http://localhost:8282/swagger-ui/index.html)_
+<img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 600px height = 375px/>
 
 <br>▶️ Save Job Configuration
 <table cellspacing="0" cellpadding="0">
