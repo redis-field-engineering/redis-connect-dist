@@ -17,7 +17,7 @@ Enterprise.
     <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
         <td width="50%"><img src="/images/Redis_Insight.png" style="float: right;" width="500" height="200"/></td> 
-        <td> <b>Multi-Tenancy | Linear Scalability</b> <br> Redis Connect can manage multi-tenant data replication pipelines (jobs) end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster node(s).</td>
+        <td> <b>Multi-Tenancy | Partitioning | Linear Scalability</b> <br> Redis Connect can manage multi-tenant (jobs) data replication pipelines end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster node(s).</td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
