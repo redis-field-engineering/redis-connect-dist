@@ -1,12 +1,38 @@
-# redis-connect-db2
+## Setting up DB2 (Source)
 
-redis-connect-db2 is a Redis Connect connector for intra-day real-time ETL. In this case, Redis Connect is used more as an initial loader, which requires it to partition its consumption of source-side transactional data. For initial load jobs, Redis Connect can spawn child processes, which can in parallel consume partitioned data from the source. The partitioning strategy can be configured to fit the SLA window for the ETL job.
+Please see an example under [Demo](demo/setup_db2.sh).
 
+## Setting up Redis Enterprise Databases (Target)
 
-### Minimum Hardware Requirements
+Before using the SQL Server connector (redis-connect-sqlserver) to capture the changes committed on SQL Server into Redis Enterprise Database, first create a database for the metadata management and metrics provided by Redis Connect by creating a database with [RedisTimeSeries](https://redislabs.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redislabs.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from SQL Server. Additionally, you can enable [RediSearch 2.0](https://redislabs.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where SQL Server changed events are being written at then [create an index, and start querying](https://oss.redislabs.com/redisearch/Commands/) the document in hashes.
 
-* 1GB of RAM
-* 4 CPU cores
-* 20GB of disk space
-* 1G Network
-* JRE 11+
+## Start Redis Connect
+<details><summary>Execute Redis Connect startup script to see all the options</summary>
+<p>
+
+```bash
+redis-connect-postgres/bin$ ./redisconnect.sh    
+-------------------------------
+Redis Connect startup script.
+*******************************
+Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in redisconnect.conf before executing any of the options below
+*******************************
+Usage: [-h|cli|start]
+options:
+-h: Print this help message and exit.
+cli: starts redis-connect-cli
+start: init Redis Connect Instance
+-------------------------------
+```
+
+</p>
+</details>
+
+```bash
+redis-connect-postgres/bin$ ./redisconnect.sh start
+```
+
+| ℹ️                                          |
+|:--------------------------------------------|
+| Docker demo: Follow the [Docker demo](demo) |
+| K8s Setup: Follow the [k8s-docs](k8s-docs)  |

@@ -17,7 +17,7 @@ Overall flow:
 Follow the [demo](../demo) steps then goto k8s-docs directory
 
 ```
-redis-connect-mysql$ cd k8s-docs
+redis-connect$ cd k8s-docs
 ```
 
 ## 2. Configure Redis Connect 
@@ -45,7 +45,7 @@ JobConfig.yml        Setup.yml            mappers/
 
 Here is an example of creating the ConfigMap. This command should be *run from the directory containing your config files*.
 ```
-kubectl create configmap redis-connect-mysql-config \
+kubectl create configmap redis-connect-config \
   --from-file=JobConfig.yml=JobConfig.yml \
   --from-file=JobManager.yml=JobManager.yml \
   --from-file=env.yml=env.yml \
@@ -54,14 +54,14 @@ kubectl create configmap redis-connect-mysql-config \
 ```
 The outcome is:
 ```
-$ oc get configmap/redis-connect-mysql-config
+$ oc get configmap/redis-connect-config
 NAME                            DATA   AGE
-redis-connect-mysql-config   5      5s
+redis-connect-config   5      5s
 ```
 
 If you need to add a custom stage jar file then you can append that to the ConfigMap creation as follows:
 ```
-kubectl create configmap redis-connect-mysql-config \
+kubectl create configmap redis-connect-config \
   --from-file=JobConfig.yml=JobConfig.yml \
   --from-file=JobManager.yml=JobManager.yml \
   --from-file=env.yml=env.yml \
@@ -71,9 +71,9 @@ kubectl create configmap redis-connect-mysql-config \
 ```
 The outcome is:
 ```
-$ oc get configmap/redis-connect-mysql-config
+$ oc get configmap/redis-connect-config
 NAME                            DATA   AGE
-redis-connect-mysql-config   6      12s
+redis-connect-config   6      12s
 ```
 
 If the ConfigMap did not get created, it's likely that one of more of the source configuration files was not found (eg. JobConfig.yml) so please verify the path to your files.
@@ -91,23 +91,23 @@ The following volume mount is defined in the manifests. The a will mount the res
 ```
         volumeMounts:
         - name: config-volume
-          mountPath: /opt/redislabs/redis-connect-mysql/config/fromconfigmap
+          mountPath: /opt/redislabs/redis-connect/config/fromconfigmap
 ```
-The volume is defined through the following `volume` directive. It will mount the file/pth `JobConfig.yml` using the contents of the key named `JobConfig.yml` from the ConfigMap `redis-connect-mysql-config` in the `mountPath` define above.  
+The volume is defined through the following `volume` directive. It will mount the file/pth `JobConfig.yml` using the contents of the key named `JobConfig.yml` from the ConfigMap `redis-connect-config` in the `mountPath` define above.  
 ```
       volumes:
       - name: config-volume
         configMap:
-          name: redis-connect-mysql-config
+          name: redis-connect-config
           items:
           - key: JobConfig.yml
             path: JobConfig.yml
 ```
 The effect of this mapping in the pod's filesystem is the following:
 ```
-root@redis-connect-mysql-7b7ccf87b9-sqshl> pwd
-/opt/redislabs/redis-connect-mysql/config/fromconfigmap
-root@redis-connect-mysql-7b7ccf87b9-sqshl> ls -al
+root@redis-connect-7b7ccf87b9-sqshl> pwd
+/opt/redislabs/redis-connect/config/fromconfigmap
+root@redis-connect-7b7ccf87b9-sqshl> ls -al
 total 0
 drwxrwxrwx    3 root     root           149 Aug 12 15:52 .
 drwxr-xr-x    1 root     root            27 Aug 12 15:52 ..
@@ -123,12 +123,12 @@ The final link is the environment variable that instructs Redis Connect to use t
 ```
         env:
           - name: REDISCONNECT_CONFIG
-            value: "/opt/redislabs/redis-connect-mysql/config/fromconfigmap"
+            value: "/opt/redislabs/redis-connect/config/fromconfigmap"
 ```
 
 ## 4. Configure the Redis Connect Deployment Manifests
 
-Update both the `redis-connect-mysql-stage.yaml` and `redis-connect-mysql-start.yaml` to map the appropriate environment variables in the `env:` section. Notable, the `REDISCONNECT_SOURCE_USERNAME`, `REDISCONNECT_SOURCE_PASSWORD`, `REDISCONNECT_TARGET_USERNAME` and `REDISCONNECT_TARGET_PASSWORD`.  
+Update both the `redis-connect-stage.yaml` and `redis-connect-start.yaml` to map the appropriate environment variables in the `env:` section. Notable, the `REDISCONNECT_SOURCE_USERNAME`, `REDISCONNECT_SOURCE_PASSWORD`, `REDISCONNECT_TARGET_USERNAME` and `REDISCONNECT_TARGET_PASSWORD`.  
 
 Examples are provided to populate environment variables from the manifest/yaml, from configmap, and from k8s secrets for sensitive info such as credentials:
 
@@ -138,7 +138,7 @@ Examples are provided to populate environment variables from the manifest/yaml, 
             # valueFrom:
             #   configMapKeyRef:
             #     key: REDISCONNECT_SOURCE_PASSWORD
-            #     name: redis-connect-mysql-config
+            #     name: redis-connect-config
             # valueFrom:
             #   secretKeyRef:
             #     key: password
@@ -147,31 +147,31 @@ Examples are provided to populate environment variables from the manifest/yaml, 
 
 ## 5. Stage the Redis Connect Job
 
-Apply the stage manifest as follows: `oc apply -f redis-connect-mysql-stage.yaml`. The outcome will be a k8s batch/Job which will run once and exit. 
+Apply the stage manifest as follows: `oc apply -f redis-connect-stage.yaml`. The outcome will be a k8s batch/Job which will run once and exit. 
 ```
 $ oc get po -w 
 NAME                                         READY   STATUS      RESTARTS   AGE
-redis-connect-mysql-stage-lkvp2           0/1     Completed   0          44s
+redis-connect-stage-lkvp2           0/1     Completed   0          44s
 ``` 
   
 The effect of this stage operation is the configuration keys are loaded in to the target Redis instance defined in `env.yml`:`jobConfigConnection`. The Job should have an `UNASSIGNED` owner.
 
 ## 6. Start the Redis Connect Job
 
-Apply the stage manifest as follows: `oc apply -f redis-connect-mysql-start.yaml`. The outcome will be a k8s apps/Deployment which will run continually. 
+Apply the stage manifest as follows: `oc apply -f redis-connect-start.yaml`. The outcome will be a k8s apps/Deployment which will run continually. 
 ```
 $ oc get po -w
 NAME                                         READY   STATUS      RESTARTS   AGE
-redis-connect-mysql-cbc7dcd9d-k9mxj       1/1     Running     0          4s
-redis-connect-mysql-stage-lkvp2           0/1     Completed   0          3m10s
+redis-connect-cbc7dcd9d-k9mxj       1/1     Running     0          4s
+redis-connect-stage-lkvp2           0/1     Completed   0          3m10s
 ``` 
 
-The effect of the above is that the Redis Connect job has started. The Job Owner should be specified in the in `env.yml`:`jobConfigConnection` Redis DB as `JC-xx@redis-connect-mysql-cbc7dcd9d-k9mxj` indicating that the pod created is the Redis Connect job owner. You should see your changes propagate to the `targetConnection` Redis database as defined in `env.yml`. 
+The effect of the above is that the Redis Connect job has started. The Job Owner should be specified in the in `env.yml`:`jobConfigConnection` Redis DB as `JC-xx@redis-connect-cbc7dcd9d-k9mxj` indicating that the pod created is the Redis Connect job owner. You should see your changes propagate to the `targetConnection` Redis database as defined in `env.yml`. 
 
 ---
 ### Troubleshooting Options
 
-1. Tail the pod logs. `oc logs -f pod/redis-connect-mysql-cbc7dcd9d-k9mxj`
+1. Tail the pod logs. `oc logs -f pod/redis-connect-cbc7dcd9d-k9mxj`
 2. Start the pods in interactive mode.
    * Launch the pods in a do/while loop instead of the redisconnect.sh start command:
     ```
@@ -180,7 +180,7 @@ The effect of the above is that the Redis Connect job has started. The Job Owner
         args: [ "while true; do sleep 30; done;" ]
     ####
     # comment out the default starting point
-    #     command: ["/opt/redislabs/redis-connect-mysql/bin/redisconnect.sh", "start"] 
+    #     command: ["/opt/redislabs/redis-connect/bin/redisconnect.sh", "start"] 
     ```
     * Now you can leverage the `bin/redisconnect.sh` enterpoint interactively to:
       * Test source and target connections

@@ -1,0 +1,44 @@
+{
+  "pipeline": {
+    "stages": [
+      {
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "databaseURL": "redis://127.0.0.1:14000",
+          "databaseType": "REDIS",
+          "customConfiguration": {
+            "redis.connection.sslEnabled": false,
+            "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+          }
+        },
+        "index": 1,
+        "stageName": "REDIS_HASH_SINK",
+        "checkpointStageIndicator": true,
+        "metricsEnabled" : true
+      }
+    ]
+  },
+  "source": {
+    "database": {
+      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "databaseURL": "jdbc:db2://127.0.0.1:50000/RCDB2",
+      "databaseType": "DB2",
+      "customConfiguration": {
+        "database.dbname" : "RCDB2",
+        "database.hostname" : "127.0.0.1",
+        "database.port" : 50000
+      }
+    },
+    "tables": {
+      "DB2INST1.EMP": {
+        "columns": [
+          { "targetColumn": "EmployeeNumber", "sourceColumn": "EMPNO", "primaryKey": true },
+          { "targetColumn": "FirstName", "sourceColumn": "FNAME" },
+          { "targetColumn": "HireDate", "sourceColumn": "HIREDATE", "type": "DATE" }
+        ],
+        "schemaAndTableName": "DB2INST1.EMP",
+        "passThroughEnabled": true
+      }
+    }
+  }
+}

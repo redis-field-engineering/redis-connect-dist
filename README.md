@@ -5,7 +5,7 @@
 <br><br>
 <p align="center"><img src="/images/Redis_Connect_Source_Sink.JPG" alt="Redis Connect Source and Sinks" width = 750px height = 350px"></p>
 
-**Demo** -> https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise/)
+**Demo** -> https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise
 
 <table cellspacing="0" cellpadding="0">
     <tr>
