@@ -41,9 +41,7 @@ Enterprise.
     </tr>
 </table>
 
-## Download and Setup
-
----
+## Quick Start
 
 ### Minimum Production Hardware Requirements
 
@@ -56,9 +54,9 @@ Enterprise.
 
 * JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
 
----
+### Download
 
-Download the [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive.<br>
+Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive<br>
 ```bash
 tar vxf <tarfile name>
 ```
@@ -69,9 +67,9 @@ The following subdirectories will be extracted under /redis-connect -
 <br>/config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
 <br>/extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
 
-### Start Redis Connect
+### Getting Started
 
-_Review options by running Redis Connect startup script<br>_
+**Review options by running Redis Connect startup script** <br>
 ```bash
 redis-connect/bin$ ./redisconnect.sh    
 -------------------------------
@@ -91,23 +89,23 @@ start: init Redis Connect Instance
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
 
-_Start Redis Connect Instance_
+**Start Redis Connect Instance**
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
 ```
 <img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
 
-_Open a browser to access Swagger UI -_ [http://localhost:8282/swagger-ui/index.html]()
-<br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 615px height = 375px/>
+**Open a browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
+<br><br><img src="/images/Redis Connect Swagger Front Page.JPG" style="float: right;" width = 615px height = 375px/>
 
-_Create a Job Configuration -_ `/connect/api/vi/job/config/{jobName}` <br><br>
+**Create a Job Configuration** - `/connect/api/vi/job/config/{jobName}` <br>
 Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>
-<img src="/images/Redis Connect Save Job Config.png.png" style="float: right;" width = 700px height = 375px/>
+<br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
-_Start Job -_ `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br><br>
-<img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}` <br><br>
+<br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
-_Create a Job Configuration -_ /connect/api/vi/job/config/{jobName}<br><br>
+**Create a Job Configuration -** /connect/api/vi/job/config/{jobName}<br><br>
 Sample job configurations include: <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
 
 | :exclamation:                                                                                                                                                                                                                  |
@@ -116,5 +114,5 @@ Sample job configurations include: <a href="/examples/postgres/demo/config/sampl
 
 <img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 615px height = 375px/>
 
-_Start Job-_ /connect/api/vi/job/transition/start/{jobName}/{jobType}<br><br>
+**Start Job -** /connect/api/vi/job/transition/start/{jobName}/{jobType}<br><br>
 <img src="/images/Redis Connect Start Job.png" style="float: right;" width = 615px height = 375px/>
