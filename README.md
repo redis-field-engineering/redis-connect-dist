@@ -8,17 +8,13 @@
 **Demo** -> https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise/)
 
 ##  Highlights
-<table style="width:100%">
+<table>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
-        <td style="width:50%"> <img src="/images/Redis_Enterprise_Architecture.png" width=400 height=200 align="center" ></td>
+        <td width="33%"><img src="/images/Redis_Enterprise_Architecture.png" style="float: right;" width="300" height="200"/></td>
     </tr>
 </table>
 
-<td width="33%">
-    <span style="float: left;">Support the efforts of companies that are enrolled in the Non-GMO Project Verification</span>
-    <img src="/images/Redis_Enterprise_Architecture.png" style="float: right;" width="300" height="200"/>
-</td>
 
 
 ## Download and Setup
