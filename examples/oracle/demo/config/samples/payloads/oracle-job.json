@@ -1,0 +1,46 @@
+{
+  "partitions" : 1,
+  "pipeline": {
+    "stages": [
+      {
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "databaseURL": "redis://127.0.0.1:14000",
+          "databaseType": "REDIS",
+          "customConfiguration": {
+            "redis.connection.sslEnabled": false,
+            "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+          }
+        },
+        "index": 1,
+        "stageName": "REDIS_HASH_SINK",
+        "checkpointStageIndicator": true,
+        "metricsEnabled" : true
+      }
+    ]
+  },
+  "source": {
+    "database": {
+      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "databaseURL": "jdbc:oracle:thin:@172.17.0.1:1522/ORCLPDB1",
+      "databaseType": "ORACLE",
+      "customConfiguration": {
+        "database.dbname" : "ORCLCDB",
+        "database.hostname" : "172.17.0.1",
+        "database.port" : 1522,
+        "database.pdb.name": "ORCLPDB1"
+      }
+    },
+    "tables": {
+      "C##RCUSER.EMP": {
+        "columns": [
+          { "targetColumn": "EmployeeNumber", "sourceColumn": "EMPNO", "primaryKey": true},
+          { "targetColumn": "FirstName", "sourceColumn": "FNAME" },
+          { "targetColumn": "HireDate", "sourceColumn": "HIREDATE", "type": "DATE"}
+        ],
+        "schemaAndTableName": "C##RCUSER.EMP",
+        "passThroughEnabled": true
+      }
+    }
+  }
+}
