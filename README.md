@@ -91,7 +91,6 @@ start: init Redis Connect Instance
 
 <br>• `redis-connect/bin$ ./redisconnect.sh start`
 <br>• Open a browser and access the [Swagger UI](http://localhost:8282/swagger-ui/index.html)
-
 <table cellspacing="0" cellpadding="0">
     <tr>
         <td> <b>Redis Connect Swagger UI</b>
@@ -99,6 +98,9 @@ start: init Redis Connect Instance
         <td width="50%"><img src="/images/Redis_Connect_Swagger.png" style="float: right;" width="500" height="200"/>
         </td>
     </tr>
+</table>
+<br>• SAVE Job Configuration
+<table cellspacing="0" cellpadding="0">
     <tr>
         <td> <b>SAVE Job Configuration</b> <br> Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See sample job configuration payloads for <a href="/examples/postgres/demo/config/samples/payloads/postgres-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/oracle-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/mssql-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/mysql-job.json">MySQL</a> and <a href="/examples/db2/demo/config/samples/payloads/db2-job.json">DB2</a>.
         </td>
@@ -106,8 +108,12 @@ start: init Redis Connect Instance
         </td>
     </tr>
 </table>
-
-<!---
-<br>• Navigate to QUICK START and SAVE a Job configuration payload using the upload method. See sample job configuration payloads for [postgres](/examples/postgres/demo/config/samples/payloads/postgres-job.json), 
---->
-
+<br>• START Job
+<table cellspacing="0" cellpadding="0">
+    <tr>
+        <td> <b>Redis Connect Swagger UI</b>
+        </td>
+        <td width="50%"><img src="/images/Redis_Connect_START_Job.png" style="float: right;" width="500" height="200"/>
+        </td>
+    </tr>
+</table>
