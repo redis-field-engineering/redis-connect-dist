@@ -19,7 +19,7 @@ chmod a+x demo/*.sh
 Expected output:
 ```bash
 redis-connect$ ls
-config demo
+demo  k8s-docs
 ```
 
 ## Setup PostgreSQL 10+ database (Source)
@@ -58,7 +58,7 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ## Start Redis Connect
 
-<details><summary>Run Redis Connect docker container to see all the options</summary>
+<details><summary>Review options by running Redis Connect docker container </summary>
 <p>
 
 ```bash
@@ -109,37 +109,7 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 </p>
 </details>
 
--------------------------------
-
-### Initial Loader Steps
-<details><summary><b>INSERT few records into postgres table (source)</b></summary>
-<p>
-You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to insert load large amount of data using a csv or sql file.
-
-```bash
-demo$ sudo docker exec -it postgres-12.7-$(hostname)-5432 bash -c 'psql -U"redisconnect" -d"RedisConnect"'
-
-psql (12.7 (Debian 12.7-1.pgdg100+1))
-Type "help" for help.
-
-RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (151, 'Virag', 'Tripathi', 'PFE', 1, '2018-08-06', 2000, 10, 1);
-INSERT 0 1
-
-RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (152, 'Brad', 'Barnes', 'RedisConnect-K8s-SME', 1, '2018-08-06', 20000, 10, 1);
-INSERT 0 1
-
-RedisConnect=# select * from emp;
- empno | fname |  lname   |         job          | mgr |  hiredate  |    sal     |  comm   | dept
--------+-------+----------+----------------------+-----+------------+------------+---------+------
-   151 | Virag | Tripathi | PFE                  |   1 | 2018-08-06 |  2000.0000 | 10.0000 |    1
-   152 | Brad  | Barnes   | RedisConnect-K8s-SME |   1 | 2018-08-06 | 20000.0000 | 10.0000 |    1
-(2 rows)
-```
-
-</p>
-</details>
-
-<details><summary><b>Start pre configured loader job</b></summary>
+<details><summary><b>Start Redis Connect Instance</b></summary>
 <p>
 
 ```bash
@@ -164,7 +134,69 @@ redislabs/redis-connect start
 <p>
 
 ```bash
+-------------------------------
+Starting redis-connect v0.9.0.4 instance using Java 11.0.15 on virag-cdc started by root in /opt/redislabs/redis-connect/bin
+Loading redis-connect instance configurations from /opt/redislabs/redis-connect/config/jobmanager.properties
+Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-connect/extlib/*
+06:23:31.822 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+  /#######                  /## /##          	  /######                                                      /##
+ | ##__  ##                | ## |__/          	 /##__  ##                                                    | ##
+ | ##  \ ##  /######   /####### /##  /#######	| ##  \__/  /######  /#######  /#######   /######   /####### /######
+ | #######/ /##__  ## /##__  ##| ## /##_____/	| ##       /##__  ##| ##__  ##| ##__  ## /##__  ## /##_____/|_  ##_/
+ | ##__  ##| ########| ##  | ##| ##|  ###### 	| ##      | ##  \ ##| ##  \ ##| ##  \ ##| ########| ##        | ##
+ | ##  \ ##| ##_____/| ##  | ##| ## \____  ##	| ##    ##| ##  | ##| ##  | ##| ##  | ##| ##_____/| ##        | ## /##
+ | ##  | ##|  #######|  #######| ## /#######/	|  ######/|  ######/| ##  | ##| ##  | ##|  #######|  #######  |  ####/
+ |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+Powered by Redis Enterprise
+06:23:36.828 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:23:38.673 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - JobManager
+06:23:38.695 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - JobReaper
+06:23:38.717 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - JobClaimer
+06:23:38.740 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - HeartbeatManager
+06:23:38.763 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - MetricsReporter
+06:23:38.860 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+06:23:38.865 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully started JobManager service
+06:23:38.867 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully started JobReaper service
+06:23:38.868 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc Metrics are not enabled so MetricsReporter threadpool will not be instantiated
+06:23:38.870 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully started JobClaimer service
+06:23:45.077 [main] INFO  redis-connect-manager - Started Redis Connect REST API listening on ["http-nio-8282"]
+06:23:45.077 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:23:45.078 [main] INFO  redis-connect-manager -
+06:23:45.078 [main] INFO  redis-connect-manager - Started Redis Connect Instance
+06:23:45.078 [main] INFO  redis-connect-manager -
+06:23:45.078 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:23:48.868 [JobManagerThreadpool-1] INFO  redis-connect-manager - Instance: 30@virag-cdc was successfully elected Redis Connect cluster leader
+```
 
+</p>
+</details>
+
+-------------------------------
+
+### Initial Loader Steps
+
+<details><summary><b>INSERT few records into postgres table (source)</b></summary>
+<p>
+You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to insert load large amount of data using a csv or sql file.
+
+```bash
+demo$ sudo docker exec -it postgres-12.7-$(hostname)-5432 bash -c 'psql -U"redisconnect" -d"RedisConnect"'
+
+psql (12.7 (Debian 12.7-1.pgdg100+1))
+Type "help" for help.
+
+RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (151, 'Virag', 'Tripathi', 'PFE', 1, '2018-08-06', 2000, 10, 1);
+INSERT 0 1
+
+RedisConnect=# INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (152, 'Brad', 'Barnes', 'RedisConnect-K8s-SME', 1, '2018-08-06', 20000, 10, 1);
+INSERT 0 1
+
+RedisConnect=# select * from emp;
+ empno | fname |  lname   |         job          | mgr |  hiredate  |    sal     |  comm   | dept
+-------+-------+----------+----------------------+-----+------------+------------+---------+------
+   151 | Virag | Tripathi | PFE                  |   1 | 2018-08-06 |  2000.0000 | 10.0000 |    1
+   152 | Brad  | Barnes   | RedisConnect-K8s-SME |   1 | 2018-08-06 | 20000.0000 | 10.0000 |    1
+(2 rows)
 ```
 
 </p>
@@ -222,26 +254,6 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 -------------------------------
 
 ### CDC Steps
-
-<details><summary><b>Start pre configured cdc job</b></summary>
-<p>
-
-```bash
-
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
-
-```
-
-</p>
-</details>
 
 <details><summary><b>INSERT a record into postgres table (source)</b></summary>
 <p>
@@ -332,44 +344,3 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 
 </p>
 </details>
-
-Similarly `UPDATE` and `DELETE` records on Postgres source and see Redis target getting updated in near real-time.
-
-<!---
-
--------------------------------
-
-### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
-
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library and follow [Initial Loader Steps](#initial-loader-steps) or [CDC Steps](#cdc-steps).
-
-* Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
-```yml
-  stages:
-    CustomStage:
-      handlerId: TO_UPPER_CASE
-```
-* Please make sure the columns that are going to be used for this custom stage has the same value at the source and target i.e. it is not mapped to another name in Redis. For this example `fname` and `lname` are the default values for `col1` and `col2` and if you want to change this then pass a different column names to `REDISCONNECT_JAVA_OPTIONS` e.g. `-Dcol1=fname -Dcol2=job`
-
-<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
-<p>
-
-```bash
-
-```
-
-</p>
-</details>
-
-<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
-<p>
-
-```bash
-
-```
-
-</p>
-</details>
-
-Validate the output after CustomStage run and make sure that `fname` and `lname` values in Redis has been updated to UPPER CASE.
---->
