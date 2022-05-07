@@ -6,12 +6,9 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <br><br>
 <p align="center"><img src="/images/Redis Connect Source Sink.jpg" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
+## Core Capabilities
+
 <table>
-    <tr>
-        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
-        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
-    </tr>
-    <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
         <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
@@ -120,3 +117,12 @@ redis-connect/bin$ ./redisconnect.sh start
 <br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Insert some records to the source and confirm they have arrived in Redis. Enjoy!**
+
+## Demos
+
+<table>
+    <tr>
+        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
+    </tr>
+</table>
