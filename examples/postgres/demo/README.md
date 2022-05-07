@@ -109,10 +109,6 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 </p>
 </details>
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                  |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
-
 <details><summary><b>Start Redis Connect Instance</b></summary>
 <p>
 
@@ -187,10 +183,6 @@ Powered by Redis Enterprise
 **Or Use `curl` to create the `cdc-job` configuration** <br>
 `demo$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/cdc-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/cdc-job.json;type=application/json"`
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                           |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable  |
-
 -------------------------------
 
 ### Initial Loader Steps
@@ -240,46 +232,46 @@ RedisConnect=# select * from emp;
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[151 152]"'
 1) (integer) 2
 2) "emp:151"
-3)  1) "lname"
-    2) "Tripathi"
-    3) "comm"
-    4) "10"
-    5) "FirstName"
-    6) "Virag"
-    7) "EmployeeNumber"
-    8) "151"
-    9) "mgr"
-   10) "1"
-   11) "HireDate"
-   12) "2018-08-06"
-   13) "dept"
-   14) "1"
-   15) "job"
-   16) "PFE"
+3)  1) "fname"
+    2) "Virag"
+    3) "lname"
+    4) "Tripathi"
+    5) "comm"
+    6) "10.0"
+    7) "mgr"
+    8) "1"
+    9) "empno"
+   10) "151"
+   11) "dept"
+   12) "1"
+   13) "job"
+   14) "PFE"
+   15) "hiredate"
+   16) "2018-08-06"
    17) "sal"
-   18) "2000"
+   18) "2000.0"
 4) "emp:152"
-5)  1) "lname"
-    2) "Barnes"
-    3) "comm"
-    4) "10"
-    5) "FirstName"
-    6) "Brad"
-    7) "EmployeeNumber"
-    8) "152"
-    9) "mgr"
-   10) "1"
-   11) "HireDate"
-   12) "2018-08-06"
-   13) "dept"
-   14) "1"
-   15) "job"
-   16) "RedisConnect-K8s-SME"
+5)  1) "fname"
+    2) "Brad"
+    3) "lname"
+    4) "Barnes"
+    5) "comm"
+    6) "10.0"
+    7) "mgr"
+    8) "1"
+    9) "empno"
+   10) "152"
+   11) "dept"
+   12) "1"
+   13) "job"
+   14) "RedisConnect-K8s-SME"
+   15) "hiredate"
+   16) "2018-08-06"
    17) "sal"
-   18) "20000"
+   18) "20000.0"
 ```
 
 </p>
@@ -331,63 +323,25 @@ RedisConnect=# select * from emp where empno=1;
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
-1) (integer) 3
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@fname:allen"'
+1) (integer) 1
 2) "emp:1"
-3)  1) "lname"
-    2) "Terleto"
-    3) "comm"
-    4) "10.0"
-    5) "FirstName"
-    6) "Allen"
-    7) "EmployeeNumber"
+3)  1) "fname"
+    2) "Allen"
+    3) "lname"
+    4) "Terleto"
+    5) "comm"
+    6) "10.0"
+    7) "mgr"
     8) "1"
-    9) "mgr"
+    9) "empno"
    10) "1"
-   11) "HireDate"
-   12) "2018-08-06"
-   13) "dept"
-   14) "1"
-   15) "job"
-   16) "FieldCTO"
-   17) "sal"
-   18) "20000.0"
-4) "emp:151"
-5)  1) "lname"
-    2) "Tripathi"
-    3) "comm"
-    4) "10.0"
-    5) "FirstName"
-    6) "Virag"
-    7) "EmployeeNumber"
-    8) "151"
-    9) "mgr"
-   10) "1"
-   11) "HireDate"
-   12) "2018-08-06"
-   13) "dept"
-   14) "1"
-   15) "job"
-   16) "PFE"
-   17) "sal"
-   18) "2000.0"
-6) "emp:152"
-7)  1) "lname"
-    2) "Barnes"
-    3) "comm"
-    4) "10.0"
-    5) "FirstName"
-    6) "Brad"
-    7) "EmployeeNumber"
-    8) "152"
-    9) "mgr"
-   10) "1"
-   11) "HireDate"
-   12) "2018-08-06"
-   13) "dept"
-   14) "1"
-   15) "job"
-   16) "RedisConnect-K8s-SME"
+   11) "dept"
+   12) "1"
+   13) "job"
+   14) "FieldCTO"
+   15) "hiredate"
+   16) "2018-08-06"
    17) "sal"
    18) "20000.0"
 ```
