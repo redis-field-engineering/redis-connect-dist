@@ -133,8 +133,8 @@ redis-connect/bin$ ./redisconnect.sh start
     </tr>
 </table>
 
-* <a href="/examples/db2/demo" target="_blank">DB2</a></p>
-* <a href="/examples/mysql/demo" target="_blank">MySQL</a></p>
-* <a href="/examples/oracle/demo" target="_blank">Oracle</a></p>
-* <a href="/examples/postgres/demo" target="_blank">PostgreSQL</a></p>
-* <a href="/examples/mssql/demo" target="_blank">SQL Server</a></p>
+* <a href="/examples/db2/demo/README.md" target="_blank">DB2</a></p>
+* <a href="/examples/mysql/demo/README.md" target="_blank">MySQL</a></p>
+* <a href="/examples/oracle/demo/README.md" target="_blank">Oracle</a></p>
+* <a href="/examples/postgres/demo/README.md" target="_blank">PostgreSQL</a></p>
+* <a href="/examples/mssql/demo/README.md" target="_blank">SQL Server</a></p>
