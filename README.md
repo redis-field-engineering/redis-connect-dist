@@ -7,10 +7,10 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <p align="center"><img src="/images/Redis Connect Source Sink.jpg" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
 # Table of Contents
-> [Core Capabilities](#core-capabilities)
-> <br>[Requirements](#requirements)
-><br>[Quick Start](#quick-start)
-><br>[Demos](#demos)
+* [Core Capabilities](#core-capabilities)
+* [Requirements](#requirements)
+* [Quick Start](#quick-start)
+* [Demos](#demos)
 
 ## Core Capabilities
 
@@ -132,3 +132,9 @@ redis-connect/bin$ ./redisconnect.sh start
         <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
     </tr>
 </table>
+
+* <a href="/examples/db2/demo" target="_blank">DB2</a></p>
+* <a href="/examples/mysql/demo" target="_blank">MySQL</a></p>
+* <a href="/examples/oracle/demo" target="_blank">Oracle</a></p>
+* <a href="/examples/postgres/demo" target="_blank">PostgreSQL</a></p>
+* <a href="/examples/mssql/demo" target="_blank">SQL Server</a></p>
