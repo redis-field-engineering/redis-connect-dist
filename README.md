@@ -36,7 +36,7 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. Users can configure, start, stop, migrate, and restart jobs via its built-in REST API and/or interactive CLI. Redis Connect also exposes a swagger UI to simplify the user and administration experience.</td>
+        <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. Users can configure, start, stop, migrate, and restart jobs via its built-in REST API and/or interactive CLI. Redis Connect also exposes a Swagger UI to simplify endpoint discovery and operational experience.</td>
         <td width="50%"><img src="/images/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
