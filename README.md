@@ -6,6 +6,12 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <br><br>
 <p align="center"><img src="/images/Redis Connect Source Sink.jpg" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
 
+# Table of Contents
+> [Core Capabilities](#core-capabilities)
+> <br>[Requirements](#requirements)
+><br>[Quick Start](#quick-start)
+><br>[Demos](#demos)
+
 ## Core Capabilities
 
 <table>
