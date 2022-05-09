@@ -266,19 +266,12 @@ demo$
 </details>
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
-<br>Use '**load**' as **jobType**_
+<br>Use '**load**' as _**jobType**_
 <br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
 **Or Use `curl` to start the initial load for `cdc-job`** <br>
 `demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"`
 
-**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
-<br>_For quick start, use '**all**' as **jobStatus**_
-<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
-
-**Or Use `curl` to query the `cdc-job` status** <br>
-`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"
-`
 <details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
 <p>
 
@@ -333,7 +326,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 ### CDC Steps
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
-<br>Use '**stream**' as **jobType**_
+<br>Use '**stream**' as _**jobType**_
 <br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
 **Or Use `curl` to start the stream for `cdc-job`** <br>
