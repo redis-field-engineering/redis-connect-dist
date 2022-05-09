@@ -61,45 +61,35 @@ spec:
         env:
           - name: REDISCONNECT_LOGBACK_CONFIG
             value: "/opt/redislabs/redis-connect/config/logback.xml"
-            # value: "/opt/redislabs/redis-connect/config/fromconfigmap/logback.xml"
-          - name: REDISCONNECT_CONFIG
+            # value: "/opt/redislabs/redis-connect/config/fromconfigmap/logback.xml"   
+          - name: REDISCONNECT_JOB_MANAGER_CONFIG_PATH
             value: "/opt/redislabs/redis-connect/config/fromconfigmap"
-          - name: REDISCONNECT_REST_API_ENABLED
-            value: "false"
-          - name: REDISCONNECT_REST_API_PORT
-            value: "8282"
           - name: REDISCONNECT_JAVA_OPTIONS
-            value: "-Xms256m -Xmx1g -Dcredentials.rotation.eventlistener.enabled=true"
+            value: "-Xms1g -Xmx2g"
+          - name: REDISCONNECT_EXTLIB_DIR
+            value: "/opt/redislabs/redis-connect/extlib"
         volumeMounts:
         - name: config-volume
           mountPath: /opt/redislabs/redis-connect/config/fromconfigmap  # must match env:REDISCONNECT_CONFIG in this file.
-        # - name: custom-stage-volume
-        #   mountPath: /opt/redislabs/redis-connect/extlib  # Redis Connect expects the custom stage jars here
+        - name: custom-stage-volume
+          mountPath: /opt/redislabs/redis-connect/extlib  # Redis Connect expects the custom stage jars here
       volumes:
       - name: config-volume
         configMap:
           name: redis-connect-config
           items:
-          - key: JobConfig.yml
-            path: JobConfig.yml
-          - key: JobManager.yml
-            path: JobManager.yml
-          - key: Setup.yml
-            path: Setup.yml
-          - key: env.yml
-            path: env.yml
-          - key: mapper1.yml
-            path: mappers/mapper1.yml
+          - key: jobmanager.properties
+            value: jobmanager.properties
 # #### uncomment the following six lines if you have custom
 #  transformation implementation and replace the jar with
 #  your own.
 # ####
-      #- name: custom-stage-volume
-      #configMap:
-      #name: redis-connect-config
-      #items:  # define as many custom stages as you have here
-      #- key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
-      #path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      - name: custom-stage-volume
+        configMap:
+          name: redis-connect-config
+          items:  # define as many custom stages as you have here
+          - key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+          path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
       # - name: tmpfsdir
       #   emptyDir:  # node-ephemeral volume
       #     medium: Memory
@@ -107,15 +97,15 @@ spec:
       #   persistentVolumeClaim:
       #     claimName: redis-connect-pvc                 
 ---
-# RedisConnect service with name 'redis-connect-service'
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: redis-connect-api-service       # name should not be 'redis-connect' 
-# spec:
-#   type: ClusterIP
-#   ports:
-#     - port: 80
-#       targetPort: 8282
-#   selector:
-#     app: redis-connect-api-service
+# RedisConnect service with name 'redis-connect-api-service'
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-connect-api-service       # name should not be 'redis-connect' 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8282
+  selector:
+    app: redis-connect-api-service
