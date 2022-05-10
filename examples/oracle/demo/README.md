@@ -8,7 +8,7 @@
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | We can not include the Oracle JDBC Driver due to licensing requirement. Please obtain the Oracle client jar following the link above or get a copy from your existing Oracle installation. |
 
-<p>Execute the following commands (copy & paste) to download and setup Redis Connect Oracle Connector and demo scripts.
+<p>Execute the following commands (copy & paste) to download and setup Redis Connect and demo scripts.
 i.e.</p>
 
 ```bash
