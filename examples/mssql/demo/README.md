@@ -115,8 +115,6 @@ demo$ docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
 -e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml \
--e REDISCONNECT_JAVA_OPTIONS="-Xms1g -Xmx2g" \
 -e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
 -v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
