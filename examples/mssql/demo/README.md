@@ -13,20 +13,22 @@ cp -R redis-connect/redis-connect-dist-main/examples/mssql/demo/* redis-connect/
 cp -R redis-connect/redis-connect-dist-main/examples/mssql/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
-chmod a+x demo/*.sh
+chmod a+x demo/*.sh && \
+cd demo
 ```
 
 Expected output:
 ```bash
-redis-connect$ ls
-demo  k8s-docs
+demo$ ls
+README.md        config_bdb.json  emp_1000.csv  insert_mssql.sh     sample_sqls.sql  setup_re_crdb.sh  target_crdb.json
+bcp_emp_1000.sh  delete.sql       extlib        mssql_cdc.sql       setup_mssql.sh   split_network.sh  update.sql
+config           delete_mssql.sh  insert.sql    restore_network.sh  setup_re.sh      stop_re_crdb.sh   update_mssql.sh
 ```
 
 ## Setup SQL Server 2019 database in docker (Source)
 
 <br>Execute [setup_mssql.sh](setup_mssql.sh)</br>
 ```bash
-redis-connect-sqlserver$ cd demo
 demo$ ./setup_mssql.sh 2019-latest 1433
 ```
 
