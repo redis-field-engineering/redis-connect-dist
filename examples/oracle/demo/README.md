@@ -243,7 +243,7 @@ Powered by Redis Enterprise
 <br><br><img src="/images/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
-<br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>
+<br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>
 <br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 <br>
 
