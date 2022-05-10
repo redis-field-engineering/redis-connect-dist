@@ -22,12 +22,12 @@ redis-connect$ ls
 demo  k8s-docs
 ```
 
-## Setup MSSQL 2019 database in docker (Source)
+## Setup SQL Server 2019 database in docker (Source)
 
 <br>Execute [setup_mssql.sh](setup_mssql.sh)</br>
 ```bash
 redis-connect-sqlserver$ cd demo
-demo$ ./setup_mssql.sh 2017-latest
+demo$ ./setup_mssql.sh 2019-latest 1433
 ```
 
 <details><summary>Validate SQL Server database is running as expected:</summary>
