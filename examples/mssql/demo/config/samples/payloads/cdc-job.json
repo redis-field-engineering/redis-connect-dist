@@ -35,7 +35,7 @@
         "columns": [
           { "targetColumn": "EmployeeNumber", "sourceColumn": "empno", "primaryKey": true },
           { "targetColumn": "FirstName", "sourceColumn": "fname" },
-          { "targetColumn": "HireDate", "sourceColumn": "hiredate", "type": "DATE_TIME" }
+          { "targetColumn": "HireDate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd HH:mm:ss.S" }
         ],
         "schemaAndTableName": "dbo.emp",
         "passThroughEnabled": true
