@@ -33,9 +33,10 @@
     "tables": {
       "dbo.emp": {
         "columns": [
-          { "targetColumn": "EmployeeNumber", "sourceColumn": "empno", "primaryKey": true },
-          { "targetColumn": "FirstName", "sourceColumn": "fname" },
-          { "targetColumn": "HireDate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd HH:mm:ss.S" }
+          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
+          { "targetColumn": "Salary", "sourceColumn": "sal", "type": "FLOAT" },
+          { "targetColumn": "Commission", "sourceColumn": "comm", "type": "FLOAT" },
+          { "targetColumn": "HireDate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd HH:mm:ss.SS" }
         ],
         "schemaAndTableName": "dbo.emp",
         "passThroughEnabled": true
