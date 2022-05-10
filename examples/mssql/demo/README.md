@@ -444,7 +444,7 @@ demo$ sudo docker exec -it $(docker ps -a --format "table {{.Names}}" | grep mss
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@empno:[1002 1002]"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[1002 1002]"'
 1) (integer) 1
 2) "emp:1002"
 3)  1) "fname"
