@@ -13,3 +13,7 @@ vault write database/roles/redis-connect \
     default_ttl="24h" \
     max_ttl="24h"
 ```
+
+## Diagram
+
+!["Redis Connect in K8s with Vault"](redis-connect-k8s.png)
