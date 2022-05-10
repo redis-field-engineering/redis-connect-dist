@@ -37,7 +37,8 @@ demo$ ./setup_mssql.sh 2019-latest 1433
 demo$ sudo docker ps -a | grep mssql
 1a08b60611fd        mcr.microsoft.com/mssql/server:2019-latest   "/opt/mssql/bin/perm…"   2 weeks ago         Up 2 weeks            0.0.0.0:1433->1433/tcp                                                                                                                                                                                                                                                                                          mssql-2019-latest-virag-cdc-1433
 
-demo$ docker exec -it mssql-2019-latest-$(hostname)-1433 /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P Redis@123 -y80 -Y 40 -Q 'use RedisConnect;exec sys.sp_cdc_help_change_data_capture;'
+demo$ sudo docker exec -it $(docker ps -a --format "table {{.Names}}" | grep mssql) /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P Redis@123 -y80 -Y 40 -Q 'use RedisConnect;exec sys.sp_cdc_help_change_data_capture;'
+
 Changed database context to 'RedisConnect'.
 source_schema                            source_table                             capture_instance                         object_id   source_object_id start_lsn              end_lsn                supports_net_changes has_drop_pending role_name                                index_name                               filegroup_name                           create_date             index_column_list                                                                captured_column_list
 ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------- ---------------- ---------------------- ---------------------- -------------------- ---------------- ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------------------- -------------------------------------------------------------------------------- --------------------------------------------------------------------------------
@@ -61,12 +62,10 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 <p>
 
 ```bash
-demo$ docker run \
+demo$ sudo docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
 -e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml \
--e REDISCONNECT_JAVA_OPTIONS="-Xms1g -Xmx2g" \
 -e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
 -v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
@@ -208,8 +207,198 @@ demo$ ./insert_mssql.sh
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[151 152]"'
-
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[1 11]"'
+ 1) (integer) 11
+ 2) "emp:1"
+ 3)  1) "fname"
+     2) "Basanth"
+     3) "lname"
+     4) "Gowda"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "1"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "FOUNDER"
+    15) "hiredate"
+    16) "2018-08-09 00:00:00.01"
+    17) "sal"
+    18) "200000.0"
+ 4) "emp:11"
+ 5)  1) "fname"
+     2) "Christian"
+     3) "lname"
+     4) "Mague"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "11"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "PFE"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.11"
+    17) "sal"
+    18) "200000.0"
+ 6) "emp:2"
+ 7)  1) "fname"
+     2) "Virag"
+     3) "lname"
+     4) "Tripathi"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "2"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "PFE"
+    15) "hiredate"
+    16) "2018-08-06 00:00:00.02"
+    17) "sal"
+    18) "2000.0"
+ 8) "emp:3"
+ 9)  1) "fname"
+     2) "Drake"
+     3) "lname"
+     4) "Albee"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "3"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "RSM"
+    15) "hiredate"
+    16) "2017-08-09 00:00:00.03"
+    17) "sal"
+    18) "5000.0"
+10) "emp:4"
+11)  1) "fname"
+     2) "Nick"
+     3) "lname"
+     4) "Doyle"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "4"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "DIR"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.04"
+    17) "sal"
+    18) "10000.0"
+12) "emp:5"
+13)  1) "fname"
+     2) "Allen"
+     3) "lname"
+     4) "Terleto"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "5"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "FieldCTO"
+    15) "hiredate"
+    16) "2017-06-09 00:00:00.05"
+    17) "sal"
+    18) "500000.0"
+14) "emp:6"
+15)  1) "fname"
+     2) "Marco"
+     3) "lname"
+     4) "Shkedi"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "6"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SA"
+    15) "hiredate"
+    16) "2018-06-09 00:00:00.06"
+    17) "sal"
+    18) "2000.0"
+16) "emp:7"
+17)  1) "fname"
+     2) "Brad"
+     3) "lname"
+     4) "Barnes"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "7"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SA"
+    15) "hiredate"
+    16) "2018-07-09 00:00:00.07"
+    17) "sal"
+    18) "2000.0"
+18) "emp:8"
+19)  1) "fname"
+     2) "Quinton"
+     3) "lname"
+     4) "Gingras"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "8"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SDR"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.08"
+    17) "sal"
+    18) "200000.0"
+20) "emp:9"
+21)  1) "fname"
+     2) "Yuval"
+     3) "lname"
+     4) "Mankerious"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "9"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SA"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.09"
+    17) "sal"
+    18) "200000.0"
 ```
 
 </p>
@@ -239,7 +428,7 @@ Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStat
 <p>
 
 ```bash
-demo$ sudo docker exec -it mssql-2019-latest-$(hostname)-1433 bash -c '/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Redis@123" -d RedisConnect'
+demo$ sudo docker exec -it $(docker ps -a --format "table {{.Names}}" | grep mssql) bash -c '/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Redis@123" -d RedisConnect'
 
 1> insert into dbo.emp values(1002, 'Virag', 'Tripathi', 'SA', 1, '2018-08-06 00:00:00.000', '2000', '10', 1)
 2> go
@@ -255,8 +444,27 @@ demo$ sudo docker exec -it mssql-2019-latest-$(hostname)-1433 bash -c '/opt/mssq
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@fname:virag"'
-
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@empno:[1002 1002]"'
+1) (integer) 1
+2) "emp:1002"
+3)  1) "fname"
+    2) "Virag"
+    3) "lname"
+    4) "Tripathi"
+    5) "comm"
+    6) "10.0"
+    7) "mgr"
+    8) "1"
+    9) "empno"
+   10) "1002"
+   11) "dept"
+   12) "1"
+   13) "job"
+   14) "SA"
+   15) "hiredate"
+   16) "2018-08-06 00:00:00.00"
+   17) "sal"
+   18) "2000.0"
 ```
 
 </p>
