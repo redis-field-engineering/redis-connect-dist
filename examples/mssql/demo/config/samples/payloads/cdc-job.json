@@ -34,8 +34,8 @@
       "dbo.emp": {
         "columns": [
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
-          { "targetColumn": "sal", "sourceColumn": "sal", "type": "FLOAT" },
-          { "targetColumn": "comm", "sourceColumn": "comm", "type": "FLOAT" },
+          { "targetColumn": "sal", "sourceColumn": "sal", "type": "DECIMAL" },
+          { "targetColumn": "comm", "sourceColumn": "comm", "type": "DECIMAL" },
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd HH:mm:ss.SS" }
         ],
         "schemaAndTableName": "dbo.emp",

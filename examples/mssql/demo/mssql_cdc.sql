@@ -28,8 +28,8 @@ CREATE TABLE [RedisConnect].[dbo].[emp] (
     [job] varchar(50),
     [mgr] int,
     [hiredate] datetime,
-    [sal] money,
-    [comm] money,
+    [sal] decimal(8,2),
+    [comm] decimal(8,2),
     [dept] int,
     PRIMARY KEY ([empno])
 );
