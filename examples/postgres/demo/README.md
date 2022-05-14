@@ -27,7 +27,6 @@ README.md  config  extlib  postgres_cdc.sql  setup_postgres.sh  setup_re.sh
 <b>_PostgreSQL on Docker_</b>
 <br>Execute [setup_postgres.sh](setup_postgres.sh)</br>
 ```bash
-redis-connect$ cd demo
 demo$ ./setup_postgres.sh 12.7 5432
 (or latest or any supported 10+ version from postgres dockerhub)
 ```
