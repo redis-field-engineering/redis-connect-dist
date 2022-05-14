@@ -16,4 +16,4 @@ vault write database/roles/redis-connect \
 
 ## Diagram
 
-!["Redis Connect in K8s with Vault"](redis_connect_k8s_postgres.png)
+!["Redis Connect in K8s with Vault"](redis_connect_k8s_oracle.png)
