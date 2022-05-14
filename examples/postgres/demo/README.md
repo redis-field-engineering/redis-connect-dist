@@ -13,13 +13,14 @@ cp -R redis-connect/redis-connect-dist-main/examples/postgres/demo/* redis-conne
 cp -R redis-connect/redis-connect-dist-main/examples/postgres/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
-chmod a+x demo/*.sh
+chmod a+x demo/*.sh && \
+cd demo
 ```
 
 Expected output:
 ```bash
-redis-connect$ ls
-demo  k8s-docs
+demo$ ls
+README.md  config  extlib  postgres_cdc.sql  setup_postgres.sh  setup_re.sh
 ```
 
 ## Setup PostgreSQL 10+ database (Source)
@@ -112,7 +113,6 @@ demo$ docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
 -e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml \
 -e REDISCONNECT_JAVA_OPTIONS="-Xms1g -Xmx2g" \
 -e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \

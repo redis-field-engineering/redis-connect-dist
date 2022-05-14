@@ -18,7 +18,7 @@
             "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
           }
         },
-        "index": 1,
+        "index": 2,
         "stageName": "REDIS_HASH_SINK",
         "checkpointStageIndicator": true,
         "metricsEnabled" : true,
