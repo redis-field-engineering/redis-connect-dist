@@ -1,7 +1,7 @@
 # Redis Connect Samples with Hashicorp Vault
 
 ## Notes
-1. The injected credentials file must be named as follows: `redisconnect_credentials_<job_name>`. This filename will be leveraged in the JVM options: `REDISCONNECT_JAVA_OPTIONS`.
+1. The injected credentials file must be named as follows: `redisconnect_credentials_jobmanager.properties` and `redisconnect_credentials_[redis|postgresql]_<job_name>.properties`.
 
 2. The following role (or similar) is required in Vault for Redis Connect to connect with the source database:
 ```
