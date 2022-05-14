@@ -10,7 +10,8 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 * [Core Capabilities](#core-capabilities)
 * [Requirements](#requirements)
 * [Quick Start](#quick-start)
-* [Demos](#demos)
+* [End-to-End Dockerized Demos](#end-to-end-dockerized-demos)
+* [Video Tutorials](#video-tutorials)
 
 ## Core Capabilities
 
@@ -128,11 +129,11 @@ redis-connect/bin$ ./redisconnect.sh start
 
 <table>
     <tr>
-        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="150" height="100"/></a></td> 
-        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="150" height="100"/></a></td> 
-        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="150" height="100"/></a></td> 
-        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="150" height="100"/></a></td> 
-        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="150" height="100"/></a></td> 
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="125" height="100"/></a></td> 
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="125" height="100"/></a></td> 
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="125" height="100"/></a></td> 
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="125" height="100"/></a></td> 
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="125" height="100"/></a></td> 
     </tr>
 </table>
 
