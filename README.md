@@ -65,6 +65,9 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 ### Download
 
 Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive<br>
+<b>[Docker Hub](https://hub.docker.com/r/redislabs/redis-connect)
+</b>
+
 ```bash
 tar vxf <tarfile name>
 ```
