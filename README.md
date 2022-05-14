@@ -126,6 +126,8 @@ redis-connect/bin$ ./redisconnect.sh start
 
 ## Demos
 
+### Video Tutorials
+
 <table>
     <tr>
         <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
@@ -133,8 +135,14 @@ redis-connect/bin$ ./redisconnect.sh start
     </tr>
 </table>
 
-* <a href="/examples/db2/demo/README.md" target="_blank">DB2</a></p>
-* <a href="/examples/mysql/demo/README.md" target="_blank">MySQL</a></p>
-* <a href="/examples/oracle/demo/README.md" target="_blank">Oracle</a></p>
-* <a href="/examples/postgres/demo/README.md" target="_blank">PostgreSQL</a></p>
-* <a href="/examples/mssql/demo/README.md" target="_blank">SQL Server</a></p>
+### End-to-End Dockerized Demos
+
+<table>
+    <tr>
+        <td><a href="/examples/db2/demo/README.md" target="_blank">DB2</a><img src="/images/DB2 Icon.png" style="float: right;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mysql/demo/README.md" target="_blank">MySQL</a><img src="/images/MySQL Icon.png" style="float: right;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/oracle/demo/README.md" target="_blank">Oracle</a><img src="/images/Oracle Icon.png" style="float: right;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/postgres/demo/README.md" target="_blank">PostgreSQL</a><img src="/images/Postgres Icon.png" style="float: right;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mssql/demo/README.md" target="_blank">SQL Server</a><img src="/images/SQL Server Icon.png" style="float: right;" width="100" height="100"/></a></td> 
+    </tr>
+</table>
