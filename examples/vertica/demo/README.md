@@ -19,14 +19,13 @@ cd demo
 
 Expected output:
 ```bash
-redis-connect-db2$ ls
-config demo
+demo$ ls
+README.md  config  extlib  setup_re.sh  setup_vertica.sh
 ```
 
 ## Setup Vertica database (Source)
 <br>Execute [setup_vertica.sh](setup_vertica.sh)</br>
 ```bash
-redis-connect-sqlserver$ cd demo
 demo$ ./setup_vertica.sh latest
 ```
 
