@@ -1,6 +1,6 @@
-## Setting up DB2 (Source)
+## Setting up Vertica (Source)
 
-Please see an example under [Demo](demo/setup_db2.sh).
+Please see an example under [Demo](demo/setup_vertica.sh).
 
 ## Setting up Redis Enterprise Databases (Target)
 

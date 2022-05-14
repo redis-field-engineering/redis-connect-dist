@@ -65,13 +65,8 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 demo$ docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml \
--e REDISCONNECT_JAVA_OPTIONS="-Xms1g -Xmx2g" \
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
 -v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
--v $(pwd)/extlib:/opt/redislabs/redis-connect/extlib \
 --net host \
 redislabs/redis-connect
 ```
@@ -88,21 +83,21 @@ Redis Connect startup script.
 *******************************
 Please ensure that these environment variables are correctly mapped before executing start and cli options. They can also be found in /opt/redislabs/redis-connect/bin/redisconnect.conf
 Example environment variables and volume mapping for docker based deployments
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml
--e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib
+-e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties [OPTIONAL]
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml [OPTIONAL]
+-e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g [OPTIONAL]
+-e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib [OPTIONAL]
 -v <HOST_PATH_TO_JOB_MANAGER_PROPERTIES>:/opt/redislabs/redis-connect/config
 -v <HOST_PATH_TO_CREDENTIALS>:/opt/redislabs/redis-connect/config/samples/credentials
--v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib
+-v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib [OPTIONAL]
 -p 8282:8282
 
 Usage: [-h|cli|start]
 options:
 -h: Print this help message and exit.
 -v: Print version.
-cli: starts redis-connect-cli.
-start: start Redis Connect instance with provided cdc or initial loader job configurations.
+cli: init Redis Connect CLI
+start: init Redis Connect Instance (Cluster Member)
 -------------------------------
 ```
 
@@ -286,7 +281,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 <br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Or Use `curl` to query the `cdc-job` status** <br>
-`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"
+`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"`
 
 Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStatus":"CLAIMED","jobOwner":"30@virag-cdc","jobType":"STREAM"}]`
 
