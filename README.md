@@ -124,25 +124,23 @@ redis-connect/bin$ ./redisconnect.sh start
 
 **Insert some records to the source and confirm they have arrived in Redis. Enjoy!**
 
-## Demos
+## End-to-End Dockerized Demos
 
-### Video Tutorials
+<table>
+    <tr>
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="150" height="100"/></a></td> 
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="150" height="100"/></a></td> 
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="150" height="100"/></a></td> 
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="150" height="100"/></a></td> 
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="150" height="100"/></a></td> 
+    </tr>
+</table>
+
+## Video Tutorials
 
 <table>
     <tr>
         <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
         <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
-    </tr>
-</table>
-
-### End-to-End Dockerized Demos
-
-<table>
-    <tr>
-        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td> 
     </tr>
 </table>
