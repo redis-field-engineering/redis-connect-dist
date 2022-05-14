@@ -139,10 +139,10 @@ redis-connect/bin$ ./redisconnect.sh start
 
 <table>
     <tr>
-        <td><a href="/examples/db2/demo/README.md" target="_blank">DB2</a><img src="/images/DB2 Icon.png" style="float: right;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/mysql/demo/README.md" target="_blank">MySQL</a><img src="/images/MySQL Icon.png" style="float: right;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/oracle/demo/README.md" target="_blank">Oracle</a><img src="/images/Oracle Icon.png" style="float: right;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/postgres/demo/README.md" target="_blank">PostgreSQL</a><img src="/images/Postgres Icon.png" style="float: right;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/mssql/demo/README.md" target="_blank">SQL Server</a><img src="/images/SQL Server Icon.png" style="float: right;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td> 
     </tr>
 </table>
