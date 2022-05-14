@@ -1,0 +1,53 @@
+{
+  "partitions" : 1,
+  "pipeline": {
+    "stages": [
+      {
+        "index": 1,
+        "stageName": "TO_UPPER_CASE",
+        "userDefinedType": "CUSTOM"
+      },
+      {
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "credentialsRotationEventListenerEnabled" : true,
+          "databaseURL": "redis://127.0.0.1:14000",
+          "databaseType": "REDIS",
+          "customConfiguration": {
+            "redis.connection.sslEnabled": false,
+            "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+          }
+        },
+        "index": 1,
+        "stageName": "REDIS_HASH_SINK",
+        "checkpointStageIndicator": true,
+        "metricsEnabled" : true,
+        "metricsRetentionInHours" : 1
+      }
+    ]
+  },
+  "source": {
+    "batchSize": 1000,
+    "database": {
+      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "credentialsRotationEventListenerEnabled" : true,
+      "databaseURL": "jdbc:postgresql://127.0.0.1/RedisConnect",
+      "databaseType": "POSTGRES",
+      "customConfiguration": {
+        "database.dbname" : "RedisConnect",
+        "database.hostname" : "127.0.0.1",
+        "database.port" : 5432
+      }
+    },
+    "tables": {
+      "public.emp": {
+        "columns": [
+          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
+          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
+        ],
+        "schemaAndTableName": "public.emp",
+        "passThroughEnabled": true
+      }
+    }
+  }
+}
