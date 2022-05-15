@@ -36,7 +36,7 @@
       "public.emp": {
         "columns": [
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
-          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
+          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME"}
         ],
         "schemaAndTableName": "public.emp",
         "passThroughEnabled": true
