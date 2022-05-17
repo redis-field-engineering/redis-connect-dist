@@ -4,7 +4,7 @@
 changed-data events from heterogeneous data platforms to multi-model [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/) and [Redis Stack](https://redis.io/docs/stack/).
 <br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
-<p align="center"><img src="/images/Redis Connect Source Sink.png" alt="Redis Connect Source and Sinks" width = 750px height = 375px"></p>
+<p align="center"><img src="/images/Redis Connect Source Sink.png" alt="Redis Connect Source and Sinks" width = 750px height = 375px" title="Redis Connect Source and Sinks"></p>
 
 # Table of Contents
 * [Core Capabilities](#core-capabilities)
