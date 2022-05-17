@@ -1,4 +1,4 @@
-<p align="center"><img src="/images/Redis Connect Intro.jpg" alt="Redis Connect" width = 650px height = 200px></p>
+<p align="center"><img src="/images/RedisConnectIntro.jpg" alt="Redis Connect" width = "650px" height = "200px" title="Redis Connect"></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
 changed-data events from heterogeneous data platforms to multi-model [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/) and [Redis Stack](https://redis.io/docs/stack/).
@@ -18,7 +18,7 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <table>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
-        <td width="50%"><img src="/images/Redis Connect Architecture.png" style="float: right;" width="500" height="250"/></td>
+        <td width="50%"><img src="/images/RedisConnectArchitecture.png" style="float: right;" width="500" height="250" title="Redis Connect Architecture" alt="Redis Connect Architecture"/></td>
     </tr>
     <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
