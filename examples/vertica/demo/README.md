@@ -26,7 +26,7 @@ README.md  config  extlib  setup_re.sh  setup_vertica.sh
 ## Setup Vertica database (Source)
 <br>Execute [setup_vertica.sh](setup_vertica.sh)</br>
 ```bash
-demo$ ./setup_vertica.sh latest
+demo$ ./setup_vertica.sh latest 5433
 ```
 
 ## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
@@ -81,6 +81,41 @@ options:
 cli: init Redis Connect CLI
 start: init Redis Connect Instance (Cluster Member)
 -------------------------------
+```
+
+</p>
+</details>
+
+**Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
+<br>_For quick start, use '**cdc_job**' as **jobName**_
+<br><br><img src="/images/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
+
+**Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
+<br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">Vertica</a>
+<br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+<br>
+
+**Or Use `curl` to create the `cdc-job` configuration** <br>
+`demo$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/cdc-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/cdc-job.json;type=application/json"`
+
+-------------------------------
+
+### Initial Loader Step
+
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>Use '**load**' as _**jobType**_
+<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+
+**Or Use `curl` to start the initial load for `cdc-job`** <br>
+`demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"`
+
+<details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
+<p>
+
+```bash
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@employee_key:[1 10]"'
+
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:cust "@customer_key:[1 10]"'
 ```
 
 </p>
