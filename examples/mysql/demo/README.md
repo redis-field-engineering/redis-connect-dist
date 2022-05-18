@@ -1,116 +1,69 @@
 # Prerequisites
-
 Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker](https://docs.docker.com/get-docker) installed.
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect Connector instances deployed on separate hosts.</br>
-<br>Execute the following commands (copy & paste) to download and setup Redis Connect MySQL Connector and demo scripts.
+<br>Execute the following commands (copy & paste) to download and setup Redis Connect and demo scripts.
 i.e.</br>
 
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
-mkdir -p redis-connect-mysql/demo && \
-mkdir -p redis-connect-mysql/k8s-docs && \
-unzip main.zip "redis-connect-dist-main/connectors/mysql/*" -d redis-connect-mysql && \
-cp -R redis-connect-mysql/redis-connect-dist-main/connectors/mysql/demo/* redis-connect-mysql/demo && \
-cp -R redis-connect-mysql/redis-connect-dist-main/connectors/mysql/k8s-docs/* redis-connect-mysql/k8s-docs && \
-rm -rf main.zip redis-connect-mysql/redis-connect-dist-main && \
-cd redis-connect-mysql && \
-chmod a+x demo/*.sh
+mkdir -p redis-connect/demo && \
+mkdir -p redis-connect/k8s-docs && \
+unzip main.zip "redis-connect-dist-main/examples/mysql/*" -d redis-connect && \
+cp -R redis-connect/redis-connect-dist-main/examples/mysql/demo/* redis-connect/demo && \
+cp -R redis-connect/redis-connect-dist-main/examples/mysql/k8s-docs/* redis-connect/k8s-docs && \
+rm -rf main.zip redis-connect/redis-connect-dist-main && \
+cd redis-connect && \
+chmod a+x demo/*.sh && \
+cd demo
 ```
 
 Expected output:
 ```bash
-redis-connect-mysql$ ls
-config demo
+demo$ ls
+README.md  delete.sql       extlib      insert_mysql.sh  mysql_cdc.sql   setup_re.sh  update_mysql.sh
+config     delete_mysql.sh  insert.sql  mysql-demo.cnf   setup_mysql.sh  update.sql
 ```
 
 ## Setup MySQL database in docker (Source)
 
 <br>Execute [setup_mysql.sh](setup_mysql.sh)</br>
 ```bash
-redis-connect-mysql$ cd demo
-demo$ ./setup_mysql.sh latest
+demo$ ./setup_mysql.sh latest 3306
 ```
 
 <details><summary>Validate MySQL database is running as expected:</summary>
 <p>
 
 ```bash
-demo$ docker ps -a | grep mysql
-33e66aaa75db        mysql:latest                                 "docker-entrypoint.s…"   31 minutes ago      Up 31 minutes       0.0.0.0:3306->3306/tcp, 33060/tcp                                                                                                                                                                                                                                                                               mysql-latest-virag-cdc
-
-demo$ docker exec -i mysql-latest-virag-cdc mysql -uroot -pRedis@123  <<< "SHOW VARIABLES LIKE 'log_bin';"
-mysql: [Warning] Using a password on the command line interface can be insecure.
-Variable_name	Value
-log_bin	ON
+demo$ sudo docker ps -a | grep mysql
+c6661f6e6714        mysql:latest                                 "docker-entrypoint.s…"   27 hours ago        Up 27 hours             0.0.0.0:3306->3306/tcp, 33060/tcp                                                                                                                                                                                                                                                                               mysql-latest-virag-cdc-3306
 ```
+
 </p>
 </details>
-
----
 
 ## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
 <br>Execute [setup_re.sh](setup_re.sh)</br>
 ```bash
 demo$ ./setup_re.sh
 ```
-<details><summary>Validate Redis databases and RedisInsight is running as expected:</summary>
-<p>
+**NOTE**
 
-```bash
-demo$ docker ps -a | grep redislabs
-8c008000ff5c        redislabs/redisinsight:latest              "bash ./docker-entry…"   2 hours ago         Up 2 hours          0.0.0.0:18001->8001/tcp                                                                                                                                                                                                                                                                                         redisinsight
-8fe702a340a9        redislabs/redis:latest                     "/opt/start.sh"          2 hours ago         Up 2 hours          53/tcp, 5353/tcp, 8001/tcp, 8080/tcp, 10000-11999/tcp, 12006-19999/tcp, 0.0.0.0:18070->8070/tcp, 0.0.0.0:18443->8443/tcp, 0.0.0.0:19443->9443/tcp, 0.0.0.0:14000->12000/tcp, 0.0.0.0:14001->12001/tcp, 0.0.0.0:14002->12002/tcp, 0.0.0.0:14003->12003/tcp, 0.0.0.0:14004->12004/tcp, 0.0.0.0:14005->12005/tcp   re-node1
+The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/), [Start a docker instance of grafana with Redis Data Source](https://redisgrafana.github.io/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
 
-demo$ docker exec -it re-node1 bash -c "rladmin status"
-CLUSTER NODES:
-NODE:ID    ROLE     ADDRESS        EXTERNAL_ADDRESS       HOSTNAME    SHARDS   CORES         FREE_RAM              PROVISIONAL_RAM       VERSION     STATUS
-*node:1    master   172.17.0.2                            re-node1    2/100    16            51.17GB/58.87GB       38.71GB/48.28GB       6.2.8-39    OK
+## Start Redis Connect
 
-DATABASES:
-DB:ID       NAME                                   TYPE  MODULE  STATUS  SHARDS  PLACEMENT  REPLICATION  PERSISTENCE  ENDPOINT
-db:1        RedisConnect-Target-db                 redis yes     active  1       dense      disabled     disabled     redis-12000.re-cluster.local:12000
-db:2        RedisConnect-JobConfig-Metrics-db      redis yes     active  1       dense      disabled     disabled     redis-12001.re-cluster.local:12001
-
-ENDPOINTS:
-DB:ID        NAME                                                                       ID                          NODE           ROLE           SSL
-db:1         RedisConnect-Target-db                                                     endpoint:1:1                node:1         single         No
-db:2         RedisConnect-JobConfig-Metrics-db                                          endpoint:2:1                node:1         single         No
-
-SHARDS:
-DB:ID         NAME                                                        ID            NODE        ROLE        SLOTS         USED_MEMORY          STATUS
-db:1          RedisConnect-Target-db                                      redis:1       node:1      master      0-16383       2.3MB                OK
-db:2          RedisConnect-JobConfig-Metrics-db                           redis:2       node:1      master      0-16383       1.99MB               OK
-
-demo$ docker exec -it re-node1 bash -c "redis-cli -p 12000 FT._LIST"
-1) "idx:emp"
-```
-</p>
-</details>
-
-| :memo:        |
-|---------------|
-
-The above script will create a 1-node Redis Enterprise cluster in a docker container, [Create a target database with RediSearch module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a job management and metrics database with RedisTimeSeries module](https://docs.redislabs.com/latest/modules/add-module-to-database/), [Create a RediSearch index for emp Hash](https://redislabs.com/blog/getting-started-with-redisearch-2-0/) and [Start an instance of RedisInsight](https://docs.redislabs.com/latest/ri/installing/install-docker/).
-
----
-
-## Start Redis Connect MySQL Connector
-
-<details><summary>Run Redis Connect MySQL Connector docker container to see all the options</summary>
+<details><summary>Review options by running Redis Connect docker container </summary>
 <p>
 
 ```bash
 docker run \
 -it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/mysql \
--e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
--e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
+--name redis-connect-$(hostname) \
+-v $(pwd)/config:/opt/redislabs/redis-connect/config \
+-v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
 --net host \
-redislabs/redis-connect-mysql:latest
+redislabs/redis-connect
 ```
 
 </p>
@@ -120,189 +73,319 @@ redislabs/redis-connect-mysql:latest
 <p>
 
 ```bash
-Unable to find image 'redislabs/redis-connect-mysql:latest' locally
-latest: Pulling from redislabs/redis-connect-mysql
-a0d0a0d46f8b: Already exists
-44537f359f3a: Pull complete
-9aaa9874ae7f: Pull complete
-13f6c829139b: Pull complete
-06add1107609: Pull complete
-bfc29d6a129c: Pull complete
-249c85a8a900: Pull complete
-ffe4c573e59c: Pull complete
-Digest: sha256:da7987fd874c50bc858b3ba2d3affde3e2f8506b7a3a5f7d42c6feb1bc9d8621
-Status: Downloaded newer image for redislabs/redis-connect-mysql:latest
 -------------------------------
 Redis Connect startup script.
 *******************************
-Please ensure that the values of environment variables in /opt/redislabs/redis-connect-mysql/bin/redisconnect.conf are correctly mapped before executing any of the options below
-*******************************
-Usage: [-h|cli|stage|start]
+Please ensure that these environment variables are correctly mapped before executing start and cli options. They can also be found in /opt/redislabs/redis-connect/bin/redisconnect.conf
+Example environment variables and volume mapping for docker based deployments
+-e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties [OPTIONAL]
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml [OPTIONAL]
+-e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g [OPTIONAL]
+-e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib [OPTIONAL]
+-v <HOST_PATH_TO_JOB_MANAGER_PROPERTIES>:/opt/redislabs/redis-connect/config
+-v <HOST_PATH_TO_CREDENTIALS>:/opt/redislabs/redis-connect/config/samples/credentials
+-v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib [OPTIONAL]
+-p 8282:8282
+
+Usage: [-h|cli|start]
 options:
 -h: Print this help message and exit.
-cli: starts redis-connect-cli.
-stage: clean and stage redis database with cdc or initial loader job configurations.
-start: start Redis Connect instance with provided cdc or initial loader job configurations.
+-v: Print version.
+cli: init Redis Connect CLI
+start: init Redis Connect Instance (Cluster Member)
 -------------------------------
 ```
 
 </p>
 </details>
+
+<details><summary><b>Start Redis Connect Instance</b></summary>
+<p>
+
+```bash
+docker run \
+-it --rm --privileged=true \
+--name redis-connect-$(hostname) \
+-v $(pwd)/config:/opt/redislabs/redis-connect/config \
+-v $(pwd)/extlib:/opt/redislabs/redis-connect/extlib \
+--net host \
+redislabs/redis-connect start
+```
+
+</p>
+</details>
+
+<details><summary>Expected output:</summary>
+<p>
+
+```bash
+-------------------------------
+Starting redis-connect v0.9.0.4 instance using Java 11.0.15 on virag-cdc started by root in /opt/redislabs/redis-connect/bin
+Loading redis-connect instance configurations from /opt/redislabs/redis-connect/config/jobmanager.properties
+Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-connect/extlib/*
+06:42:22.996 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+  /#######                  /## /##          	  /######                                                      /##
+ | ##__  ##                | ## |__/          	 /##__  ##                                                    | ##
+ | ##  \ ##  /######   /####### /##  /#######	| ##  \__/  /######  /#######  /#######   /######   /####### /######
+ | #######/ /##__  ## /##__  ##| ## /##_____/	| ##       /##__  ##| ##__  ##| ##__  ## /##__  ## /##_____/|_  ##_/
+ | ##__  ##| ########| ##  | ##| ##|  ###### 	| ##      | ##  \ ##| ##  \ ##| ##  \ ##| ########| ##        | ##
+ | ##  \ ##| ##_____/| ##  | ##| ## \____  ##	| ##    ##| ##  | ##| ##  | ##| ##  | ##| ##_____/| ##        | ## /##
+ | ##  | ##|  #######|  #######| ## /#######/	|  ######/|  ######/| ##  | ##| ##  | ##|  #######|  #######  |  ####/
+ |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+Powered by Redis Enterprise
+06:42:28.003 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:42:29.843 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobManager
+06:42:29.866 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobReaper
+06:42:29.890 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobClaimer
+06:42:29.912 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - HeartbeatManager
+06:42:29.934 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - MetricsReporter
+06:42:30.037 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc skipped creating Job Claim Assignment Consumer Group since it already exists
+06:42:30.042 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobManager service
+06:42:30.044 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobReaper service
+06:42:30.045 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc Metrics are not enabled so MetricsReporter threadpool will not be instantiated
+06:42:30.047 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobClaimer service
+06:42:36.006 [main] INFO  redis-connect-manager - Started Redis Connect REST API listening on ["http-nio-8282"]
+06:42:36.006 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:42:36.006 [main] INFO  redis-connect-manager -
+06:42:36.006 [main] INFO  redis-connect-manager - Started Redis Connect Instance
+06:42:36.006 [main] INFO  redis-connect-manager -
+06:42:36.006 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:42:40.044 [JobManagerThreadpool-1] INFO  redis-connect-manager - Instance: 29@virag-cdc was successfully elected Redis Connect cluster leader
+```
+
+</p>
+</details>
+
+**Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
+<br>_For quick start, use '**cdc_job**' as **jobName**_
+<br><br><img src="/images/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
+
+**Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
+<br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a>
+<br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+<br>
+
+**Or Use `curl` to create the `cdc-job` configuration** <br>
+`demo$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/cdc-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/cdc-job.json;type=application/json"`
 
 -------------------------------
 
 ### Initial Loader Steps
-<details><summary><b>INSERT few records into MySQL table (source) using the insert.sql or create a more realistic load using https://github.com/redis-field-engineering/redis-connect-crud-loader</b></summary>
+
+<details><summary><b>INSERT few records into MySQL table (source)</b></summary>
 <p>
+You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to insert load large amount of data using a csv or sql file.
 
 ```bash
 demo$ ./insert_mysql.sh
-mysql: [Warning] Using a password on the command line interface can be insecure.
-count(*)
-12
-```
-OR
-```bash
-redis-connect-crud-loader/bin$ ./start.sh crudloader
 ```
 
 </p>
 </details>
 
-<details><summary><b>Stage pre configured loader job</b></summary>
-<p>
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>Use '**load**' as _**jobType**_
+<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=root \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
---net host \
-redislabs/redis-connect-mysql:latest stage
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
--------------------------------
-Staging Redis Connect redis-connect-mysql v0.4.0.7 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
-Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/loader
-04:20:11,322 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
-04:20:11,498 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - Will scan for changes in [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
-....
-....
-04:20:11.584 [main] INFO  startup - ##################################################################
-04:20:11.586 [main] INFO  startup -
-04:20:11.587 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
-
-04:20:11.587 [main] INFO  startup -
-04:20:11.587 [main] INFO  startup - ##################################################################
-....
-....
-04:20:13.910 [main] INFO  startup - ##################################################################
-04:20:13.912 [main] INFO  startup -
-04:20:13.913 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
-04:20:13.913 [main] INFO  startup -
-04:20:13.913 [main] INFO  startup - ##################################################################
-04:20:14.639 [main] INFO  startup - Instance: 99@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
-04:20:15.375 [main] INFO  startup - Instance: 99@virag-cdc successfully established Redis connection for INIT service
-04:20:15.377 [main] INFO  startup - Instance: 99@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
-04:20:15.391 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Job related metadata
-04:20:15.392 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Metrics related metadata
-04:20:15.392 [main] INFO  startup - Instance: 99@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
--------------------------------
-```
-
-</p>
-</details>
-
-<details><summary><b>Start pre-configured loader job</b></summary>
-<p>
-
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE_USERNAME=root \
--e REDISCONNECT_SOURCE_PASSWORD=Redis@123 \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
---net host \
-redislabs/redis-connect-mysql:latest start
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
--------------------------------
-Starting Redis Connect redis-connect-mysql v0.4.0.7 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
-Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/loader
-02:48:13,831 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
-....
-....
-02:48:14.145 [main] INFO  startup -
-02:48:14.149 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
-02:48:14.149 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
-02:48:14.149 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
-02:48:14.150 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
-02:48:14.150 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
-02:48:14.150 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
-02:48:14.150 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
-02:48:14.150 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
-02:48:14.150 [main] INFO  startup -
-02:48:14.150 [main] INFO  startup - ##################################################################
-02:48:14.151 [main] INFO  startup -
-02:48:14.151 [main] INFO  startup - Initializing Redis Connect Instance
-02:48:14.151 [main] INFO  startup -
-02:48:14.151 [main] INFO  startup - ##################################################################
-....
-....
-02:48:41.481 [JobManager-1] INFO  startup - JobId: {connect}:job:initial_load claim request with ID: 1637117271879-0 has been fully processed and all metadata has been updated
-02:48:41.485 [JobManager-1] INFO  startup - Instance: 30@virag-cdc published Job Claim Transition Event to Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
-02:48:41.485 [lettuce-nioEventLoop-4-3] INFO  startup - Instance: 30@virag-cdc consumed Job Claim Transition Event on Channel: REDIS.CONNECT.JOB.CLAIM.TRANSITION.EVENTS Message: {"jobId":"{connect}:job:initial_load","instanceName":"30@virag-cdc","transitionEvent":"CLAIMED","serviceName":"JobClaimer"}
-02:48:51.532 [EventProducer-1] WARN  startup - Instance: 30@virag-cdc did not find entry in its executor threads local cache during stop process for JobId: {connect}:job:initial_load
-02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully cancelled heartbeat for JobId: {connect}:job:initial_load
-02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully stopped replication pipeline for JobId: {connect}:job:initial_load
-02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc now owns 0 job(s) from its 2 max allowable capacity
-02:48:51.532 [EventProducer-1] INFO  startup - Instance: 30@virag-cdc successfully stopped JobId: {connect}:job:initial_load and added it to {connect}:jobs:stopped
-02:49:11.019 [JobManager-2] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_WRITER
-02:49:11.054 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
-02:49:11.057 [JobManager-2] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_CHECKPOINT_WRITER
-02:49:11.057 [JobManager-2] WARN  startup - metricsKey not set - Metrics collection will be disabled
-02:49:11.086 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisCheckpointReader service
-02:49:11.090 [JobManager-2] INFO  redisconnect - Instance: 30@virag-cdc recovered JobId: {connect}:task:partition:initial_load:1 and will set StartRecord: 2
-02:49:11.092 [JobManager-2] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-mysql/config/samples/loader/mappers
-02:49:11.108 [JobManager-2] INFO  redisconnect - Loaded Config for : RedisConnect.emp
-02:49:11.147 [JobManager-2] INFO  startup - Instance: 30@virag-cdc successfully started job execution for JobId: {connect}:task:partition:initial_load:1
-....
-....
-```
-
-</p>
-</details>
+**Or Use `curl` to start the initial load for `cdc-job`** <br>
+`demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"`
 
 <details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "*"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[1 11]"'
+ 1) (integer) 11
+ 2) "emp:1"
+ 3)  1) "fname"
+     2) "Basanth"
+     3) "lname"
+     4) "Gowda"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "1"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "FOUNDER"
+    15) "hiredate"
+    16) "2018-08-09 00:00:00.01"
+    17) "sal"
+    18) "200000.0"
+ 4) "emp:11"
+ 5)  1) "fname"
+     2) "Christian"
+     3) "lname"
+     4) "Mague"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "11"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "PFE"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.11"
+    17) "sal"
+    18) "200000.0"
+ 6) "emp:2"
+ 7)  1) "fname"
+     2) "Virag"
+     3) "lname"
+     4) "Tripathi"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "2"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "PFE"
+    15) "hiredate"
+    16) "2018-08-06 00:00:00.02"
+    17) "sal"
+    18) "2000.0"
+ 8) "emp:3"
+ 9)  1) "fname"
+     2) "Drake"
+     3) "lname"
+     4) "Albee"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "3"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "RSM"
+    15) "hiredate"
+    16) "2017-08-09 00:00:00.03"
+    17) "sal"
+    18) "5000.0"
+10) "emp:4"
+11)  1) "fname"
+     2) "Nick"
+     3) "lname"
+     4) "Doyle"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "4"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "DIR"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.04"
+    17) "sal"
+    18) "10000.0"
+12) "emp:5"
+13)  1) "fname"
+     2) "Allen"
+     3) "lname"
+     4) "Terleto"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "5"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "FieldCTO"
+    15) "hiredate"
+    16) "2017-06-09 00:00:00.05"
+    17) "sal"
+    18) "500000.0"
+14) "emp:6"
+15)  1) "fname"
+     2) "Marco"
+     3) "lname"
+     4) "Shkedi"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "6"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SA"
+    15) "hiredate"
+    16) "2018-06-09 00:00:00.06"
+    17) "sal"
+    18) "2000.0"
+16) "emp:7"
+17)  1) "fname"
+     2) "Brad"
+     3) "lname"
+     4) "Barnes"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "7"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SA"
+    15) "hiredate"
+    16) "2018-07-09 00:00:00.07"
+    17) "sal"
+    18) "2000.0"
+18) "emp:8"
+19)  1) "fname"
+     2) "Quinton"
+     3) "lname"
+     4) "Gingras"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "8"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SDR"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.08"
+    17) "sal"
+    18) "200000.0"
+20) "emp:9"
+21)  1) "fname"
+     2) "Yuval"
+     3) "lname"
+     4) "Mankerious"
+     5) "comm"
+     6) "10.0"
+     7) "mgr"
+     8) "1"
+     9) "empno"
+    10) "9"
+    11) "dept"
+    12) "1"
+    13) "job"
+    14) "SA"
+    15) "hiredate"
+    16) "2019-07-09 00:00:00.09"
+    17) "sal"
+    18) "200000.0"
 ```
 
 </p>
@@ -311,137 +394,28 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 -------------------------------
 
 ### CDC Steps
-<details><summary><b>Stage pre-configured cdc job</b></summary>
+
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>Use '**stream**' as _**jobType**_
+<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+
+**Or Use `curl` to start the stream for `cdc-job`** <br>
+`demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/stream" -H "accept: */*"`
+
+**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
+<br>_For quick start, use '**all**' as **jobStatus**_
+<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
+
+**Or Use `curl` to query the `cdc-job` status** <br>
+`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"`
+
+Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStatus":"CLAIMED","jobOwner":"30@virag-cdc","jobType":"STREAM"}]`
+
+<details><summary><b>INSERT a record into SQL Server table (source)</b></summary>
 <p>
 
 ```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/mysql \
--e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
--e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
---net host \
-redislabs/redis-connect-mysql:latest stage
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
--------------------------------
-Staging Redis Connect redis-connect-mysql v0.4.0.7 job using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
-Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/mysql
-
-06:37:36,477 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
-....
-....
-06:37:36.727 [main] INFO  startup - ##################################################################
-06:37:36.730 [main] INFO  startup -
-06:37:36.730 [main] INFO  startup - REDIS CONNECT SETUP CLEAN - Deletes metadata related to Redis Connect from Job Management Database
-
-06:37:36.730 [main] INFO  startup -
-06:37:36.730 [main] INFO  startup - ##################################################################
-....
-....
-06:37:39.104 [main] INFO  startup - ##################################################################
-06:37:39.106 [main] INFO  startup -
-06:37:39.106 [main] INFO  startup - REDIS CONNECT SETUP CREATE - Seed metadata related to Redis Connect to Job Management Database
-06:37:39.106 [main] INFO  startup -
-06:37:39.106 [main] INFO  startup - ##################################################################
-06:37:39.841 [main] INFO  startup - Instance: 99@virag-cdc will attempt Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
-06:37:40.591 [main] INFO  startup - Instance: 99@virag-cdc successfully established Redis connection for INIT service
-06:37:40.593 [main] INFO  startup - Instance: 99@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
-06:37:40.607 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Job related metadata
-06:37:40.755 [main] ERROR startup - Key - RedisConnect:emp:C:Throughput already exists
-06:37:40.756 [main] ERROR startup - Key - RedisConnect:emp:U:Throughput already exists
-06:37:40.757 [main] ERROR startup - Key - RedisConnect:emp:D:Throughput already exists
-06:37:40.759 [main] ERROR startup - Key - RedisConnect:emp:Latency already exists
-06:37:40.769 [main] INFO  startup - Instance: 99@virag-cdc successfully seeded Metrics related metadata
-06:37:40.769 [main] INFO  startup - Instance: 99@virag-cdc successfully staged Job Management Database (Redis) with all the configurations and scripts, if applicable, needed to execute jobs
--------------------------------
-```
-
-</p>
-</details>
-
-<details><summary><b>Start pre-configured cdc job</b></summary>
-<p>
-
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/mysql \
--e REDISCONNECT_REST_API_ENABLED=true \
--e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
--e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
---net host \
-redislabs/redis-connect-mysql:latest start
-```
-
-</p>
-</details>
-
-<details><summary>Expected output:</summary>
-<p>
-
-```bash
--------------------------------
-Starting Redis Connect redis-connect-mysql v0.4.0.7 instance using Java 11.0.13 on virag-cdc started by root in /opt/redislabs/redis-connect-mysql/bin
-Loading Redis Connect redis-connect-mysql Configurations from /opt/redislabs/redis-connect-mysql/config/samples/mysql
-06:37:51,779 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/opt/redislabs/redis-connect-mysql/config/logback.xml] at [file:/opt/redislabs/redis-connect-mysql/config/logback.xml]
-....
-....
-06:37:52.098 [main] INFO  startup -
-06:37:52.103 [main] INFO  startup -  /$$$$$$$                  /$$ /$$                  /$$$$$$                                                      /$$
-06:37:52.103 [main] INFO  startup - | $$__  $$                | $$|__/                 /$$__  $$                                                    | $$
-06:37:52.104 [main] INFO  startup - | $$  \ $$  /$$$$$$   /$$$$$$$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$$ /$$$$$$
-06:37:52.104 [main] INFO  startup - | $$$$$$$/ /$$__  $$ /$$__  $$| $$ /$$_____/      | $$       /$$__  $$| $$__  $$| $$__  $$ /$$__  $$ /$$_____/|_  $$_/
-06:37:52.104 [main] INFO  startup - | $$__  $$| $$$$$$$$| $$  | $$| $$|  $$$$$$       | $$      | $$  \ $$| $$  \ $$| $$  \ $$| $$$$$$$$| $$        | $$
-06:37:52.105 [main] INFO  startup - | $$  \ $$| $$_____/| $$  | $$| $$ \____  $$      | $$    $$| $$  | $$| $$  | $$| $$  | $$| $$_____/| $$        | $$ /$$
-06:37:52.105 [main] INFO  startup - | $$  | $$|  $$$$$$$|  $$$$$$$| $$ /$$$$$$$/      |  $$$$$$/|  $$$$$$/| $$  | $$| $$  | $$|  $$$$$$$|  $$$$$$$  |  $$$$/
-06:37:52.105 [main] INFO  startup - |__/  |__/ \_______/ \_______/|__/|_______/        \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
-06:37:52.105 [main] INFO  startup -
-06:37:52.105 [main] INFO  startup - ##################################################################
-06:37:52.105 [main] INFO  startup -
-06:37:52.105 [main] INFO  startup - Initializing Redis Connect Instance
-06:37:52.106 [main] INFO  startup -
-06:37:52.106 [main] INFO  startup - ##################################################################
-....
-....
-06:38:08.788 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for HeartbeatManager service
-06:38:08.788 [JobManager-1] INFO  startup - Instance: 30@virag-cdc was successfully elected Redis Connect cluster leader
-06:38:18.858 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_WRITER
-06:38:18.890 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisConnectorEventHandler service
-06:38:18.893 [JobManager-1] INFO  startup - Getting instance of EventHandler for : REDIS_HASH_CHECKPOINT_WRITER
-06:38:18.894 [JobManager-1] WARN  startup - metricsKey not set - Metrics collection will be disabled
-06:38:18.912 [JobManager-1] INFO  startup - Instance: 30@virag-cdc successfully established Redis connection for RedisCheckpointReader service
-06:38:18.925 [JobManager-1] INFO  redisconnect - Reading Mapper Config from : /opt/redislabs/redis-connect-mysql/config/samples/mysql/mappers
-06:38:18.940 [JobManager-1] INFO  redisconnect - Loaded Config for : RedisConnect.emp
-06:38:19.469 [JobManager-1] INFO  i.d.connector.common.BaseSourceTask - Starting MySqlConnectorTask with configuration:
-....
-....
-```
-
-</p>
-</details>
-
-<details><summary><b>INSERT a record into MySQL table (source) using the command line or provided script, insert_mysql.sh in the demo directory</b></summary>
-<p>
-
-```bash
-sudo docker exec -it mysql-latest-virag-cdc bash -c "mysql -uroot -pRedis@123 RedisConnect"
+sudo docker exec -it mysql-latest-virag-cdc-3306 bash -c "mysql -uroot -pRedis@123 RedisConnect"
 
 mysql> insert into emp values(1002, 'Virag', 'Tripathi', 'SA', 1, '2018-08-06 00:00:00.000', '2000', '10', 1);
 Query OK, 1 row affected (0.00 sec)
@@ -456,70 +430,28 @@ Bye
 <p>
 
 ```bash
-sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EmployeeNumber:[1000 1002]"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[1002 1002]"'
+1) (integer) 1
+2) "emp:1002"
+3)  1) "fname"
+    2) "Virag"
+    3) "lname"
+    4) "Tripathi"
+    5) "comm"
+    6) "10.0"
+    7) "mgr"
+    8) "1"
+    9) "empno"
+   10) "1002"
+   11) "dept"
+   12) "1"
+   13) "job"
+   14) "SA"
+   15) "hiredate"
+   16) "2018-08-06 00:00:00.00"
+   17) "sal"
+   18) "2000.0"
 ```
 
 </p>
 </details>
-
-Similarly `UPDATE` and `DELETE` records on SQL Server source using queries on the command line or provided scripts [update_mysql.sh](update_mysql.sh) and [delete_mysql.sh](delete_mysql.sh) and see Redis target getting updated in near real-time.
-
--------------------------------
-
-### [_Custom Stage_](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo)
-
-Review the Custom Stage Demo then use the pre-built CustomStage function by passing it as an external library and follow [Initial Loader Steps](#initial-loader-steps) or [CDC Steps](#cdc-steps).
-
-* Add the `CustomStage` `handlerId` in JobConfig.yml as explained in the Custom Stage Demo i.e.
-```yml
-  stages:
-    CustomStage:
-      handlerId: TO_UPPER_CASE
-```
-* Please make sure the columns that are going to be used for this custom stage has the same value at the source and target i.e. it is not mapped to another name in Redis. For this example `fname` and `lname` are the default values for `col1` and `col2` and if you want to change this then pass a different column names to `REDISCONNECT_JAVA_OPTIONS` e.g. `-Dcol1=fname -Dcol2=job`
-
-<details><summary><b>Stage pre-configured loader job with Custom Stage</b></summary>
-<p>
-
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
--e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
--e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx256m" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
--v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
---net host \
-redislabs/redis-connect-mysql:latest stage
-```
-
-</p>
-</details>
-
-<details><summary><b>Start pre-configured loader job with Custom Stage</b></summary>
-<p>
-
-```bash
-docker run \
--it --rm --privileged=true \
---name redis-connect-mysql \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect-mysql/config/logback.xml \
--e REDISCONNECT_CONFIG=/opt/redislabs/redis-connect-mysql/config/samples/loader \
--e REDISCONNECT_REST_API_ENABLED=false \
--e REDISCONNECT_REST_API_PORT=8282 \
--e REDISCONNECT_SOURCE_USERNAME=redisconnectuser \
--e REDISCONNECT_SOURCE_PASSWORD=redisconnectpassword \
--e REDISCONNECT_JAVA_OPTIONS="-Xms256m -Xmx1g" \
--v $(pwd)/config:/opt/redislabs/redis-connect-mysql/config \
--v $(pwd)/extlib:/opt/redislabs/redis-connect-mysql/extlib \
---net host \
-redislabs/redis-connect-mysql:latest start
-```
-
-</p>
-</details>
-
-Validate the output after CustomStage run and make sure that `fname` and `lname` values in Redis has been updated to UPPER CASE.

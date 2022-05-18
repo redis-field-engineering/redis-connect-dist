@@ -27,15 +27,15 @@
       "customConfiguration": {
         "database.dbname" : "RedisConnect",
         "database.hostname" : "127.0.0.1",
-        "database.port" : 3306
+        "database.port" : 3306,
+        "snapshot.mode": "never"
       }
     },
     "tables": {
       "RedisConnect.emp": {
         "columns": [
-          { "targetColumn": "EmployeeNumber", "sourceColumn": "empno", "primaryKey": true },
-          { "targetColumn": "FirstName", "sourceColumn": "fname" },
-          { "targetColumn": "HireDate", "sourceColumn": "hiredate", "type": "DATE_TIME" }
+          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
+          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME" }
         ],
         "schemaAndTableName": "RedisConnect.emp",
         "passThroughEnabled": true

@@ -46,6 +46,7 @@ source_schema                            source_table                           
 ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------- ---------------- ---------------------- ---------------------- -------------------- ---------------- ---------------------------------------- ---------------------------------------- ---------------------------------------- ----------------------- -------------------------------------------------------------------------------- --------------------------------------------------------------------------------
 dbo                                      emp                                      cdcauditing_emp                            965578478        933578364 0x000000C0000060900001 NULL                                      1             NULL cdc_reader                               PK__emp__AF4C318A8A59B13C                NULL                                     2022-04-23 07:15:26.660 [empno]                                                                          [empno], [fname], [lname], [job], [mgr], [hiredate], [sal], [comm], [dept]  
 ```
+
 </p>
 </details>
 
@@ -85,21 +86,21 @@ Redis Connect startup script.
 *******************************
 Please ensure that these environment variables are correctly mapped before executing start and cli options. They can also be found in /opt/redislabs/redis-connect/bin/redisconnect.conf
 Example environment variables and volume mapping for docker based deployments
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml
--e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib
+-e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties [OPTIONAL]
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml [OPTIONAL]
+-e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g [OPTIONAL]
+-e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib [OPTIONAL]
 -v <HOST_PATH_TO_JOB_MANAGER_PROPERTIES>:/opt/redislabs/redis-connect/config
 -v <HOST_PATH_TO_CREDENTIALS>:/opt/redislabs/redis-connect/config/samples/credentials
--v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib
+-v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib [OPTIONAL]
 -p 8282:8282
 
 Usage: [-h|cli|start]
 options:
 -h: Print this help message and exit.
 -v: Print version.
-cli: starts redis-connect-cli.
-start: start Redis Connect instance with provided cdc or initial loader job configurations.
+cli: init Redis Connect CLI
+start: init Redis Connect Instance (Cluster Member)
 -------------------------------
 ```
 
@@ -110,13 +111,10 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 <p>
 
 ```bash
-demo$ docker run \
+docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
--v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect/extlib \
 --net host \
 redislabs/redis-connect start
