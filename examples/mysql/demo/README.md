@@ -411,7 +411,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 
 Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStatus":"CLAIMED","jobOwner":"30@virag-cdc","jobType":"STREAM"}]`
 
-<details><summary><b>INSERT a record into SQL Server table (source)</b></summary>
+<details><summary><b>INSERT a record into MySQL table (source)</b></summary>
 <p>
 
 ```bash
