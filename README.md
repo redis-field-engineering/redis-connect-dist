@@ -64,46 +64,62 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 
 ### Download
 
-Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) and untar redis-connect-`<version>.<build>`.tar.gz archive<br>
-<b>[ [🐳 Hub](https://hub.docker.com/r/redislabs/redis-connect)
-]
-</b>
+Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) for `Linux` or `Windows` operating system and unarchive redis-connect-`<version>.<build>`.[tar.gz|zip] archive<br>
+Docker image can be found at [DockerHub](https://hub.docker.com/r/redislabs/redis-connect)
 
+Linux:
 ```bash
 tar vxf <tarfile name>
 ```
+Windows:
+```cmd
+unzip <zipfile name>
+```
 
 The following subdirectories will be extracted under /redis-connect -
-<br>/bin – Startup scripts
-<br>/lib – Dependencies
-<br>/config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
-<br>/extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
+<br>bin – Startup scripts
+<br>lib – Dependencies
+<br>config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
+<br>extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
 
 ### Getting Started
 
 **Review options by running Redis Connect startup script** <br>
+Linux:
 ```bash
 redis-connect/bin$ ./redisconnect.sh    
 -------------------------------
 Redis Connect startup script.
 *******************************
-Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in redisconnect.conf before executing any of the options below
+Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in /home/viragtripathi/qa/vm/redis-connect/bin/redisconnect.conf before executing any of the options below
+Check the value of redis.connection.url and credentials.file.path in jobmanager.properties e.g.
+redis.connection.url=redis://redis-19836.c9.us-east-1-2.ec2.cloud.redislabs.com:19836
+credentials.file.path=/var/secrets/redis
 *******************************
 Usage: [-h|cli|start]
 options:
 -h: Print this help message and exit.
-cli: starts redis-connect-cli
-start: init Redis Connect Instance
+cli: init Redis Connect CLI
+start: init Redis Connect Instance (Cluster Member)
 -------------------------------
+```
+Windows:
+```cmd
+redis-connect\bin> redisconnect.bat
 ```
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                  |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
 
-**Start Redis Connect Instance**
+**Start Redis Connect Instance**<br>
+Linux:
 ```bash
 redis-connect/bin$ ./redisconnect.sh start
+```
+Windows:
+```cmd
+redis-connect\bin> redisconnect.bat start
 ```
 <img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
 
