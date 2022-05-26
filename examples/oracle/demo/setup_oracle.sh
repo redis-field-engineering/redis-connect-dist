@@ -56,10 +56,14 @@ done
 
 #Check if the logminer option is provided or not
 if [ $# -eq 3 ] && [ "$3" = "logminer" ]; then
-	echo "Setting up LogMiner and loading sample HR schema on $container_name.."
+	echo "Setting up LogMiner and loading sample HR and C##RCUSER schema on $container_name.."
 	sudo docker cp setup_logminer.sh $container_name:/tmp/setup_logminer.sh
 	sudo docker exec -it $container_name bash -c "/tmp/setup_logminer.sh"
+	sudo docker cp emp.csv $container_name:/tmp/emp.csv
+	sudo docker cp emp.ctl $container_name:/tmp/emp.ctl
 	sudo docker cp load_sql.sh $container_name:/tmp/load_sql.sh
+	sudo docker cp load_c##rcuser_schema.sh $container_name:/tmp/load_c##rcuser_schema.sh
+        sudo docker exec -it $container_name bash -c "/tmp/load_c##rcuser_schema.sh"
 	sudo docker cp employees1k_insert.sql $container_name:/tmp/employees1k_insert.sql
 	sudo docker cp employees10k_insert.sql $container_name:/tmp/employees10k_insert.sql
 	sudo docker cp update.sql $container_name:/tmp/update.sql

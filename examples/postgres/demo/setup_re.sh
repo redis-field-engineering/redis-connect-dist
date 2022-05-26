@@ -39,8 +39,8 @@ timeseries_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c 
 
 echo "Creating databases..."
 tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "$search_module_name", "semantic_version": "$search_semantic_version"}, {"module_args": "", "module_name": "$json_module_name", "semantic_version": "$json_semantic_version"} ] }' https://localhost:9443/v1/bdbs
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_name": "$timeseries_module_name", "semantic_version": "$timeseries_semantic_version"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "Target", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "$search_module_name", "semantic_version": "$search_semantic_version"}, {"module_args": "", "module_name": "$json_module_name", "semantic_version": "$json_semantic_version"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "JobManager", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_name": "$timeseries_module_name", "semantic_version": "$timeseries_semantic_version"} ] }' https://localhost:9443/v1/bdbs
 EOF
 
 sleep 20

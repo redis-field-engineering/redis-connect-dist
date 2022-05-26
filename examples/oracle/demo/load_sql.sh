@@ -23,6 +23,9 @@ case ${options} in
 -h)
 help
 exit;;
+insert1k_emp)
+  sqlldr c##rcuser/rcpwd@orclpdb1 control=/tmp/emp.ctl
+break;;
 insert1k)
 sqlplus hr/hr@ORCLPDB1 <<- EOF
   select count(*) from employees;

@@ -276,7 +276,7 @@ demo$
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@empno:[151 152]"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EMPNO:[151 152]"'
 1) (integer) 2
 2) "emp:151"
 3)  1) "fname"
@@ -355,7 +355,7 @@ demo$
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@fname:allen"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@FNAME:allen"'
 1) (integer) 1
 2) "emp:1"
 3)  1) "fname"

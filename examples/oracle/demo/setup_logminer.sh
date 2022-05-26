@@ -5,7 +5,7 @@ ORACLE_SID=ORCLCDB
 export ORACLE_SID
 sqlplus /nolog <<- EOF
 	CONNECT sys/Redis123 AS SYSDBA
-	alter system set db_recovery_file_dest_size = 10G;
+	alter system set db_recovery_file_dest_size = 50G;
 	alter system set db_recovery_file_dest = '/opt/oracle/oradata/recovery_area' scope=spfile;
 	shutdown immediate
 	startup mount
@@ -25,12 +25,12 @@ EOF
 
 # Create Log Miner Tablespace and User
 sqlplus sys/Redis123@//localhost:1521/ORCLCDB as sysdba <<- EOF
-  CREATE TABLESPACE LOGMINER_TBS DATAFILE '/opt/oracle/oradata/ORCLCDB/logminer_tbs.dbf' SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+  CREATE TABLESPACE LOGMINER_TBS DATAFILE '/opt/oracle/oradata/ORCLCDB/logminer_tbs.dbf' SIZE 400M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
   exit;
 EOF
 
 sqlplus sys/Redis123@//localhost:1521/ORCLPDB1 as sysdba <<- EOF
-  CREATE TABLESPACE LOGMINER_TBS DATAFILE '/opt/oracle/oradata/ORCLCDB/ORCLPDB1/logminer_tbs.dbf' SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+  CREATE TABLESPACE LOGMINER_TBS DATAFILE '/opt/oracle/oradata/ORCLCDB/ORCLPDB1/logminer_tbs.dbf' SIZE 400M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
   exit;
 EOF
 
@@ -61,25 +61,5 @@ sqlplus sys/Redis123@//localhost:1521/ORCLCDB as sysdba <<- EOF
   GRANT SELECT ON V_\$ARCHIVE_DEST_STATUS TO c##rcuser CONTAINER=ALL;
   GRANT SELECT ON V_\$TRANSACTION TO c##rcuser CONTAINER=ALL;
 
-  exit;
-EOF
-
-sqlplus sys/Redis123@//localhost:1521/ORCLPDB1 as sysdba <<- EOF
-  CREATE USER rcuser IDENTIFIED BY rcpwd;
-  GRANT CONNECT TO rcuser;
-  GRANT CREATE SESSION TO rcuser;
-  GRANT CREATE TABLE TO rcuser;
-  GRANT CREATE SEQUENCE to rcuser;
-  ALTER USER rcuser QUOTA 100M on users;
-  exit;
-EOF
-
-sqlplus sys/Redis123@ORCLPDB1 as sysdba <<- EOF
-  @?/demo/schema/human_resources/hr_main.sql hr users temp \$ORACLE_HOME/demo/schema/log/
-  ALTER TABLE HR.EMPLOYEES ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
-  ALTER TABLE HR.JOBS ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
-
-  connect hr/hr@ORCLPDB1
-  select count(*) from employees;
   exit;
 EOF

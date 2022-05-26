@@ -170,7 +170,7 @@ Powered by Redis Enterprise
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@emp:[1 10]"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EMPNO:[1 10]"'
 ```
 
 </p>

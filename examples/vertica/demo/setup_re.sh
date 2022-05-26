@@ -62,7 +62,7 @@ echo $timeseries_semantic_version
 
 echo "Creating idx:emp index for search.."
 sleep 10
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx:emp on hash prefix 1 'employee_dimension:' schema employee_key numeric sortable"
+sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx:emp on hash prefix 1 'employee_dimension:' schema employee_key numeric sortable employee_state tag sortable employee_gender text sortable"
 sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx:cust on hash prefix 1 'customer_dimension:' schema customer_key numeric sortable"
 sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx:emp"
 sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx:cust"

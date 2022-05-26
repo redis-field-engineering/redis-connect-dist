@@ -39,8 +39,8 @@ timeseries_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c 
 
 echo "Creating databases..."
 tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "RedisConnect-Target-db", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "$search_module_name", "semantic_version": "$search_semantic_version"}, {"module_args": "", "module_name": "$json_module_name", "semantic_version": "$json_semantic_version"} ] }' https://localhost:9443/v1/bdbs
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "RedisConnect-JobConfig-Metrics-db", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_name": "$timeseries_module_name", "semantic_version": "$timeseries_semantic_version"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "Target", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "$search_module_name", "semantic_version": "$search_semantic_version"}, {"module_args": "", "module_name": "$json_module_name", "semantic_version": "$json_semantic_version"} ] }' https://localhost:9443/v1/bdbs
+curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "JobManager", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_name": "$timeseries_module_name", "semantic_version": "$timeseries_semantic_version"} ] }' https://localhost:9443/v1/bdbs
 EOF
 
 sleep 20
@@ -60,10 +60,10 @@ echo Created RedisConnect-JobConfig-Metrics-db with
 echo $timeseries_module_name
 echo $timeseries_semantic_version
 
-echo "Creating idx:employees index for search.."
+echo "Creating idx:emp index for search.."
 sleep 10
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx:employees on hash prefix 1 'EMPLOYEES:' schema employee_id numeric sortable first_name text sortable last_name text job_id tag sortable manager_id numeric sortable hire_date text sortable salary numeric sortable"
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx:employees"
+sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx:emp on hash prefix 1 'EMP:' schema EMPNO numeric sortable FNAME text sortable LNAME text JOB tag sortable MGR numeric HIREDATE text SAL numeric COMM numeric DEPT numeric"
+sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx:emp"
 echo "Database port mappings per node. We are using mDNS so use the IP and exposed port to connect to the databases."
 echo "node1:"
 sudo docker port re-node1 | egrep "12000|12001"
