@@ -149,11 +149,12 @@ redis-connect\bin> redisconnect.bat start
 
 <table>
     <tr>
-        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="125" height="100"/></a></td> 
-        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="125" height="100"/></a></td> 
-        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="125" height="100"/></a></td> 
-        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="125" height="100"/></a></td> 
-        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="125" height="100"/></a></td> 
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/vertica/demo/README.md"><img src="/images/Vertica_Icon.png" style="float: center;" width="100" height="100"/></a></td>
     </tr>
 </table>
 
