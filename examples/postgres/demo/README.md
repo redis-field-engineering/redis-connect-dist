@@ -1,3 +1,9 @@
+# Demo Outline
+:white_check_mark: Setup and start Postgres database (Source)<br>
+:white_check_mark: Setup and start Redis Enterprise database (Target)<br>
+:white_check_mark: Setup and start Redis Connect<br>
+:white_check_mark: Perform Initial load and CDC with Redis Connect<br>
+
 # Prerequisites
 Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker](https://docs.docker.com/get-docker) installed.
 <br>Please have 8 vCPU*, 8GB RAM and 50GB storage for this demo to function properly. Adjust the resources based on your requirements. For HA, at least have 2 Redis Connect instances deployed on separate hosts.</br>
