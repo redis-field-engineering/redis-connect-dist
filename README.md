@@ -162,7 +162,7 @@ redis-connect\bin> redisconnect.bat start
 
 <table>
     <tr>
-        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/video-tutorials/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td><a href="https://www.youtube.com/watch?v=hQWhPU7y0OU"><img src="/images/video-tutorials/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
         <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/video-tutorials/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
     </tr>
 </table>

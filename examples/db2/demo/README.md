@@ -29,7 +29,7 @@ demo$ ls
 README.md  config  extlib  setup_re.sh  setup_db2.sh
 ```
 
-## Setup Vertica database (Source)
+## Setup DB2 database (Source)
 <br>Execute [setup_db2.sh](setup_db2.sh)</br>
 ```bash
 demo$ ./setup_db2.sh latest 50000
