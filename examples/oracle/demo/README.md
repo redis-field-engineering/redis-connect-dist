@@ -20,13 +20,15 @@ cp -R redis-connect/redis-connect-dist-main/examples/oracle/demo/* redis-connect
 cp -R redis-connect/redis-connect-dist-main/examples/oracle/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
-chmod a+x demo/*.sh
+chmod a+x demo/*.sh && \
+cd demo
 ```
 
 Expected output:
 ```bash
-redis-connect$ ls
-demo  k8s-docs
+demo$ ls
+README.md  delete.sql  emp.ctl                  employees1k_insert.sql  load_c##rcuser_schema.sh  setup_logminer.sh  setup_re.sh
+config     emp.csv     employees10k_insert.sql  extlib                  load_sql.sh               setup_oracle.sh    update.sql
 ```
 
 ## Setup Oracle database in docker (Source)
@@ -88,24 +90,32 @@ SQL> Disconnected from Oracle Database 12c Enterprise Edition Release 12.2.0.1.0
 
 ```bash
 demo$ docker ps -a | grep oracle
-ae728fa6e001        virag/oracle-12.2.0.1-ee                     "/bin/sh -c 'exec $O…"   5 hours ago         Up 5 hours (healthy)    0.0.0.0:1521->1521/tcp                                                                                                                                                                                                                                                                                          oracle-12.2.0.1-ee-virag-cdc
-cb7c33534565        virag/oracle-19.3.0-ee                       "/bin/sh -c 'exec $O…"   44 hours ago        Up 44 hours (healthy)   0.0.0.0:1522->1521/tcp                                                                                                                                                                                                                                                                                          oracle-19.3.0-ee-virag-cdc
+f31d84987694        virag/oracle-19.3.0-ee                       "/bin/sh -c 'exec $O…"   8 days ago          Up 8 days (healthy)   0.0.0.0:1522->1521/tcp                                                                                                                                                                                                                                                                                          oracle-19.3.0-ee-virag-cdc-1522
 
-demo$ docker exec -it oracle-12.2.0.1-ee-$(hostname) bash -c "sqlplus sys/Redis123@ORCLPDB1 as sysdba"
+demo$ docker exec -it oracle-19.3.0-ee-$(hostname)-1522 bash -c "sqlplus c##rcuser/rcpwd@ORCLPDB1"
 
-SQL*Plus: Release 12.2.0.1.0 Production on Wed Nov 17 20:22:35 2021
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu May 26 02:00:21 2022
+Version 19.3.0.0.0
 
-Copyright (c) 1982, 2016, Oracle.  All rights reserved.
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
+Last Successful login time: Tue May 17 2022 03:21:34 +00:00
 
 Connected to:
-Oracle Database 12c Enterprise Edition Release 12.2.0.1.0 - 64bit Production
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
 
 SQL> select 1 from dual;
 
 	 1
 ----------
 	 1
+
+SQL> select count(*) from c##rcuser.emp;
+
+  COUNT(*)
+----------
+	 0
 ```
 
 </p>
@@ -122,9 +132,6 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 
 ## Start Redis Connect
 
-| :point_up:    | Don't forget to download and copy the Oracle client jar into the extlib folder i.e. `demo$ cp ojdbc8.jar extlib` (we have included ojdbc8.jar for this demo purposes) |
-|---------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-
 <details><summary>Review options by running Redis Connect docker container </summary>
 <p>
 
@@ -132,13 +139,8 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 demo$ docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml \
--e REDISCONNECT_JAVA_OPTIONS="-Xms1g -Xmx2g" \
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
 -v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
--v $(pwd)/extlib:/opt/redislabs/redis-connect/extlib \
 --net host \
 redislabs/redis-connect
 ```
@@ -155,21 +157,21 @@ Redis Connect startup script.
 *******************************
 Please ensure that these environment variables are correctly mapped before executing start and cli options. They can also be found in /opt/redislabs/redis-connect/bin/redisconnect.conf
 Example environment variables and volume mapping for docker based deployments
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml
--e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib
+-e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/redislabs/redis-connect/config/jobmanager.properties [OPTIONAL]
+-e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml [OPTIONAL]
+-e REDISCONNECT_JAVA_OPTIONS=-Xms1g -Xmx2g [OPTIONAL]
+-e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib [OPTIONAL]
 -v <HOST_PATH_TO_JOB_MANAGER_PROPERTIES>:/opt/redislabs/redis-connect/config
 -v <HOST_PATH_TO_CREDENTIALS>:/opt/redislabs/redis-connect/config/samples/credentials
--v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib
+-v <HOST_PATH_TO_EXTLIB>:/opt/redislabs/redis-connect/extlib [OPTIONAL]
 -p 8282:8282
 
 Usage: [-h|cli|start]
 options:
 -h: Print this help message and exit.
 -v: Print version.
-cli: starts redis-connect-cli.
-start: start Redis Connect instance with provided cdc or initial loader job configurations.
+cli: init Redis Connect CLI
+start: init Redis Connect Instance (Cluster Member)
 -------------------------------
 ```
 
@@ -180,15 +182,10 @@ start: start Redis Connect instance with provided cdc or initial loader job conf
 <p>
 
 ```bash
-demo$ docker run \
+docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
--e REDISCONNECT_JOB_MANAGER_CONFIG_PATH=/opt/rediabs/redis-connect/config/jobmanager.properties \
--e REDISCONNECT_LOGBACK_CONFIG=/opt/redislabs/redis-connect/config/logback.xml \
--e REDISCONNECT_JAVA_OPTIONS="-Xms1g -Xmx2g" \
--e REDISCONNECT_EXTLIB_DIR=/opt/redislabs/redis-connect/extlib \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
--v $(pwd)/config/samples/credentials:/opt/redislabs/redis-connect/config/samples/credentials \
 -v $(pwd)/extlib:/opt/redislabs/redis-connect/extlib \
 --net host \
 redislabs/redis-connect start
@@ -202,10 +199,10 @@ redislabs/redis-connect start
 
 ```bash
 -------------------------------
-Starting redis-connect v0.9.0.4 instance using Java 11.0.15 on virag-cdc started by root in /opt/redislabs/redis-connect/bin
-Loading redis-connect instance configurations from /opt/redislabs/redis-connect/config/jobmanager.properties
+Starting redis-connect v0.9.1.4 Instance using JAVA 11.0.15 on virag-cdc started by root in /opt/redislabs/redis-connect/bin
+Loading redis-connect Instance configuration from /opt/redislabs/redis-connect/config/jobmanager.properties
 Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-connect/extlib/*
-06:42:22.996 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+02:04:12.114 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
   /#######                  /## /##          	  /######                                                      /##
  | ##__  ##                | ## |__/          	 /##__  ##                                                    | ##
  | ##  \ ##  /######   /####### /##  /#######	| ##  \__/  /######  /#######  /#######   /######   /####### /######
@@ -215,24 +212,25 @@ Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-conne
  | ##  | ##|  #######|  #######| ## /#######/	|  ######/|  ######/| ##  | ##| ##  | ##|  #######|  #######  |  ####/
  |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
 Powered by Redis Enterprise
-06:42:28.003 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
-06:42:29.843 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobManager
-06:42:29.866 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobReaper
-06:42:29.890 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobClaimer
-06:42:29.912 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - HeartbeatManager
-06:42:29.934 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - MetricsReporter
-06:42:30.037 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc skipped creating Job Claim Assignment Consumer Group since it already exists
-06:42:30.042 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobManager service
-06:42:30.044 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobReaper service
-06:42:30.045 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc Metrics are not enabled so MetricsReporter threadpool will not be instantiated
-06:42:30.047 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobClaimer service
-06:42:36.006 [main] INFO  redis-connect-manager - Started Redis Connect REST API listening on ["http-nio-8282"]
-06:42:36.006 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
-06:42:36.006 [main] INFO  redis-connect-manager -
-06:42:36.006 [main] INFO  redis-connect-manager - Started Redis Connect Instance
-06:42:36.006 [main] INFO  redis-connect-manager -
-06:42:36.006 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
-06:42:40.044 [JobManagerThreadpool-1] INFO  redis-connect-manager - Instance: 29@virag-cdc was successfully elected Redis Connect cluster leader
+02:04:17.124 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+02:04:18.935 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobManager
+02:04:18.957 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobReaper
+02:04:18.979 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobClaimer
+02:04:19.000 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - HeartbeatManager
+02:04:19.021 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - MetricsReporter
+02:04:19.110 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc skipped creating Job Claim Assignment Consumer Group since it already exists
+02:04:19.115 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobManager service
+02:04:19.118 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobReaper service
+02:04:19.118 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc Metrics are not enabled so MetricsReporter threadpool will not be instantiated
+02:04:19.121 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobClaimer service
+02:04:24.929 [main] INFO  redis-connect-manager - Started Redis Connect REST API listening on ["http-nio-8282"]
+02:04:24.930 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+02:04:24.930 [main] INFO  redis-connect-manager -
+02:04:24.930 [main] INFO  redis-connect-manager - Started Redis Connect Instance
+02:04:24.930 [main] INFO  redis-connect-manager -
+02:04:24.930 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+02:04:29.116 [JobManagerThreadpool-1] INFO  redis-connect-manager - Instance: 29@virag-cdc was successfully elected Redis Connect cluster leader
+02:04:29.119 [JobManagerThreadpool-2] INFO  redis-connect-heartbeat - Instance: 29@virag-cdc successfully refreshed Heartbeat: {connect}:cluster:leader:heartbeat with value: 29@virag-cdc to new Lease: 5000
 ```
 
 </p>
@@ -248,18 +246,58 @@ Powered by Redis Enterprise
 <br>
 
 **Or Use `curl` to create the `cdc-job` configuration** <br>
-`demo$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/cdc-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/cdc-job.json;type=application/json"`
+```bash
+demo$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/cdc-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/cdc-job.json;type=application/json"
 
+SUCCESS
+```
 -------------------------------
 
 ### Initial Loader Steps
 
 <details><summary><b>INSERT few records into emp table (source)</b></summary>
 <p>
-You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to insert load large amount of data using a csv or sql file.
+You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to load large amount of data using a csv or sql file.
 
 ```bash
-demo$ 
+demo$ docker exec -it oracle-19.3.0-ee-$(hostname)-1522 bash -c "/tmp/load_sql.sh insert1k_emp"
+
+-------------------------------
+
+SQL*Loader: Release 19.0.0.0.0 - Production on Thu May 26 02:30:57 2022
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Path used:      Conventional
+Commit point reached - logical record count 50
+Commit point reached - logical record count 100
+Commit point reached - logical record count 150
+Commit point reached - logical record count 200
+Commit point reached - logical record count 250
+Commit point reached - logical record count 300
+Commit point reached - logical record count 350
+Commit point reached - logical record count 400
+Commit point reached - logical record count 450
+Commit point reached - logical record count 500
+Commit point reached - logical record count 550
+Commit point reached - logical record count 600
+Commit point reached - logical record count 650
+Commit point reached - logical record count 700
+Commit point reached - logical record count 750
+Commit point reached - logical record count 800
+Commit point reached - logical record count 850
+Commit point reached - logical record count 900
+Commit point reached - logical record count 950
+Commit point reached - logical record count 1000
+
+Table C##RCUSER.EMP:
+  1000 Rows successfully loaded.
+
+Check the log file:
+  emp.log
+for more information about the load.
+-------------------------------
 ```
 
 </p>
@@ -270,52 +308,68 @@ demo$
 <br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
 **Or Use `curl` to start the initial load for `cdc-job`** <br>
-`demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"`
+```bash
+demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"
+
+SUCCESS - Transition has been scheduled
+```
 
 <details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EMPNO:[151 152]"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EMPNO:[1 2]"'
 1) (integer) 2
-2) "emp:151"
-3)  1) "fname"
-    2) "Virag"
-    3) "lname"
-    4) "Tripathi"
-    5) "comm"
-    6) "10.0"
-    7) "mgr"
+2) "EMP:1"
+3)  1) "COMM"
+    2) "123517.13"
+    3) "LNAME"
+    4) "McGarvie"
+    5) "FirstName"
+    6) "Chlo"
+    7) "EmployeeNumber"
     8) "1"
-    9) "empno"
-   10) "151"
-   11) "dept"
-   12) "1"
-   13) "job"
-   14) "PFE"
-   15) "hiredate"
-   16) "2018-08-06"
-   17) "sal"
-   18) "2000.0"
-4) "emp:152"
-5)  1) "fname"
-    2) "Brad"
-    3) "lname"
-    4) "Barnes"
-    5) "comm"
-    6) "10.0"
-    7) "mgr"
-    8) "1"
-    9) "empno"
-   10) "152"
-   11) "dept"
-   12) "1"
-   13) "job"
-   14) "RedisConnect-K8s-SME"
-   15) "hiredate"
-   16) "2018-08-06"
-   17) "sal"
-   18) "20000.0"
+    9) "MGR"
+   10) "19"
+   11) "HireDate"
+   12) "2016-08-05 04:07:50.0"
+   13) "DEPT"
+   14) "96"
+   15) "JOB"
+   16) "General Manager"
+   17) "SAL"
+   18) "167105.34"
+   19) "EMPNO"
+   20) "1"
+   21) "FNAME"
+   22) "Chlo"
+   23) "HIREDATE"
+   24) "2016-08-05 04:07:50.0"
+4) "EMP:2"
+5)  1) "COMM"
+    2) "165687.45"
+    3) "LNAME"
+    4) "Humm"
+    5) "FirstName"
+    6) "Alex"
+    7) "EmployeeNumber"
+    8) "2"
+    9) "MGR"
+   10) "70"
+   11) "HireDate"
+   12) "2019-08-14 04:01:21.0"
+   13) "DEPT"
+   14) "51"
+   15) "JOB"
+   16) "Assistant Media Planner"
+   17) "SAL"
+   18) "162370.71"
+   19) "EMPNO"
+   20) "2"
+   21) "FNAME"
+   22) "Alex"
+   23) "HIREDATE"
+   24) "2019-08-14 04:01:21.0"
 ```
 
 </p>
@@ -337,7 +391,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 <br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Or Use `curl` to query the `cdc-job` status** <br>
-`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"
+`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"`
 
 Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStatus":"CLAIMED","jobOwner":"30@virag-cdc","jobType":"STREAM"}]`
 
@@ -345,7 +399,22 @@ Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStat
 <p>
 
 ```bash
-demo$ 
+demo$ docker exec -it oracle-19.3.0-ee-$(hostname)-1522 bash -c "sqlplus c##rcuser/rcpwd@ORCLPDB1"
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu May 26 03:01:01 2022
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Last Successful login time: Thu May 26 2022 02:58:29 +00:00
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> insert into C##RCUSER.emp values (1001, 'Allen', 'Terleto', 'FieldCTO', 19, (TO_DATE('2018-08-05 04:07:50', 'yyyy-MM-dd HH:mi:ss')), 167105.34, 123517.13, 96);
+
+1 row created.
+
 ```
 
 </p>
@@ -355,27 +424,27 @@ demo$
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx:emp "@FNAME:allen"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@FNAME:allen"'
 1) (integer) 1
-2) "emp:1"
-3)  1) "fname"
-    2) "Allen"
-    3) "lname"
+2) "EMP:1001"
+3)  1) "COMM"
+    2) "123517.13"
+    3) "LNAME"
     4) "Terleto"
-    5) "comm"
-    6) "10.0"
-    7) "mgr"
-    8) "1"
-    9) "empno"
-   10) "1"
-   11) "dept"
-   12) "1"
-   13) "job"
+    5) "HIREDATE"
+    6) "1533442070000"
+    7) "EMPNO"
+    8) "1001"
+    9) "MGR"
+   10) "19"
+   11) "DEPT"
+   12) "96"
+   13) "JOB"
    14) "FieldCTO"
-   15) "hiredate"
-   16) "2018-08-06"
-   17) "sal"
-   18) "20000.0"
+   15) "FNAME"
+   16) "Allen"
+   17) "SAL"
+   18) "167105.34"
 ```
 
 </p>

@@ -34,9 +34,7 @@
     "tables": {
       "C##RCUSER.EMP": {
         "columns": [
-          { "targetColumn": "EmployeeNumber", "sourceColumn": "EMPNO", "primaryKey": true},
-          { "targetColumn": "FirstName", "sourceColumn": "FNAME" },
-          { "targetColumn": "HireDate", "sourceColumn": "HIREDATE", "type": "DATE"}
+          { "targetColumn": "EMPNO", "sourceColumn": "EMPNO", "primaryKey": true}
         ],
         "schemaAndTableName": "C##RCUSER.EMP",
         "passThroughEnabled": true
