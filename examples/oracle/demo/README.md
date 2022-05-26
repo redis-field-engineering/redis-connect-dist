@@ -389,7 +389,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 
 **Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
 <br>_For quick start, use '**all**' as **jobStatus**_
-<br><br><img src="/images/quick-start/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
+<br><br><img src="/images/quick-start/Redis Connect Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Or Use `curl` to query the `cdc-job` status** <br>
 `demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"`
