@@ -151,7 +151,7 @@ Powered by Redis Enterprise
 
 **Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
 <br>_For quick start, use '**cdc_job**' as **jobName**_
-<br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
+<br><br><img src="./images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
 <br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">Vertica</a>
