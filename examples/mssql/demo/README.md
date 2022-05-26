@@ -172,11 +172,11 @@ Powered by Redis Enterprise
 
 **Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
 <br>_For quick start, use '**cdc_job**' as **jobName**_
-<br><br><img src="/images/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
+<br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
 <br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>
-<br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 <br>
 
 **Or Use `curl` to create the `cdc-job` configuration** <br>
@@ -199,7 +199,7 @@ demo$ ./insert_mssql.sh
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>Use '**load**' as _**jobType**_
-<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
 **Or Use `curl` to start the initial load for `cdc-job`** <br>
 `demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"`
@@ -411,14 +411,14 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:em
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>Use '**stream**' as _**jobType**_
-<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
 **Or Use `curl` to start the stream for `cdc-job`** <br>
 `demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/stream" -H "accept: */*"`
 
 **Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
 <br>_For quick start, use '**all**' as **jobStatus**_
-<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
+<br><br><img src="/images/quick-start/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Or Use `curl` to query the `cdc-job` status** <br>
 `demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"`
