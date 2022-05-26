@@ -1,4 +1,4 @@
-<p align="center"><img src="/images/RedisConnectIntro.jpg" alt="Redis Connect" width = "650px" height = "200px" title="Redis Connect"></p>
+<p align="center"><img src="/images/icons/Redis Connect Icon.jpg" alt="Redis Connect" width = "650px" height = "200px" title="Redis Connect"></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
 changed-data events from heterogeneous data platforms to multi-model [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/) and [Redis Stack](https://redis.io/docs/stack/).
@@ -18,31 +18,31 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 <table>
     <tr>
         <td> <b>Cloud-Native Architecture</b> <br> Redis Connect has a cloud-native and shared-nothing architecture which allows any node to operate stand-alone or as a cluster member. Its platform-agnostic and lightweight design requires minimal infrastructure and avoids complex dependencies on 3rd-party platforms. All you need is Redis Enterprise.</td>
-        <td width="50%"><img src="/images/RedisConnectArchitecture.png" style="float: right;" width="500" height="250" title="Redis Connect Architecture" alt="Redis Connect Architecture"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Architecture.png" style="float: right;" width="500" height="250" title="Redis Connect Architecture" alt="Redis Connect Architecture"/></td>
     </tr>
     <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/Redis Insight.png" style="float: right;" width="500" height="200"/></td> 
+        <td width="50%"><img src="/images/capabilities/Redis Insight.png" style="float: right;" width="500" height="200"/></td> 
         <td> <b>Multi-Tenancy | Partitioning | Linear Scalability</b> <br> Redis Connect can manage multi-tenant (jobs) data replication pipelines end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster nodes.</td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the occurrence of node failure, or network split, a job would failover to another node and seamlessly begin replication from the last committed checkpoint. Data would not be lost, and order would be maintained. Redis Connect is supported on Kubernetes environments including OpenShift.</td>
-        <td width="50%"><img src="/images/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/Redis Connect Pipeline.png" style="float: right;" width="500" height="150"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Pipeline.png" style="float: right;" width="500" height="150"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. Users can configure, start, stop, migrate, and restart jobs via its built-in REST API and/or interactive CLI. Redis Connect also exposes a Swagger UI to simplify endpoint discovery and operational experience.</td>
-        <td width="50%"><img src="/images/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/Redis Enterprise ACL.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Enterprise ACL.png" style="float: right;" width="500" height="200"/></td>
         <td> <b>Enterprise-Grade Security</b> <br> Redis Connect jobs are stateless so changed-data events are always in-transit. Redis Connect benefits from Redis Enterprise’s enterprise-grade security capabilities including RBAC, TLS, and more. Credentials, secrets, and trust-store passwords are never stored within Redis Connect however can be dynamically rotated with minimal disruption to the replication pipeline. Vault integration is supported.</td>
     </tr>
 </table>
@@ -64,7 +64,7 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
 
 ### Download
 
-Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) for `Linux` or `Windows` operating system and unarchive redis-connect-`<version>.<build>`.[tar.gz|zip] archive<br>
+Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) for `Linux` or `Windows` and unarchive redis-connect-`<version>.<build>`.[tar.gz|zip] archive<br>
 Docker image can be found at [DockerHub](https://hub.docker.com/r/redislabs/redis-connect)
 
 Linux:
@@ -121,15 +121,15 @@ Windows:
 ```cmd
 redis-connect\bin> redisconnect.bat start
 ```
-<img src="/images/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
+<img src="/images/quick-start/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
 
 **Open browser to access Swagger UI -** [http://localhost:8282/swagger-ui/index.html]()
 <br>_For quick start, use '**cdc_job**' as **jobName**_
-<br><br><img src="/images/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
+<br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
 <br>_For quick start, use a sample job configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a>, <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a> and <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">VERTICA</a>
-<br><br><img src="/images/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                           |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -137,11 +137,11 @@ redis-connect\bin> redisconnect.bat start
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>_For quick start, use '**stream**' as **jobType**_
-<br><br><img src="/images/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
 **Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
 <br>_For quick start, use '**all**' as **jobStatus**_
-<br><br><img src="/images/Redis Connect Quick Start Get Claims.png" style="float: right;" width = 700px height = 250px/>
+<br><br><img src="/images/quick-start/Redis Connect Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Insert some records to the source and confirm they have arrived in Redis. Enjoy!**
 
@@ -149,12 +149,12 @@ redis-connect\bin> redisconnect.bat start
 
 <table>
     <tr>
-        <td><a href="/examples/db2/demo/README.md"><img src="/images/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/mysql/demo/README.md"><img src="/images/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/oracle/demo/README.md"><img src="/images/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/postgres/demo/README.md"><img src="/images/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/mssql/demo/README.md"><img src="/images/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td> 
-        <td><a href="/examples/vertica/demo/README.md"><img src="/images/Vertica_Icon.png" style="float: center;" width="100" height="100"/></a></td>
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td> 
+        <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="100" height="100"/></a></td>
     </tr>
 </table>
 
@@ -162,7 +162,7 @@ redis-connect\bin> redisconnect.bat start
 
 <table>
     <tr>
-        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
-        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td><a href="https://redis.com/webinars/rapid-data-ingestion-with-redis-enterprise"><img src="/images/video-tutorials/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
+        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/video-tutorials/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
     </tr>
 </table>
