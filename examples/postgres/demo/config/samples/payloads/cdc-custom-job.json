@@ -21,8 +21,7 @@
         "index": 2,
         "stageName": "REDIS_HASH_SINK",
         "checkpointStageIndicator": true,
-        "metricsEnabled" : true,
-        "metricsRetentionInHours" : 1
+        "metricsEnabled" : true
       }
     ]
   },
@@ -31,20 +30,24 @@
     "database": {
       "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
       "credentialsRotationEventListenerEnabled" : true,
-      "databaseURL": "jdbc:postgresql://127.0.0.1/RedisConnect",
+      "databaseURL": "jdbc:postgresql://redisconnect.c7glrswbovia.us-east-1.rds.amazonaws.com:5432/RedisConnect",
       "databaseType": "POSTGRES",
       "customConfiguration": {
         "database.dbname" : "RedisConnect",
-        "database.hostname" : "127.0.0.1",
-        "database.port" : 5432
+        "database.hostname" : "redisconnect.c7glrswbovia.us-east-1.rds.amazonaws.com",
+        "database.port" : 5432,
+        "heartbeat.interval.ms": 10000,
+        "heartbeat.action.query": "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;"
       }
     },
     "tables": {
       "public.emp": {
         "columns": [
-          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
-          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
+          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true }
         ],
+        "initialLoad": {
+          "partitions": 5
+        },
         "schemaAndTableName": "public.emp",
         "passThroughEnabled": true
       }

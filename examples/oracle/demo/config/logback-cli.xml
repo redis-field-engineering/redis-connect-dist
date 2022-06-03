@@ -101,6 +101,7 @@
     </logger>
     <logger name="Validator" level="OFF" additivity="false"/>
     <logger name="_org.springframework.web.servlet.HandlerMapping" level="OFF" additivity="false"/>
+    <logger name="com.redis.connect.cluster.RedisConnectSpringBootApplication" level="OFF" additivity="false"/>
     <logger name="reactor.util" level="OFF" additivity="false"/>
 
     <root>
