@@ -8,6 +8,6 @@ INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUE
 INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('8', 'Dallas', 'Young', 'MGR', '1', '2020-07-09 07:07:07', '200000', '10', '1');
 INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('9', 'Yuval', 'Shkedi', 'SA', '1', '2019-07-09 08:08:08', '200000', '10', '1');
 INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('10', 'Julien', 'Ruaux', 'PFE', '1', '2019-07-09 09:09:09', '200000', '10', '1');
-INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('11', 'Christian', 'Mague', 'PFE', '1', '2019-07-09 10:10:10', '200000', '10', '1');
-INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('12', 'Owen', 'Taylor', 'SA', '1', '2019-07-09 10:10:10', '200000', '10', '1');
+INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('11', 'Christian', 'Mague', 'PFE', '1', '2019-07-09 21:10:10', '200000', '10', '1');
+INSERT INTO emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES ('12', 'Owen', 'Taylor', 'SA', '1', '2019-07-09 14:10:10', '200000', '10', '1');
 SELECT count(*) from emp;

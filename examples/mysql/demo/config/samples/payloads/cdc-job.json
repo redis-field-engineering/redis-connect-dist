@@ -35,7 +35,7 @@
       "RedisConnect.emp": {
         "columns": [
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
-          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME" }
+          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd'T'HH:mm:ss" }
         ],
         "schemaAndTableName": "RedisConnect.emp",
         "passThroughEnabled": true

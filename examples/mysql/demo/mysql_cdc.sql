@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS emp (
     job varchar(50),
     mgr int,
     hiredate datetime,
-    sal decimal(13, 4),
-    comm decimal(13, 4),
+    sal decimal(13, 2),
+    comm decimal(13, 2),
     dept int,
     PRIMARY KEY (empno)
     )
