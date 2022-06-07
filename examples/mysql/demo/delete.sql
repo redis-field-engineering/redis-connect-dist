@@ -1,1 +1,1 @@
-delete emp where empno=4
+delete from emp where empno=4
