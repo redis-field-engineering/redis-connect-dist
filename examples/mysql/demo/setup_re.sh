@@ -62,10 +62,10 @@ echo "$timeseries_module_name"
 echo "$timeseries_semantic_version"
 echo "module."
 
-echo "Creating idx:emp index for search.."
+echo "Creating idx_emp index for search.."
 sleep 10
 sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx_emp on hash prefix 1 'emp:' schema empno numeric sortable fname text sortable lname text job tag sortable mgr numeric hiredate text sal numeric comm numeric dept numeric"
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx:emp"
+sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx_emp"
 echo "Database port mappings per node. We are using mDNS so use the IP and exposed port to connect to the databases."
 echo "node1:"
 sudo docker port re-node1 | grep -E "12000|12001"
