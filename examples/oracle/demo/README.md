@@ -319,7 +319,7 @@ SUCCESS - Transition has been scheduled
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@EMPNO:[1 2]"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx_emp "@EMPNO:[1 2]"'
 1) (integer) 2
 2) "EMP:1"
 3)  1) "COMM"
@@ -425,7 +425,7 @@ SQL> insert into C##RCUSER.emp values (1001, 'Allen', 'Terleto', 'FieldCTO', 19,
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx:emp "@FNAME:allen"'
+demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx_emp "@FNAME:allen"'
 1) (integer) 1
 2) "EMP:1001"
 3)  1) "COMM"

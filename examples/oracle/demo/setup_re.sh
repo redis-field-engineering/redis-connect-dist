@@ -2,9 +2,9 @@
 sudo docker kill re-node1;sudo docker rm re-node1;
 sudo docker kill redisinsight;sudo docker rm redisinsight;
 sudo docker kill grafana; sudo docker rm grafana;
-# Uncomment this to pull the newer version of redislabs/redis docker image in case the latest tag has been upgraded
+# shellcheck disable=SC2046
 sudo docker rmi -f $(sudo docker images | grep redislabs | awk '{print $3}')
-# Start 1 docker container sincce we can't do HA with vanilla docker instance. Use docker swarm, RE on VM's or RE's K8s operator to achieve HA, clustering etc.
+# Start 1 docker container since we can't do HA with vanilla docker instance. Use docker swarm, RE on VM's or RE's K8s operator to achieve HA, clustering etc.
 echo "Starting Redis Enterprise as Docker containers..."
 sudo docker run -d --cap-add sys_resource -h re-node1 --name re-node1 -p 18443:8443 -p 19443:9443 -p 14000-14005:12000-12005 -p 18070:8070 redislabs/redis:latest
 # Create Redis Enterprise cluster
@@ -51,22 +51,24 @@ sudo docker exec --user root -it re-node1 bash -c "sed -i "s///g" /opt/create_d
 sudo docker exec -it re-node1 bash -c "/opt/create_demodb.sh"
 echo ""
 
-echo Created RedisConnect-Target-db with
-echo $search_module_name
-echo $search_semantic_version
-echo $json_module_name
-echo $json_semantic_version
-echo Created RedisConnect-JobConfig-Metrics-db with
-echo $timeseries_module_name
-echo $timeseries_semantic_version
+echo Created Redis Target database with
+echo "$search_module_name"
+echo "$search_semantic_version"
+echo "$json_module_name"
+echo "$json_semantic_version"
+echo "modules."
+echo Created Redis JobManger dataabsde with
+echo "$timeseries_module_name"
+echo "$timeseries_semantic_version"
+echo "module."
 
-echo "Creating idx:emp index for search.."
+echo "Creating idx_emp index for search.."
 sleep 10
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx:emp on hash prefix 1 'EMP:' schema EMPNO numeric sortable FNAME text sortable LNAME text JOB tag sortable MGR numeric HIREDATE text SAL numeric COMM numeric DEPT numeric"
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx:emp"
+sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx_emp on hash prefix 1 'EMP:' schema EMPNO numeric sortable FNAME text sortable LNAME text JOB tag sortable MGR numeric HIREDATE text SAL numeric COMM numeric DEPT numeric"
+sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx_emp"
 echo "Database port mappings per node. We are using mDNS so use the IP and exposed port to connect to the databases."
 echo "node1:"
-sudo docker port re-node1 | egrep "12000|12001"
+sudo docker port re-node1 | grep -E "12000|12001"
 echo "------- RLADMIN status -------"
 sudo docker exec -it re-node1 bash -c "rladmin status"
 echo ""
@@ -86,3 +88,4 @@ sudo docker exec --user root -it re-node1 bash -c "rm /opt/list_modules.sh"
 sudo docker exec --user root -it re-node1 bash -c "rm /opt/module_list.txt"
 rm create_demodb.sh
 sudo docker exec --user root -it re-node1 bash -c "rm /opt/create_demodb.sh"
+
