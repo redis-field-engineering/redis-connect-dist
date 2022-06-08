@@ -57,7 +57,7 @@ echo "$search_semantic_version"
 echo "$json_module_name"
 echo "$json_semantic_version"
 echo "modules."
-echo Created Redis JobManger dataabsde with
+echo Created Redis JobManger database with
 echo "$timeseries_module_name"
 echo "$timeseries_semantic_version"
 echo "module."
