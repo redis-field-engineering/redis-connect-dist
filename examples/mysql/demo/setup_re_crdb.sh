@@ -66,10 +66,6 @@ sudo docker exec -it re-node1-cluster1 /opt/redislabs/bin/rladmin cluster create
 sudo docker exec -it re-node1-cluster2 /opt/redislabs/bin/rladmin cluster create name cluster2.local username demo@redis.com password redislabs
 sudo docker exec -it re-node1-cluster3 /opt/redislabs/bin/rladmin cluster create name cluster3.local username demo@redis.com password redislabs
 
-
-# Create the CRDB
-echo "Creating a CRDB"
-echo ""
 # Test the cluster
 sudo docker exec -it re-node1-cluster1 bash -c "/opt/redislabs/bin/rladmin info cluster"
 
@@ -117,7 +113,7 @@ echo "------- RLADMIN status -------"
 sleep 60
 sudo docker exec -it re-node1-cluster1 bash -c "rladmin status"
 echo ""
-sudo docker exec -it re-node1-cluster1 bash -c "crdb-cli crdb list"
+sudo docker exec -it re-node1-cluster1 bash -c "crdb-cli coordinate crdb-list"
 echo ""
 echo "You can open a browser and access Redis Enterprise Admin UI at https://127.0.0.1:8443 (replace localhost with your ip/host) with username=demo@redis.com and password=redislabs."
 echo "To connect using RedisInsight or redis-cli, please use the exposed port from the node where master shard for the database resides."
