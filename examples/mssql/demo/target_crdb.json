@@ -1,6 +1,6 @@
 {
 	"default_db_config": {
-		"name": "RedisCDC-Target-db",
+		"name": "Target",
 		"bigstore": false,
 		"replication": false,
 		"memory_size": 1024000000,
@@ -13,10 +13,9 @@
 			"regex": "(?<tag>.*)"
 		}],
 		"module_list": [{
-			"module_id": "f3f9ffbad97841b0ecb0d8175c601ebb",
 			"module_args": "PARTITIONS AUTO",
 			"module_name": "search",
-			"semantic_version": "2.0.9"
+			"semantic_version": "2.4.6"
 		}],
 		"port": 12000
 	},
@@ -51,5 +50,5 @@
 		},
 		"compression": 6
 	}],
-	"name": "RedisCDC-Target-db"
+	"name": "Target"
 }
