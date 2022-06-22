@@ -104,7 +104,38 @@ redislabs/redis-connect start
 <p>
 
 ```bash
-
+-------------------------------
+Starting redis-connect v0.9.2.4 Instance using JAVA 11.0.15 on virag-cdc started by root in /opt/redislabs/redis-connect/bin
+Loading redis-connect Instance configuration from /opt/redislabs/redis-connect/config/jobmanager.properties
+Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-connect/extlib/*
+03:59:45.190 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+  /#######                  /## /##          	  /######                                                      /##
+ | ##__  ##                | ## |__/          	 /##__  ##                                                    | ##
+ | ##  \ ##  /######   /####### /##  /#######	| ##  \__/  /######  /#######  /#######   /######   /####### /######
+ | #######/ /##__  ## /##__  ##| ## /##_____/	| ##       /##__  ##| ##__  ##| ##__  ## /##__  ## /##_____/|_  ##_/
+ | ##__  ##| ########| ##  | ##| ##|  ###### 	| ##      | ##  \ ##| ##  \ ##| ##  \ ##| ########| ##        | ##
+ | ##  \ ##| ##_____/| ##  | ##| ## \____  ##	| ##    ##| ##  | ##| ##  | ##| ##  | ##| ##_____/| ##        | ## /##
+ | ##  | ##|  #######|  #######| ## /#######/	|  ######/|  ######/| ##  | ##| ##  | ##|  #######|  #######  |  ####/
+ |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+Powered by Redis Enterprise
+03:59:50.197 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+03:59:52.100 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - JobManager
+03:59:52.122 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - JobReaper
+03:59:52.146 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - JobClaimer
+03:59:52.168 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - HeartbeatManager
+03:59:52.189 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully established Redis connection for JobManager - MetricsReporter
+03:59:52.284 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully created Job Claim Assignment Stream and Consumer Group
+03:59:52.289 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully started JobManager service
+03:59:52.291 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully started JobReaper service
+03:59:52.293 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc Metrics are not enabled so MetricsReporter threadpool will not be instantiated
+03:59:52.296 [main] INFO  redis-connect-manager - Instance: 30@virag-cdc successfully started JobClaimer service
+03:59:58.504 [main] INFO  redis-connect-manager - Started Redis Connect REST API listening on ["http-nio-8282"]
+03:59:58.505 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+03:59:58.505 [main] INFO  redis-connect-manager -
+03:59:58.505 [main] INFO  redis-connect-manager - Started Redis Connect Instance
+03:59:58.505 [main] INFO  redis-connect-manager -
+03:59:58.505 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+04:00:02.291 [JobManagerThreadpool-1] INFO  redis-connect-manager - Instance: 30@virag-cdc was successfully elected Redis Connect cluster leader
 ```
 
 </p>
@@ -115,7 +146,7 @@ redislabs/redis-connect start
 <br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
-<br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/mongodb/demo/config/samples/payloads/cdc-job.json">SQL Server</a>
+<br>_For quick start, use the sample `cdc-job.json` configuration:_ <a href="/examples/mongodb/demo/config/samples/payloads/cdc-job.json">MongoDB</a>
 <br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 <br>
 
@@ -133,16 +164,7 @@ redislabs/redis-connect start
 **Or Use `curl` to start the initial load for `cdc-job`** <br>
 `demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/load" -H "accept: */*"`
 
-<details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
-<p>
-
-```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx_emp "@empno:[1 11]"'
-
-```
-
-</p>
-</details>
+<b>Query for the above inserted record in Redis (target)</b>
 
 -------------------------------
 
@@ -167,13 +189,4 @@ Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStat
 <b>INSERT/UPDATE a document in MongoDB (source)</b>
 <p>
 
-<details><summary><b>Query for the above inserted record in Redis (target)</b></summary>
-<p>
-
-```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx_emp "@empno:[1002 1002]"'
-
-```
-
-</p>
-</details>
+<b>Query for the above inserted record in Redis (target)</b>
