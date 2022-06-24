@@ -1,7 +1,6 @@
 {
   "partitions" : 1,
   "pipeline": {
-    "pipelineBufferSize" : 1024,
     "stages" : [
       {
         "database": {
@@ -26,20 +25,22 @@
       "customConfiguration": {
         "mongodb.hosts" : "<comma-separated list of hostname and port pairs of the MongoDB servers in the replica set>",
         "database.include.list" : "sample_airbnb",
-        "collection.include.list" : "sample_airbnb.testSnapshot",
+        "collection.include.list" : "sample_airbnb.listingsAndReviews",
         "mongodb.ssl.enabled" : true,
-        "mongodb.members.auto.discover" : true
+        "mongodb.members.auto.discover" : true,
+        "partition_records_initial_load_limit" : 0
       }
     },
     "tables": {
-      "sample_airbnb.testSnapshot": {
+      "sample_airbnb.listingsAndReviews": {
         "columns": [
           { "targetColumn": "primary_key", "sourceColumn": "_id", "primaryKey": true }
         ],
         "initialLoad": {
-          "partitions": 4
+          "partitions": 4,
+          "selectQuery": "{ $match: { '_id' : { $gte : '0' } } }"
         },
-        "schemaAndTableName": "sample_airbnb.testSnapshot",
+        "schemaAndTableName": "sample_airbnb.listingsAndReviews",
         "passThroughEnabled" : true
       }
     }
