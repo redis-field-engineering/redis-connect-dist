@@ -1,8 +1,8 @@
-# redisEnterpriseVault - Redis Enterprise integrated with Hashicorp Vault to migrate data from postgresql using redis connect
+# redisEnterpriseVault - Redis Enterprise integrated with Hashicorp Vault to migrate data from postgresql using Redis Connect
 
 ## Purpose
 
-Describe steps to deploy redis-connect inside kubernetes and (optionally) Hashicorp Vault
+Describe steps to deploy Redis Connect inside kubernetes and (optionally) using Hashicorp Vault for credentials 
 
 &nbsp;
 
@@ -24,10 +24,9 @@ Describe steps to deploy redis-connect inside kubernetes and (optionally) Hashic
 &nbsp;
 
 ## Overview
-Ensure proper environment exists for running redis connect inside kubernetes and (optionally) Hashicorp Vault.  Inside this
-environment, add redis connect and configure a simple replication.
+Ensure proper environment exists for running Redis Connect inside kubernetes and (optionally) using Hashicorp Vault for credentials.  Inside this environment, add Redis Connect and configure a simple replication.
 ![Solution Diagram](../images/deployments/Postgres%20K8s%20HashiCorp%20Vault%20Deployment.png)
-Note:   Need a metadata and a target redis enterprise database connection.  These can be the same database if desired.
+Note: Need a metadata and a target redis enterprise database connection.  These can be the same database if desired.
 
 ## Important Links
 
@@ -345,7 +344,7 @@ kubectl -n redis-connect exec --stdin --tty  redis-connect-687bd546fc-44kvc -- /
 ```
   * log in to the pod and look at log files 
   * there is a debug line in redis-connect-start.yaml that keeps the pod running even if there are connection errors-this is great for debug
-  * NOTE: check the swagger UI for API commands that are easier to use than redisconnect.sh
+  * NOTE: check the swagger UI for equivalent API commands as redis-connect-cli
   * Check the file systems mounted correctly
 ```bash
 cd logs
@@ -354,7 +353,7 @@ vi *
 # login to cli
 cd ../bin
 ./redisconnect.sh cli
-> validate connection -t JDBCConnectionProvider -i RDBConnection
+redis-connect-cli> validate connection -t JDBCConnectionProvider -i RDBConnection
 exit
 df -h
 ```
