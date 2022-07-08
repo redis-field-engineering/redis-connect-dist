@@ -312,14 +312,14 @@ INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept
 INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (4, 'Jason', 'Haugland', 'SA', 1, '2021-08-06', 20000, 10, 1);
 INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (5, 'Ryan', 'Bee', 'Field Sales', 1, '2005-08-06', 20000, 10, 1);
 ```
-* Run the initial bulk load of the job ![swagger start](images/swaggerStartjob.png)
-  * Click on *POST* START Job to biring up the API interface ![API start](images/swagger-run-load.png)
+* Run the initial bulk load of the job ![swagger start](../images/deployments/swaggerStartjob.png)
+  * Click on *POST* START Job to biring up the API interface ![API start](../images/deployments/swagger-run-load.png)
   * click on *Try It Out*
   * Enter the jobname of *postgres-job*
   * Enter the jobtype of *load*
 * Test the results
-* Run the stream load ![swagger start](images/swaggerStartjob.png)
-  * Click on *POST* START Job to bring up the API interface ![API start](images/swagger-run-load.png)
+* Run the stream load ![swagger start](../images/deployments/swaggerStartjob.png)
+  * Click on *POST* START Job to bring up the API interface ![API start](../images/deployments/swagger-run-load.png)
 ```bash
 INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (111, 'Simon', 'Prickett', 'Tech Advocate', 1, '2016-08-06', 20000, 10, 1);
 INSERT INTO public.emp (empno, fname, lname, job, mgr, hiredate, sal, comm, dept) VALUES (112, 'Doug', 'Snyder','Territory Manager', 1, '2021-08-06', 20000, 10, 1);
