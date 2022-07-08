@@ -1,0 +1,42 @@
+{
+  "partitions" : 1,
+  "pipeline": {
+    "stages": [
+      {
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "databaseURL": "redis://redis-enterprise-database.demo.svc:17932",
+          "databaseType": "REDIS"
+        },
+        "index": 1,
+        "stageName": "REDIS_HASH_SINK",
+        "checkpointStageIndicator": true,
+        "metricsEnabled" : true,
+        "metricsRetentionInHours" : 1
+      }
+    ]
+  },
+  "source": {
+    "batchSize": 1000,
+    "database": {
+      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "databaseURL": "jdbc:postgresql://mypostgres.postgres.svc:5432/RedisConnect",
+      "databaseType": "POSTGRES",
+    "customConfiguration": {
+        "database.dbname" : "RedisConnect",
+        "database.hostname" : "mypostgres.postgres.svc",
+        "database.port" : 5432
+      }
+    },
+    "tables": {
+      "public.emp": {
+        "columns": [
+          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
+          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
+        ],
+        "schemaAndTableName": "public.emp",
+        "passThroughEnabled": true
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-connect # deployment name
+  labels:
+    app: redis-connect # deployment label
+
+spec:
+  replicas: 1 # replicas for HA
+  selector:
+    matchLabels:
+      app: redis-connect # which pods is the deployment managing, as defined by the pod template
+  template: # pod template
+    metadata:
+      labels:
+        app: redis-connect 
+    spec:
+      serviceAccountName: redis-connect
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - redis-connect # must match Deployment:metadata:labels:app
+            topologyKey: "kubernetes.io/hostname"    
+      containers:
+      - name:  redis-connect # Container name 
+        image: redislabs/redis-connect:latest
+        # The following `command` can be leveraged for troubleshooting
+        command: ["/bin/bash", "-c", "echo $REDISCONNECT_JAVA_OPTIONS; /opt/redislabs/redis-connect/bin/redisconnect.sh start; while true; do sleep 30; done;"]
+        # command: ["/opt/redislabs/redis-connect/bin/redisconnect.sh", "start"]
+        imagePullPolicy: Always # IfNotPresent # Always pull image
+        resources:
+          limits:
+            cpu: "4000m"
+            memory: "2048Mi"
+          requests:
+            cpu: "500m"
+            memory: "256Mi"
+        ports:  
+        - containerPort: 8282 # exposed container port to the REST API 
+          protocol: TCP
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/redislabs/redis-connect/config  # must match env:REDISCONNECT_CONFIG in this file.
+        - name: credential-volume
+          mountPath: /opt/redislabs/redis-connect/config/samples/credentials 
+      volumes:
+      - name: config-volume
+        configMap:
+          name: redis-connect-config
+          items:
+          - key: jobmanager.properties
+            path: jobmanager.properties
+      - name: credential-volume
+        configMap:
+          name: redis-connect-config
+          items:
+          - key: redisconnect_credentials_jobmanager.properties
+            path: redisconnect_credentials_jobmanager.properties
+          - key: redisconnect_credentials_redis_postgres-job.properties
+            path: redisconnect_credentials_redis_postgres-job.properties
+          - key: redisconnect_credentials_postgresql_postgres-job.properties
+            path: redisconnect_credentials_postgresql_postgres-job.properties
+# #### uncomment the following six lines if you have custom
+#  transformation implementation and replace the jar with
+#  your own.
+# ####
+      #- name: custom-stage-volume
+      #  configMap:
+      #    name: redis-connect-custom-stage
+      #    items:  # define as many custom stages as you have here
+      #    - key: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      #      path: redis-connect-custom-stage-demo-1.0-SNAPSHOT.jar
+      # - name: tmpfsdir
+      #   emptyDir:  # node-ephemeral volume
+      #     medium: Memory
+      # - name: redis-connect-pv
+      #   persistentVolumeClaim:
+      #     claimName: redis-connect-pvc                 
+---
+# RedisConnect service with name 'redis-connect-api-service'
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-connect-api-service       # name should not be 'redis-connect' 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8282
+  selector:
+    app: redis-connect-api-service

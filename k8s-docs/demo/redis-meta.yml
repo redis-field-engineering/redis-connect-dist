@@ -1,0 +1,17 @@
+apiVersion: app.redislabs.com/v1alpha1
+kind: RedisEnterpriseDatabase
+metadata:
+  name: redis-meta
+spec:
+  memorySize: 500MB
+  persistence: "snapshotEvery1Hour"
+  rolesPermissions:
+  - type: redis-enterprise
+    role: "DB Member"
+    acl: "Full Access"
+  - type: redis-enterprise
+    role: "Admin"
+    acl: "Full Access"
+  modulesList: 
+  - name: timeseries
+    version: 1.6.9
