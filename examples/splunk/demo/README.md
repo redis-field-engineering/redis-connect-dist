@@ -1,5 +1,5 @@
 # Demo Outline
-:white_check_mark: Setup and start Vertica database (Source)<br>
+:white_check_mark: Setup and start Splunk Enterprise (Source)<br>
 :white_check_mark: Setup and start Redis Enterprise database (Target)<br>
 :white_check_mark: Setup and start Redis Connect<br>
 :white_check_mark: Perform Initial load with Redis Connect<br>
