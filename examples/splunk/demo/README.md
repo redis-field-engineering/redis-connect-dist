@@ -32,7 +32,7 @@ README.md  config  extlib  setup_re.sh  setup_splunk.sh
 ## Setup Splunk Enterprise (Source)
 <br>Execute [setup_splunk.sh](setup_splunk.sh)</br>
 ```bash
-demo$ ./setup_splunk.sh latest 5433
+demo$ ./setup_splunk.sh
 ```
 
 ## Setup Redis Enterprise cluster, databases and RedisInsight in docker (Target)
