@@ -16,7 +16,6 @@ mkdir -p redis-connect/demo && \
 mkdir -p redis-connect/k8s-docs && \
 unzip main.zip "redis-connect-dist-main/examples/splunk/*" -d redis-connect && \
 cp -R redis-connect/redis-connect-dist-main/examples/splunk/demo/* redis-connect/demo && \
-cp -R redis-connect/redis-connect-dist-main/examples/splunk/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
 chmod a+x demo/*.sh && \
