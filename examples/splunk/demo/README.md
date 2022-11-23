@@ -163,4 +163,20 @@ Powered by Redis Enterprise
 **Or Use `curl` to create the `cdc-job` configuration** <br>
 `demo$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/cdc-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/cdc-job.json;type=application/json"`
 
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>Use '**stream**' as _**jobType**_
+<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+
+**Or Use `curl` to start the stream for `cdc-job`** <br>
+`demo$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/cdc-job/stream" -H "accept: */*"`
+
+**Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
+<br>_For quick start, use '**all**' as **jobStatus**_
+<br><br><img src="/images/quick-start/Redis Connect Get Claims.png" style="float: right;" width = 700px height = 250px/>
+
+**Or Use `curl` to query the `cdc-job` status** <br>
+`demo$ curl -X GET "http://localhost:8282/connect/api/v1/cluster/jobs/claim/all" -H "accept: */*"`
+
+Expected output: `[JobClaim { jobId={connect}:job:cdc-job, jobName=cdc-job, jobStatus=CLAIMED, jobOwner=29@virag-cdc, jobType=STREAM }]`
+
 -------------------------------
