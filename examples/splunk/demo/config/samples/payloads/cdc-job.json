@@ -1,0 +1,65 @@
+{
+  "partitions" : 1,
+  "pipeline": {
+    "stages" : [
+      {
+        "index": 1,
+        "stageName": "FORWARD_HEC_REQUEST",
+        "userDefinedType": "CUSTOM",
+        "database": {
+          "databaseType": "NONE",
+          "customConfiguration": {
+            "splunk.destination.url" : "http://localhost:8088/services/collector/event/1.0"
+          }
+        }
+      },
+      {
+        "index" : 2,
+        "stageName": "REDIS_STREAMS_SINK",
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "credentialsRotationEventListenerEnabled" : false,
+          "databaseURL": "redis://127.0.0.1:14000",
+          "databaseType": "REDIS",
+          "customConfiguration": {
+            "redis.streams.passthrough.key.only.enabled": true
+          }
+        }
+      },
+      {
+        "index" : 3,
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "credentialsRotationEventListenerEnabled" : false,
+          "databaseURL": "redis://127.0.0.1:14000",
+          "databaseType": "REDIS"
+        },
+        "stageName": "REDIS_JSON_SINK",
+        "checkpointStageIndicator": true
+      }
+    ]
+  },
+  "source": {
+    "database": {
+      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "databaseType": "SPLUNK",
+      "customConfiguration": {
+        "server.port": 8088,
+        "event.metadata.time.key": "time",
+        "passthrough.http.headers.enabled": true
+      }
+    },
+    "tables": {
+      "hec_collector": {
+        "columns": [
+          { "primaryKey": true, "sourceColumn": "sourcetype", "targetColumn": "sourcetype", "type": "STRING" },
+          { "primaryKey": true, "sourceColumn": "time", "targetColumn": "time", "type": "INTEGER" },
+          { "primaryKey": true, "sourceColumn": "sequenceId", "targetColumn": "sequenceId", "type": "LONG", "passThroughEnabled": false }
+        ],
+        "schemaAndTableName": "hec_collector",
+        "passThroughEnabled": true,
+        "prependTableNameToKeysEnabled": false
+      }
+    }
+  }
+}
