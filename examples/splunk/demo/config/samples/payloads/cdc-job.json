@@ -9,7 +9,7 @@
         "database": {
           "databaseType": "NONE",
           "customConfiguration": {
-            "splunk.destination.url" : "http://localhost:8088/services/collector/event/1.0"
+            "splunk.destination.url" : "http://localhost:18088/services/collector/event/1.0"
           }
         }
       },
