@@ -7,15 +7,15 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
 
 ## End-to-End Dockerized Demos
 
-<table>
-    <tr style="background-color:#ffffff">
+<table bgcolor="white">
+    <tr>
         <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td>
     </tr>
-    <tr style="background-color:#ffffff">
+    <tr>
         <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><img src="/images/icons/Geode Icon.png" style="float: center;" width="100" height="100"/></td>
         <td><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100"/></td>
@@ -46,7 +46,7 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the occurrence of node failure, or network split, a job would failover to another node and seamlessly begin replication from the last committed checkpoint. Data would not be lost, and order would be maintained. Redis Connect is supported on Kubernetes environments including OpenShift.</td>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><div style="margin: 0 auto; width: 500"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></div></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
