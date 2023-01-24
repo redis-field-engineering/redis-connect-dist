@@ -1,19 +1,37 @@
 <p align="center"><img src="/images/icons/Redis Connect Icon.jpg" alt="Redis Connect" width = "650px" height = "200px" title="Redis Connect"></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
-changed-data events from heterogeneous data platforms to multi-model [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/) and [Redis Stack](https://redis.io/docs/stack/).
+changed-data events from heterogeneous data platforms to [Redis Stack](https://redis.io/docs/stack/), [Redis Cloud](https://redis.com/redis-enterprise-cloud/overview/), and [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/).
 <br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
-<p align="center"><img src="/images/Redis Connect Source Sink.png" alt="Redis Connect Source and Sinks" width = 750px height = 375px" title="Redis Connect Source and Sinks"></p>
+
+## End-to-End Dockerized Demos
+
+<table>
+    <tr>
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="125" height="100"/></a></td>
+    </tr>
+    <tr>
+        <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><img src="/images/icons/Geode Icon.png" style="float: center;" width="125" height="100"/></td>
+        <td><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="125" height="100"/></td>
+        <td><img src="/images/icons/CSV Icon.png" style="float: center;" width="125" height="100"/></td>
+        <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="125" height="100"/></a></td>
+    </tr>
+</table>
+
 
 # Table of Contents
-* [Core Capabilities](#core-capabilities)
+* [Background](#background)
 * [Requirements](#requirements)
 * [Quick Start](#quick-start)
-* [End-to-End Dockerized Demos](#end-to-end-dockerized-demos)
 * [Video Tutorials](#video-tutorials)
 
-## Core Capabilities
+## Background
 
 <table>
     <tr>
@@ -23,7 +41,7 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
     <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
         <td width="50%"><img src="/images/capabilities/Redis Insight.png" style="float: right;" width="500" height="200"/></td> 
-        <td> <b>Multi-Tenancy | Partitioning | Linear Scalability</b> <br> Redis Connect can manage multi-tenant (jobs) data replication pipelines end-to-end within a single cluster node. Jobs support a variety of different source databases which can be collocated without becoming noisy neighbors. Streaming and initial load jobs can be partitioned for linear scalability across a single or multiple cluster nodes.</td>
+        <td> <b>Multi-Tenancy | Partitioning | Linear Scalability</b> <br> Redis Connect can manage multi-tenant (jobs) data replication pipelines end-to-end within a single cluster node. Jobs with different source types can be collocated without becoming noisy neighbors. Streaming and Initial Load jobs can be partitioned for linear scalability across a single or multiple cluster nodes.</td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
@@ -32,7 +50,7 @@ changed-data events from heterogeneous data platforms to multi-model [Redis Ente
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Pipeline.png" style="float: right;" width="500" height="150"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Pipeline.jpg" style="float: right;" width="500" height="150"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
@@ -144,20 +162,6 @@ redis-connect\bin> redisconnect.bat start
 <br><br><img src="/images/quick-start/Redis Connect Get Claims.png" style="float: right;" width = 700px height = 250px/>
 
 **Insert some records to the source and confirm they have arrived in Redis. Enjoy!**
-
-## End-to-End Dockerized Demos
-
-<table>
-    <tr>
-        <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="125" height="100"/></a></td>
-    </tr>
-</table>
 
 ## Video Tutorials
 
