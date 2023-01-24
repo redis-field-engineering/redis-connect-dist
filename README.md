@@ -52,7 +52,7 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" style="float: none;" width="350" height="150"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" style="float: none;" width="250" height="150"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
