@@ -7,29 +7,29 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
 
 ## End-to-End Dockerized Demos
 
-<table>
+<table style="background-color:#ffffff">
     <tr>
-        <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td>
+        <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td>
+        <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td>
+        <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td>
+        <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td>
     </tr>
     <tr>
-        <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="125" height="100"/></a></td>
-        <td><img src="/images/icons/Geode Icon.png" style="float: center;" width="125" height="100"/></td>
-        <td><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="125" height="100"/></td>
-        <td><img src="/images/icons/CSV Icon.png" style="float: center;" width="125" height="100"/></td>
-        <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="125" height="100"/></a></td>
+        <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="100" height="100"/></a></td>
+        <td><img src="/images/icons/Geode Icon.png" style="float: center;" width="100" height="100"/></td>
+        <td><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100"/></td>
+        <td><img src="/images/icons/CSV Icon.png" style="float: center;" width="100" height="100"/></td>
+        <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="100" height="100"/></a></td>
     </tr>
 </table>
 
 
 # Table of Contents
 * [Background](#background)
-* [Requirements](#requirements)
 * [Quick Start](#quick-start)
 * [Video Tutorials](#video-tutorials)
+* [Requirements](#requirements)
 
 ## Background
 
@@ -50,7 +50,7 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Pipeline.jpg" style="float: right;" width="500" height="150"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Pipeline.jpg" style="float: right;" width="250" height="150"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
@@ -64,41 +64,6 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
         <td> <b>Enterprise-Grade Security</b> <br> Redis Connect jobs are stateless so changed-data events are always in-transit. Redis Connect benefits from Redis Enterprise’s enterprise-grade security capabilities including RBAC, TLS, and more. Credentials, secrets, and trust-store passwords are never stored within Redis Connect however can be dynamically rotated with minimal disruption to the replication pipeline. Vault integration is supported.</td>
     </tr>
 </table>
-
-## Requirements
-
-### Minimum Production Hardware Requirements
-
-* 1GB of RAM
-* 4 CPU cores
-* 20GB of disk space
-* 1G Network
-
-### Runtime Requirements
-
-* JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
-
-## Quick Start
-
-### Download
-
-Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) for `Linux` or `Windows` and unarchive redis-connect-`<version>.<build>`.[tar.gz|zip] archive<br>
-Docker image can be found at [DockerHub](https://hub.docker.com/r/redislabs/redis-connect)
-
-Linux:
-```bash
-tar vxf <tarfile name>
-```
-Windows:
-```cmd
-unzip <zipfile name>
-```
-
-The following subdirectories will be extracted under /redis-connect -
-<br>bin – Startup scripts
-<br>lib – Dependencies
-<br>config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
-<br>extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
 
 ### Getting Started
 
@@ -171,3 +136,38 @@ redis-connect\bin> redisconnect.bat start
         <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/video-tutorials/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
     </tr>
 </table>
+
+## Requirements
+
+### Minimum Production Hardware Requirements
+
+* 1GB of RAM
+* 4 CPU cores
+* 20GB of disk space
+* 1G Network
+
+### Runtime Requirements
+
+* JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
+
+## Quick Start
+
+### Download
+
+Download [latest release](https://github.com/redis-field-engineering/redis-connect-dist/releases) for `Linux` or `Windows` and unarchive redis-connect-`<version>.<build>`.[tar.gz|zip] archive<br>
+Docker image can be found at [DockerHub](https://hub.docker.com/r/redislabs/redis-connect)
+
+Linux:
+```bash
+tar vxf <tarfile name>
+```
+Windows:
+```cmd
+unzip <zipfile name>
+```
+
+The following subdirectories will be extracted under /redis-connect -
+<br>bin – Startup scripts
+<br>lib – Dependencies
+<br>config – Credentials property files, jobmanager.properties, and job-config (JSON) examples
+<br>extlib – Custom/External dependencies e.g. [custom stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-demo), source-database drivers, etc.
