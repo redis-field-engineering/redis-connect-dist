@@ -48,11 +48,11 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the occurrence of node failure, or network split, a job would failover to another node and seamlessly begin replication from the last committed checkpoint. Data would not be lost, and order would be maintained. Redis Connect is supported on Kubernetes environments including OpenShift.</td>
-        <td width="50%"><div style="margin: 0 auto; width: 500"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></div></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" style="float: center;" width="250" height="150"/></td>
+        <td width="50%"><div style="margin: 0 auto; width: 250"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" width="250" height="150"/></div></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
