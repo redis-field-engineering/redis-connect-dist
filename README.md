@@ -7,15 +7,15 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
 
 ## End-to-End Dockerized Demos
 
-<table style="background-color:#ffffff">
-    <tr>
+<table>
+    <tr style="background-color:#ffffff">
         <td><a href="/examples/db2/demo/README.md"><img src="/images/icons/DB2 Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/mysql/demo/README.md"><img src="/images/icons/MySQL Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/oracle/demo/README.md"><img src="/images/icons/Oracle Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/postgres/demo/README.md"><img src="/images/icons/Postgres Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><a href="/examples/mssql/demo/README.md"><img src="/images/icons/SQL Server Icon.png" style="float: center;" width="100" height="100"/></a></td>
     </tr>
-    <tr>
+    <tr style="background-color:#ffffff">
         <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="100" height="100"/></a></td>
         <td><img src="/images/icons/Geode Icon.png" style="float: center;" width="100" height="100"/></td>
         <td><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100"/></td>
@@ -50,7 +50,7 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Pipeline.jpg" style="float: right;" width="250" height="150"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" style="float: center;" width="250" height="150"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect Jobs support user-defined business logic simply by adding a JAR to the /extlib directory. Users can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. Users can also extend the supported list of Target Sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
