@@ -136,7 +136,7 @@ redis-connect\bin> redisconnect.bat
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                  |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentials.file.path` and `redis.connection.url` within `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
+| Update `credentials.file.path` and `redis.connection.url` in `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
 
 ### Starting an instance
 
@@ -163,7 +163,7 @@ The Redis Connect Swagger UI is available on port 8282 by default. If you're run
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                           |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable  |
+| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable.  |
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>_For quick start, use '**stream**' as **jobType**_
