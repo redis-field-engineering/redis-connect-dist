@@ -1,4 +1,4 @@
-<p align="center"><img src="/images/icons/Redis Connect Banner.png" alt="Redis Connect" width = "650px" height = "200px" title="Redis Connect"></p>
+<p align="center"><img src="/images/icons/Redis Connect Banner.png" alt="Redis Connect" width = "100%" title="Redis Connect"></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
 changed-data events from heterogeneous data platforms to [Redis Stack](https://redis.io/docs/stack/), [Redis Cloud](https://redis.com/redis-enterprise-cloud/overview/), and [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/).
