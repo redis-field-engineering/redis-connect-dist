@@ -9,7 +9,7 @@
           "databaseType": "REDIS",
           "customConfiguration": {
             "redis.connection.sslEnabled": false,
-            "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+            "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
           }
         },
         "index": 1,
@@ -22,23 +22,24 @@
   "source": {
     "database": {
       "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
-      "databaseURL": "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect",
+      "databaseURL": "jdbc:sqlserver://127.0.0.1:1433;database=RedisConnect;encrypt=false",
       "databaseType": "SQL_SERVER",
       "customConfiguration": {
-        "database.dbname" : "RedisConnect",
+        "database.names": "RedisConnect",
         "database.hostname" : "127.0.0.1",
-        "database.port" : 1433
+        "database.port" : 1433,
+        "database.encrypt": false
       }
     },
     "tables": {
       "dbo.emp": {
         "columns": [
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
-          { "targetColumn": "sal", "sourceColumn": "sal", "type": "DECIMAL" },
-          { "targetColumn": "comm", "sourceColumn": "comm", "type": "DECIMAL" },
-          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd HH:mm:ss.SS" }
+          { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME" }
         ],
-        "schemaAndTableName": "dbo.emp",
+        "initialLoad": {
+          "partitions": 4
+        },
         "passThroughEnabled": true
       }
     }
