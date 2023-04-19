@@ -9,7 +9,7 @@
           "databaseType": "REDIS",
           "customConfiguration": {
             "redis.connection.sslEnabled": false,
-            "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+            "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
           }
         },
         "index": 1,
@@ -35,12 +35,8 @@
       "C##RCUSER.EMP": {
         "columns": [
           { "targetColumn": "EMPNO", "sourceColumn": "EMPNO", "primaryKey": true},
-          { "targetColumn": "HIREDATE", "sourceColumn": "HIREDATE", "type": "DATE_TIME" }
+          { "targetColumn": "HIREDATE", "sourceColumn": "HIREDATE", "type": "DATE"}
         ],
-        "initialLoad": {
-          "partitions": 2
-        },
-        "schemaAndTableName": "C##RCUSER.EMP",
         "passThroughEnabled": true
       }
     }
