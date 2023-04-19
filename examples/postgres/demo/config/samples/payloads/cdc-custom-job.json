@@ -46,9 +46,8 @@
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true }
         ],
         "initialLoad": {
-          "partitions": 5
+          "partitions": 4
         },
-        "schemaAndTableName": "public.emp",
         "passThroughEnabled": true
       }
     }

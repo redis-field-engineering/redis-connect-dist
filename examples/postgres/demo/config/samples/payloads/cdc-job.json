@@ -9,14 +9,13 @@
           "databaseType": "REDIS",
           "customConfiguration": {
             "redis.connection.sslEnabled": false,
-            "redis.truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+            "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
           }
         },
         "index": 1,
         "stageName": "REDIS_HASH_SINK",
         "checkpointStageIndicator": true,
-        "metricsEnabled" : true,
-        "metricsRetentionInHours" : 1
+        "metricsEnabled" : true
       }
     ]
   },
@@ -38,7 +37,6 @@
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
         ],
-        "schemaAndTableName": "public.emp",
         "passThroughEnabled": true
       }
     }
