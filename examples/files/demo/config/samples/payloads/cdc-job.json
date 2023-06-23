@@ -1,0 +1,42 @@
+{
+  "partitions" : 1,
+  "pipeline": {
+    "stages" : [
+      {
+        "index" : 1,
+        "database": {
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "credentialsRotationEventListenerEnabled" : false,
+          "databaseURL": "redis://127.0.0.1:14000",
+          "databaseType": "REDIS"
+        },
+        "stageName": "REDIS_HASH_SINK",
+        "checkpointStageIndicator": true
+      }
+    ]
+  },
+  "source": {
+    "database": {
+      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "databaseType": "FILES",
+      "customConfiguration": {
+        "type" : "CSV",
+        "source.absolute.path" : "https://raw.githubusercontent.com/redis-field-engineering/redis-connect-dist/main/examples/files/demo/emp.csv",
+        "column.range" : "1,10",
+        "includes.header" : false,
+        "initial.offset" : 1
+      }
+    },
+    "tables": {
+      "emp": {
+        "columns": [
+          { "primaryKey": true, "sourceColumn": "empno", "targetColumn": "empno" }
+        ],
+        "initialLoad": {
+          "partitions": 4
+        },
+        "passThroughEnabled": true
+      }
+    }
+  }
+}

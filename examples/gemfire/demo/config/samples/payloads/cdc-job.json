@@ -5,12 +5,12 @@
     "stages": [
       {
         "database": {
-          "credentialsFilePath" : "src/test/resources/config/samples/credentials",
+          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
           "databaseURL": "redis://127.0.0.1:14000",
           "databaseType": "REDIS",
           "customConfiguration": {
             "redis.connection.sslEnabled": false,
-            "truststore": "src/test/resources/config/samples/credentials/client-truststore.jks"
+            "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
           }
         },
         "index": 1,

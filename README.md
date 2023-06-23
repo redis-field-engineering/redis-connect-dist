@@ -20,8 +20,8 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     <tr>
         <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect MongoDB demo"/></a></td>
         <td><a href="/examples/gemfire/demo/README.md"><img src="/images/icons/Geode Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Gemfire/Apache Geode demo"/></a></td>
-        <td><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Splunk HEC demo"/></td>
-        <td><img src="/images/icons/CSV Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Files demo"/></td>
+        <td><a href="/examples/splunk/demo/README.md"><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Splunk HEC demo"/></a>></td>
+        <td><a href="/examples/files/demo/README.md"><img src="/images/icons/CSV Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Files demo"/></a>></td>
         <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Vertica demo"/></a></td>
     </tr>
 </table>
@@ -158,7 +158,7 @@ The Redis Connect Swagger UI is available on port 8282 by default. If you're run
 <br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
-<br>_For quick start, use a sample job configuration:_ <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>, <a href="/examples/gemfire/demo/config/samples/payloads/cdc-job.json">Gemfire</a>, <a href="/examples/mongodb/demo/config/samples/payloads/cdc-job.json">MongoDB</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a> and <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">VERTICA</a>
+<br>_For quick start, use a sample job configuration:_ <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>, <a href="/examples/files/demo/config/samples/payloads/cdc-job.json">Files</a>, <a href="/examples/gemfire/demo/config/samples/payloads/cdc-job.json">Gemfire</a>, <a href="/examples/mongodb/demo/config/samples/payloads/cdc-job.json">MongoDB</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a> and <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">VERTICA</a>
 <br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
 | Prerequisite Configuration :exclamation:                                                                                                                                                                           |
