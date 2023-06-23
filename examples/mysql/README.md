@@ -34,7 +34,7 @@ start: init Redis Connect Instance
 redis-connect-postgres/bin$ ./redisconnect.sh start
 ```
 
-| ℹ️                                          |
-|:--------------------------------------------|
-| Docker demo: Follow the [Docker demo](demo) |
-| K8s Setup: Follow the [k8s-docs](k8s-docs)  |
+| ℹ️                                               |
+|:-------------------------------------------------|
+| Docker demo: Follow the [Docker demo](demo)      |
+| K8s Setup: Follow the [k8s-docs](../../k8s-docs) |
