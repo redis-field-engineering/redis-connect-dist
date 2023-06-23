@@ -22,7 +22,7 @@ cd demo
 ```
 
 ## Setup Gemfire database (Source)
-<b>_PostgreSQL on Docker_</b>
+<b>_Apache Geode on Docker_</b>
 <br>Execute [setup_gemfire.sh](setup_gemfire.sh)</br>
 ```bash
 demo$ ./setup_gemfire.sh
@@ -32,10 +32,10 @@ demo$ ./setup_gemfire.sh
 <p>
 
 ```bash
-demo$ sudo docker ps -a | grep gemfire
+demo$ docker ps -a | grep gemfire
 beb0205a037f   apachegeode/geode:1.12.9   "sh -c /geode/script…"   4 hours ago   Up 4 hours   0.0.0.0:1099->1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:8080->8080/tcp, 0.0.0.0:10334->10334/tcp, 0.0.0.0:40404->40404/tcp                                                                              gemfire-1.12.9-virag-WPG6PH3FV5
 
-demo$ sudo docker exec -it gemfire-1.12.9-$(hostname) sh -c "gfsh version"
+demo$ docker exec -it gemfire-1.12.9-$(hostname) sh -c "gfsh version"
 1.12.9  
 ```
 </p>
@@ -56,7 +56,7 @@ The above script will create a 1-node Redis Enterprise cluster in a docker conta
 <p>
 
 ```bash
-demo$ docker run \
+docker run \
 -it --rm --privileged=true \
 --name redis-connect-$(hostname) \
 -v $(pwd)/config:/opt/redislabs/redis-connect/config \
@@ -118,6 +118,42 @@ redislabs/redis-connect start
 <p>
 
 ```bash
+-------------------------------
+Starting redis-connect v0.10.1.5 Instance using JAVA 11.0.19 on docker-desktop started by root in /opt/redislabs/redis-connect/bin
+Loading redis-connect Instance configuration from /opt/redislabs/redis-connect/config/jobmanager.properties
+Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-connect/extlib/*
+Check redis-connect-manager-<PID>.log for cluster-level information, redis-connect-heartbeat-<PID>.log for heartbeat-lease renewals, and redis-connect-<PID>.log for the job-level information
+07:11:09.184 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+  /#######                  /## /##          	  /######                                                      /##
+ | ##__  ##                | ## |__/          	 /##__  ##                                                    | ##
+ | ##  \ ##  /######   /####### /##  /#######	| ##  \__/  /######  /#######  /#######   /######   /####### /######
+ | #######/ /##__  ## /##__  ##| ## /##_____/	| ##       /##__  ##| ##__  ##| ##__  ## /##__  ## /##_____/|_  ##_/
+ | ##__  ##| ########| ##  | ##| ##|  ###### 	| ##      | ##  \ ##| ##  \ ##| ##  \ ##| ########| ##        | ##
+ | ##  \ ##| ##_____/| ##  | ##| ## \____  ##	| ##    ##| ##  | ##| ##  | ##| ##  | ##| ##_____/| ##        | ## /##
+ | ##  | ##|  #######|  #######| ## /#######/	|  ######/|  ######/| ##  | ##| ##  | ##|  #######|  #######  |  ####/
+ |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/   v0.10.1
+Powered by Redis Enterprise
+07:11:14.190 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+07:11:14.930 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: JobManager
+07:11:14.934 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: JobReaper
+07:11:14.939 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: JobClaimer
+07:11:14.943 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: JobOrchestrator
+07:11:14.947 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: HeartbeatManager
+07:11:14.949 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: MetricsReporter
+07:11:14.951 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: CredentialsRotationEventListener
+07:11:14.953 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully established Redis connection with ClientId: JobManager ConnectionId: ChangeEventQueue
+07:11:14.986 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully created Job Claim Assignment Stream and Consumer Group
+07:11:14.988 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully started JobManager service
+07:11:14.988 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully started JobReaper service
+07:11:14.989 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop successfully started JobClaimer service
+07:11:14.990 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop Metrics are not enabled so MetricsReporter threadpool will not be instantiated
+07:11:16.630 [main] INFO  redis-connect-manager - Instance: 30@docker-desktop started Redis Connect REST API listening on ["http-nio-8282"]
+07:11:16.630 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+07:11:16.630 [main] INFO  redis-connect-manager -
+07:11:16.630 [main] INFO  redis-connect-manager - Started Redis Connect Instance v0.10.1
+07:11:16.630 [main] INFO  redis-connect-manager -
+07:11:16.630 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+07:11:24.997 [JOB_MANAGER_THREADPOOL-2] INFO  redis-connect-manager - Instance: 30@docker-desktop was successfully elected Redis Connect cluster leader
 ```
 
 </p>
@@ -139,14 +175,113 @@ redislabs/redis-connect start
 
 ### Initial Loader Steps
 
-<details><summary><b>INSERT few records into postgres table (source)</b></summary>
+<details><summary><b>INSERT few records into Gemfire region (source)</b></summary>
 <p>
-You can also use <a href="https://github.com/redis-field-engineering/redis-connect-crud-loader#redis-connect-crud-loader">redis-connect-crud-loader</a> to insert load large amount of data using a csv or sql file.
 
 ```bash
 demo$ ./load.sh
 
+Inserting records in session region..
 
+(1) Executing - connect --locator localhost[10334]
+
+Connecting to Locator at [host=localhost, port=10334] ..
+Connecting to Manager at [host=beb0205a037f, port=1099] ..
+Successfully connected to: [host=beb0205a037f, port=1099]
+
+You are connected to a cluster of version: 1.12.9
+
+
+(2) Executing - put --key=(Key1) --value=(Value1) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key1}
+Value Class : java.lang.String
+Old Value   : "{UpdatedValue1}"
+
+
+(3) Executing - put --key=(Key2) --value=(Value2) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key2}
+Value Class : java.lang.String
+Old Value   : "{UpdatedValue2}"
+
+
+(4) Executing - put --key=(Key3) --value=(Value3) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key3}
+Value Class : java.lang.String
+Old Value   : "{Value3}"
+
+
+(5) Executing - put --key=(Key4) --value=(Value4) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key4}
+Value Class : java.lang.String
+Old Value   : "{Value4}"
+
+
+(6) Executing - put --key=(Key5) --value=(Value5) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key5}
+Value Class : java.lang.String
+Old Value   : "{Value5}"
+
+
+(7) Executing - put --key=(Key6) --value=(Value6) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key6}
+Value Class : java.lang.String
+Old Value   : "{Value6}"
+
+
+(8) Executing - put --key=(Key7) --value=(Value7) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key7}
+Value Class : java.lang.String
+Old Value   : null
+
+
+(9) Executing - put --key=(Key8) --value=(Value8) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key8}
+Value Class : java.lang.String
+Old Value   : "{Value8}"
+
+
+(10) Executing - put --key=(Key9) --value=(Value9) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key9}
+Value Class : java.lang.String
+Old Value   : null
+
+
+(11) Executing - put --key=(Key10) --value=(Value10) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key10}
+Value Class : java.lang.String
+Old Value   : "{Value10}"
+
+done
 ```
 
 </p>
@@ -189,13 +324,32 @@ demo$
 
 Expected output: `[{"jobId":"{connect}:job:cdc-job","jobName":"cdc-job","jobStatus":"CLAIMED","jobOwner":"30@virag-cdc","jobType":"STREAM"}]`
 
-<details><summary><b>INSERT a record into postgres table (source)</b></summary>
+<details><summary><b>INSERT a record into Gemfire region (source)</b></summary>
 <p>
 
 ```bash
 demo$ ./insert.sh
 
+Inserting records in session region..
 
+(1) Executing - connect --locator localhost[10334]
+
+Connecting to Locator at [host=localhost, port=10334] ..
+Connecting to Manager at [host=beb0205a037f, port=1099] ..
+Successfully connected to: [host=beb0205a037f, port=1099]
+
+You are connected to a cluster of version: 1.12.9
+
+
+(2) Executing - put --key=(Key11) --value=(Value11) --region=/session
+
+Result      : true
+Key Class   : java.lang.String
+Key         : {Key11}
+Value Class : java.lang.String
+Old Value   : "{Value11}"
+
+done
 ```
 
 </p>
@@ -205,7 +359,7 @@ demo$ ./insert.sh
 <p>
 
 ```bash
-demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 idx_emp "@fname:allen"'
+demo$ 
 
 ```
 
