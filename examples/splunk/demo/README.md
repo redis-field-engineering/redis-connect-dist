@@ -13,7 +13,6 @@ i.e.</br>
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect/demo && \
-mkdir -p redis-connect/k8s-docs && \
 unzip main.zip "redis-connect-dist-main/examples/splunk/*" -d redis-connect && \
 cp -R redis-connect/redis-connect-dist-main/examples/splunk/demo/* redis-connect/demo && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \

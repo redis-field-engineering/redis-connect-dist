@@ -15,10 +15,8 @@ i.e.</p>
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect/demo && \
-mkdir -p redis-connect/k8s-docs && \
 unzip main.zip "redis-connect-dist-main/examples/oracle/*" -d redis-connect && \
 cp -R redis-connect/redis-connect-dist-main/examples/oracle/demo/* redis-connect/demo && \
-cp -R redis-connect/redis-connect-dist-main/examples/oracle/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
 chmod a+x demo/*.sh && \

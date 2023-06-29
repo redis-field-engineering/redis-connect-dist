@@ -13,10 +13,8 @@ i.e.</br>
 ```bash
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect/demo && \
-mkdir -p redis-connect/k8s-docs && \
 unzip main.zip "redis-connect-dist-main/examples/mongodb/*" -d redis-connect && \
 cp -R redis-connect/redis-connect-dist-main/examples/mongodb/demo/* redis-connect/demo && \
-cp -R redis-connect/redis-connect-dist-main/examples/mongodb/k8s-docs/* redis-connect/k8s-docs && \
 rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
 chmod a+x demo/*.sh && \
@@ -24,6 +22,12 @@ cd demo
 ```
 
 ## Setup MongoDB database (Source)
+<b>_MongoDB on Docker_</b>
+<br>Execute [setup_mongodb.sh](setup_mongodb.sh)</br>
+```bash
+demo$ ./setup_mongodb.sh
+```
+<b>_MongoDB in Cloud_</b>
 
 https://www.mongodb.com/atlas/database
 
