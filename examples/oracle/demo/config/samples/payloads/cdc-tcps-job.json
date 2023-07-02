@@ -22,13 +22,13 @@
   "source": {
     "database": {
       "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
-      "databaseURL": "jdbc:oracle:thin:@172.17.0.1:1521/ORCLPDB1",
+      "databaseURL": "jdbc:oracle:thin:@(DESCRIPTION= (ADDRESS= (PROTOCOL=TCPS)(PORT=2484)(HOST=172.17.0.1)) (CONNECT_DATA=(SERVICE_NAME=ORCLPDB1)) (SECURITY=(ssl_server_cert_dn=\"CN=localhost\")))",
       "databaseType": "ORACLE",
       "customConfiguration": {
         "database.dbname" : "ORCLCDB",
-        "database.hostname" : "172.17.0.1",
-        "database.port" : 1521,
-        "database.pdb.name": "ORCLPDB1"
+        "database.url" : "jdbc:oracle:thin:@(DESCRIPTION= (ADDRESS= (PROTOCOL=TCPS)(PORT=2484)(HOST=172.17.0.1)) (CONNECT_DATA=(SERVICE_NAME=ORCLPDB1)) (SECURITY=(ssl_server_cert_dn=\"CN=localhost\")))",
+        "database.pdb.name": "ORCLPDB1",
+        "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/OracleTrustStore.jks"
       }
     },
     "tables": {
