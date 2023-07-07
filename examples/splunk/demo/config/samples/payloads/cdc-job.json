@@ -56,7 +56,6 @@
           { "primaryKey": true, "sourceColumn": "time", "targetColumn": "time", "type": "INTEGER" },
           { "primaryKey": true, "sourceColumn": "sequenceId", "targetColumn": "sequenceId", "type": "LONG", "passThroughEnabled": false }
         ],
-        "schemaAndTableName": "hec_collector",
         "passThroughEnabled": true,
         "prependTableNameToKeysEnabled": false
       }

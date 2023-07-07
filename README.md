@@ -50,27 +50,27 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     </tr>
     <tr><td height="20" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Insight.png" style="float: right;" width="500" height="200"/></td> 
+        <td width="50%"><img src="/images/capabilities/Redis Insight.png" style="float: right;" width="500" height="200" alt="Redis Insight"/></td> 
         <td> <b>Multi-Tenancy | Partitioning | Linear Scalability</b> <br> Redis Connect manages multi-tenant replication pipelines. A pipeline from source to sink is known as a job. Jobs with different source types can be collocated without becoming noisy neighbors. Jobs can be partitioned for linear scalability across one or more cluster nodes.</td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>High-Availability | Recovery</b> <br> Redis Connect jobs update their checkpoint upon each committed changed-data event within a transactional scope. In the event of a node failure or network split, in-flight jobs will fail over to another node and seamlessly begin replication from the last committed checkpoint. Data is not lost, and order is preserved. Redis Connect works in container orchestration environments such as Kubernetes and OpenShift.</td>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Cluster.png" style="float: right;" width="500" height="200" alt="Redis Connect Cluster"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" style="float: none;" width="500" height="150"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Custom Transformer.jpg" style="float: none;" width="500" height="150" alt="Redis Connect Custom Transformation"/></td>
         <td> <b>Custom Transformations</b> <br> Redis Connect jobs support user-defined business logic. You can create custom workflows that include user-defined stages for proprietary business rules, custom transformations, de-tokenization, and more. You can also extend the supported list of target sinks.</td> 
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. You can configure, start, stop, migrate, and restart jobs using the built-in REST API and interactive CLI. Redis Connect also exposes a Swagger UI to simplify endpoint discovery and operational experience.</td>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200" alt="Redis Connect Swagger UI"/></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
-        <td width="50%"><img src="/images/capabilities/Redis Enterprise ACL.png" style="float: right;" width="500" height="200"/></td>
+        <td width="50%"><img src="/images/capabilities/Redis Enterprise ACL.png" style="float: right;" width="500" height="200" alt="Redis Enterprise ACL"/></td>
         <td> <b>Enterprise-Grade Security</b> <br> Redis Connect jobs are stateless, so changed-data events are always in-transit. Redis Connect benefits from Redis Enterprise’s security, including RBAC, TLS, and more. Credentials, secrets, and trust-store passwords are never stored in Redis Connect; these secrets can be dynamically rotated with minimal disruption to the replication pipeline. Vault integration is supported.</td>
     </tr>
 </table>
@@ -134,9 +134,9 @@ start: init Redis Connect Instance (Cluster Member)
 redis-connect\bin> redisconnect.bat
 ```
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                  |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentials.file.path` and `redis.connection.url` in `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>  |
+| Prerequisite Configuration :exclamation:                                                                                                                                                                |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentials.file.path` and `redis.connection.url` in `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>    |
 
 ### Starting an instance
 
@@ -148,7 +148,7 @@ Windows:
 ```cmd
 redis-connect\bin> redisconnect.bat start
 ```
-<img src="/images/quick-start/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px/>
+<img src="/images/quick-start/Redis Connect Start Log.png" style="float: right;" width = 700px height = 250px alt="Redis Connect Start Log"/>
 
 ### Swagger UI
 
@@ -161,9 +161,9 @@ The Redis Connect Swagger UI is available on port 8282 by default. If you're run
 <br>_For quick start, use a sample job configuration:_ <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>, <a href="/examples/files/demo/config/samples/payloads/cdc-job.json">Files</a>, <a href="/examples/gemfire/demo/config/samples/payloads/cdc-job.json">Gemfire</a>, <a href="/examples/mongodb/demo/config/samples/payloads/cdc-job.json">MongoDB</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a> and <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">VERTICA</a>
 <br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                           |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentialsFilePath`, `databaseURL`, `database.dbname`, `database.hostname`, `database.port`, `schemaAndTableName`, and `columns` within sample job configuration for source and target, where applicable.  |
+| Prerequisite Configuration :exclamation:                                                                                                                                                                                      |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentialsFilePath`, `databaseURL`, `database.dbname` (`database.names` for SQL Server), `database.hostname`, `database.port` and `columns` within sample job configuration for source and target, where applicable. |
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>_For quick start, use '**stream**' as **jobType**_

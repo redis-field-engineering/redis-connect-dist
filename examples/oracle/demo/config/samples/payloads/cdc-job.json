@@ -15,7 +15,7 @@
         "index": 1,
         "stageName": "REDIS_HASH_SINK",
         "checkpointStageIndicator": true,
-        "metricsEnabled" : true
+        "metricsEnabled": true
       }
     ]
   },
@@ -25,9 +25,9 @@
       "databaseURL": "jdbc:oracle:thin:@172.17.0.1:1521/ORCLPDB1",
       "databaseType": "ORACLE",
       "customConfiguration": {
-        "database.dbname" : "ORCLCDB",
+        "database.dbname": "ORCLCDB",
         "database.hostname" : "172.17.0.1",
-        "database.port" : 1521,
+        "database.port": 1521,
         "database.pdb.name": "ORCLPDB1"
       }
     },
@@ -37,6 +37,9 @@
           { "targetColumn": "EMPNO", "sourceColumn": "EMPNO", "primaryKey": true},
           { "targetColumn": "HIREDATE", "sourceColumn": "HIREDATE", "type": "DATE"}
         ],
+        "initialLoad": {
+          "partitions": 4
+        },
         "passThroughEnabled": true
       }
     }

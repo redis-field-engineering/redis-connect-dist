@@ -36,7 +36,9 @@
           { "targetColumn": "FirstName", "sourceColumn": "FNAME" },
           { "targetColumn": "HireDate", "sourceColumn": "HIREDATE", "type": "DATE" }
         ],
-        "schemaAndTableName": "DB2INST1.EMP",
+        "initialLoad": {
+          "partitions": 4
+        },
         "passThroughEnabled": true
       }
     }

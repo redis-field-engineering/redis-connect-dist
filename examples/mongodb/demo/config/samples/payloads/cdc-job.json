@@ -40,7 +40,6 @@
           "partitions": 4,
           "selectQuery": "{ $match: { '_id' : { $gte : '0' } } }"
         },
-        "schemaAndTableName": "sample_airbnb.listingsAndReviews",
         "passThroughEnabled" : true
       }
     }

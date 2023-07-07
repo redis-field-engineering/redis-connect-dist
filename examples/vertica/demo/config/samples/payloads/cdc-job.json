@@ -38,7 +38,6 @@
           "partitions": 2,
           "selectQuery": "SELECT * FROM (SELECT ALIAS.*, ROW_NUMBER() OVER (ORDER BY employee_key) RowIndex FROM public.employee_dimension ALIAS) ALIAS WHERE ALIAS.RowIndex >= ${start} AND ALIAS.RowIndex <= ${end}"
         },
-        "schemaAndTableName": "public.employee_dimension",
         "passThroughEnabled": true
       },
       "public.customer_dimension": {
@@ -49,7 +48,6 @@
           "partitions": 2,
           "selectQuery": "SELECT * FROM (SELECT ALIAS.*, ROW_NUMBER() OVER (ORDER BY customer_key) RowIndex FROM public.customer_dimension ALIAS) ALIAS WHERE ALIAS.RowIndex >= ${start} AND ALIAS.RowIndex <= ${end}"
         },
-        "schemaAndTableName": "public.customer_dimension",
         "passThroughEnabled": true
       }
     }

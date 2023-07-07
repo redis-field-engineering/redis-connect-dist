@@ -15,20 +15,19 @@
         "index": 1,
         "stageName": "REDIS_HASH_SINK",
         "checkpointStageIndicator": true,
-        "metricsEnabled" : true
+        "metricsEnabled": true
       }
     ]
   },
   "source": {
-    "batchSize": 1000,
     "database": {
       "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
       "databaseURL": "jdbc:postgresql://127.0.0.1/RedisConnect",
       "databaseType": "POSTGRES",
       "customConfiguration": {
-        "database.dbname" : "RedisConnect",
-        "database.hostname" : "127.0.0.1",
-        "database.port" : 5432
+        "database.dbname": "RedisConnect",
+        "database.hostname": "127.0.0.1",
+        "database.port": 5432
       }
     },
     "tables": {
@@ -37,6 +36,9 @@
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
         ],
+        "initialLoad": {
+          "partitions": 4
+        },
         "passThroughEnabled": true
       }
     }

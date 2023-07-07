@@ -21,21 +21,20 @@
         "index": 2,
         "stageName": "REDIS_HASH_SINK",
         "checkpointStageIndicator": true,
-        "metricsEnabled" : true
+        "metricsEnabled": true
       }
     ]
   },
   "source": {
-    "batchSize": 1000,
     "database": {
       "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
       "credentialsRotationEventListenerEnabled" : true,
       "databaseURL": "jdbc:postgresql://redisconnect.c7glrswbovia.us-east-1.rds.amazonaws.com:5432/RedisConnect",
       "databaseType": "POSTGRES",
       "customConfiguration": {
-        "database.dbname" : "RedisConnect",
-        "database.hostname" : "redisconnect.c7glrswbovia.us-east-1.rds.amazonaws.com",
-        "database.port" : 5432,
+        "database.dbname": "RedisConnect",
+        "database.hostname": "redisconnect.c7glrswbovia.us-east-1.rds.amazonaws.com",
+        "database.port": 5432,
         "heartbeat.interval.ms": 10000,
         "heartbeat.action.query": "INSERT INTO heartbeat (id, ts) VALUES (1, NOW()) ON CONFLICT(id) DO UPDATE SET ts=EXCLUDED.ts;"
       }

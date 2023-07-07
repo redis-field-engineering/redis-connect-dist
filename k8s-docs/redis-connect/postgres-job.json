@@ -34,7 +34,9 @@
           { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
         ],
-        "schemaAndTableName": "public.emp",
+        "initialLoad": {
+          "partitions": 4
+        },
         "passThroughEnabled": true
       }
     }
