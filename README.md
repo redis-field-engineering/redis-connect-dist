@@ -66,7 +66,7 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
         <td> <b>REST API | CLI | Swagger UI</b> <br> Redis Connect is entirely data-driven and relies on Redis Enterprise as its metadata store. You can configure, start, stop, migrate, and restart jobs using the built-in REST API and interactive CLI. Redis Connect also exposes a Swagger UI to simplify endpoint discovery and operational experience.</td>
-        <td width="50%"><img src="/images/capabilities/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200" alt="Redis Connect Swagger UI"/></td>
+        <td width="50%"><a href="https://redis-field-engineering.github.io/redis-connect-api-docs"><img src="/images/capabilities/Redis Connect Swagger UI.png" style="float: right;" width="500" height="200" alt="Redis Connect Swagger UI"></a></td>
     </tr>
     <tr><td bgcolor="#FFFFFF" colspan="2">&nbsp;</td></tr>
     <tr>
@@ -152,7 +152,7 @@ redis-connect\bin> redisconnect.bat start
 
 ### Swagger UI
 
-The Redis Connect Swagger UI is available on port 8282 by default. If you're running locally, you can point your browser to [http://localhost:8282/swagger-ui/index.html]()
+The [Redis Connect Swagger UI](https://redis-field-engineering.github.io/redis-connect-api-docs) is available on port 8282 by default. If you're running locally, you can point your browser to [http://localhost:8282/swagger-ui/index.html]()
 
 <br>_For quick start, use '**cdc_job**' as **jobName**_
 <br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
