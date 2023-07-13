@@ -3,6 +3,8 @@
 :white_check_mark: Setup and start Redis Enterprise database (Target)<br>
 :white_check_mark: Setup and start Redis Connect<br>
 :white_check_mark: Perform Initial load and CDC with Redis Connect<br>
+:white_check_mark: Setup Grafana dashboard for Redis Connect metrics<br>
+
 
 # Prerequisites
 
@@ -448,3 +450,24 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx_em
 
 </p>
 </details>
+
+-------------------------------
+
+### Dashboard
+
+#### Prerequisites
+1. Redis Connect cluster timeseries metrics should be [enabled](../demo/config/jobmanager.properties#L9).
+2. Redis Connect job metrics should be enabled [enabled](../demo/config/samples/payloads/cdc-custom-job.json#L23).
+
+###### Standalone Grafana
+Use your existing Grafana install and add [redis-datasource](https://redisgrafana.github.io/redis-datasource/overview/) plugin.
+1. Configure two Redis data sources, one with JobManager and another one with Target name using [redis-datasource](https://redisgrafana.github.io/redis-datasource/overview/) plugin.
+2. Import [Sample Redis Connect Dashboard](../demo/config/samples/dashboard/redis-connnnect-dashboard.json)
+3. Validate and fix dashboard variables if they don't load properly 
+
+###### Containerized Grafana
+If you used the demo script to set up Redis Enterprise in a docker container then, a containerized Grafana with [redis-datasource](https://redisgrafana.github.io/redis-datasource/overview/) plugin should already be installed and running.
+
+1. Open Grafana UI by going to http://localhost:13000 and login with `redisconnect/Redis@123` credentials.
+2. Import [Sample Redis Connect Dashboard](../demo/config/samples/dashboard/redis-connnnect-dashboard.json)
+3. Validate and fix dashboard variables if they don't load properly 

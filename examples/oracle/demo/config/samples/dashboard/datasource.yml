@@ -3,7 +3,7 @@ apiVersion: 1
 datasources:
   - name: JobManager
     type: redis-datasource
-    url: redis://<REDIS_DB_ENDPOINT>:<REDIS_DB_PORT>
+    url: redis://host.docker.internal:14001
     jsonData:
       client: standalone
       poolSize: 5
@@ -11,17 +11,17 @@ datasources:
       pingInterval: 0
       pipelineWindow: 0
       acl: true
-      user: <REDIS_DB_USERNAME>
+      user: redisconnect
     editable: true
     secureJsonData:
-      password: <REDIS_DB_PASSWORD>
+      password: Redis123
     access: proxy
     orgId: 1
     isDefault: false
     version: 1
   - name: Target
     type: redis-datasource
-    url: redis://<REDIS_DB_ENDPOINT>:<REDIS_DB_PORT>
+    url: redis://host.docker.internal:14000
     jsonData:
       client: standalone
       poolSize: 5
@@ -29,10 +29,10 @@ datasources:
       pingInterval: 0
       pipelineWindow: 0
       acl: true
-      user: <REDIS_DB_USERNAME>
+      user: redisconnect
     editable: true
     secureJsonData:
-      password: <REDIS_DB_PASSWORD>
+      password: Redis123
     access: proxy
     orgId: 1
     isDefault: false

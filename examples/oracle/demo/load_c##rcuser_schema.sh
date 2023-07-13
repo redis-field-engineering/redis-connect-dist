@@ -11,8 +11,8 @@ sqlplus c##rcuser/rcpwd@ORCLPDB1 <<- EOF
   job		varchar2(40),
   mgr		number(4,0),
   hiredate	date,
-  sal		number(10,4),
-  comm		number(10,4),
+  sal		number(10,2),
+  comm		number(10,2),
   dept		number(4,0),
   constraint pk_emp primary key (empno)
   );

@@ -1,91 +1,137 @@
 #!/bin/bash
-sudo docker kill re-node1;sudo docker rm re-node1;
-sudo docker kill redisinsight;sudo docker rm redisinsight;
-sudo docker kill grafana; sudo docker rm grafana;
-# shellcheck disable=SC2046
-sudo docker rmi -f $(sudo docker images | grep redislabs | awk '{print $3}')
-# Start 1 docker container since we can't do HA with vanilla docker instance. Use docker swarm, RE on VM's or RE's K8s operator to achieve HA, clustering etc.
+
+version="${1:-latest}"
+platform="${2:-linux/amd64}"
+
+container_name="re-node1-$version-$(hostname)"
+
+# Start 1 docker container since we can't do HA with vanilla docker instance. Use docker swarm, RE on VM's or RE K8s operator to achieve HA, clustering etc.
+
 echo "Starting Redis Enterprise as Docker containers..."
-sudo docker run -d --cap-add sys_resource -h re-node1 --name re-node1 -p 18443:8443 -p 19443:9443 -p 14000-14005:12000-12005 -p 18070:8070 redislabs/redis:latest
+IS_RUNNING=$(docker ps --filter name="${container_name}" --format '{{.ID}}')
+if [ -n "${IS_RUNNING}" ]; then
+    echo "${container_name} is running. Stopping ${container_name} and removing container..."
+    docker container stop "${container_name}"
+    docker container rm "${container_name}"
+    docker container stop grafana
+    docker container rm grafana
+    docker network rm redis-connect
+else
+    IS_STOPPED=$(docker ps -a --filter name="${container_name}" --format '{{.ID}}')
+    if [ -n "${IS_STOPPED}" ]; then
+        echo "${container_name} is stopped. Removing container..."
+        docker container rm "${container_name}"
+        docker container rm grafana
+        docker network rm redis-connect
+    fi
+fi
+
+docker network create -d bridge redis-connect
+
+docker run -d \
+  --init \
+  --platform "${platform}" \
+  --cap-add sys_resource \
+  --name "${container_name}" \
+  --network=redis-connect \
+	-h "${container_name}" \
+	-p 18443:8443 \
+	-p 19443:9443 \
+	-p 14000-14001:12000-12001 \
+	-p 18070:8070 \
+	redislabs/redis:"${version}"
+
+while ! nc -vz localhost 18443 < /dev/null
+do
+  echo "$(date) - still trying"
+  sleep 2
+done
+echo "$(date) - connected to admin ui port successfully"
+
+while ! nc -vz localhost 19443 < /dev/null
+do
+  echo "$(date) - still trying"
+  sleep 2
+done
+echo "$(date) - connected to rest api port successfully"
+
+while ! nc -vz localhost 18070 < /dev/null
+do
+  echo "$(date) - still trying"
+  sleep 2
+done
+echo "$(date) - connected to metrics exporter port successfully"
+
 # Create Redis Enterprise cluster
 echo "Waiting for the servers to start..."
 sleep 60
 echo "Creating Redis Enterprise cluster..."
-sudo docker exec -it --privileged re-node1 "/opt/redislabs/bin/rladmin" cluster create name re-cluster.local username demo@redis.com password redislabs
-echo ""
-# Test the cluster
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/rladmin info cluster"
+
+while [[ "$(curl -o ./cluster -w ''%{http_code}'' -X POST -H 'Content-Type:application/json' -d '{"action":"create_cluster","cluster":{"name":"re-cluster.local"},"node":{"paths":{"persistent_path":"/var/opt/redislabs/persist","ephemeral_path":"/var/opt/redislabs/tmp"}},"credentials":{"username":"demo@redis.com","password":"redislabs"}}' -k https://localhost:19443/v1/bootstrap/create_cluster)" != "200" ]]; do sleep 5; done
+echo "Cluster.." && cat ./cluster
+
+# Test the cluster. cluster info and nodes
+while [[ "$(curl -o ./bootstrap -w ''%{http_code}'' -u demo@redis.com:redislabs -k https://localhost:19443/v1/bootstrap)" != "200" ]]; do sleep 5; done
+echo "Bootstrap.." && cat ./bootstrap
+while [[ "$(curl -o ./nodes -w ''%{http_code}'' -u demo@redis.com:redislabs -k https://localhost:19443/v1/nodes)" != "200" ]]; do sleep 5; done
+echo "Nodes.." && cat ./nodes
 
 # Get the module info to be used for database creation
-tee -a list_modules.sh <<EOF
-curl -s -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-Type: application/json" -X GET https://localhost:9443/v1/modules | python -c 'import sys, json; modules = json.load(sys.stdin);
-modulelist = open("./module_list.txt", "a")
-for i in modules:
-     lines = i["display_name"], " ", i["module_name"], " ", i["uid"], " ", i["semantic_version"], "\n"
-     modulelist.writelines(lines)
-modulelist.close()'
-EOF
+while [[ "$(curl -o ./modules -w ''%{http_code}'' -u demo@redis.com:redislabs -k https://localhost:19443/v1/modules)" != "200" ]]; do sleep 5; done
+echo "Modules.." && cat ./modules
 
-sudo docker cp list_modules.sh re-node1:/opt/list_modules.sh
-sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/list_modules.sh"
-sudo docker exec --user root -it re-node1 bash -c "/opt/list_modules.sh"
+json_module_name=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 json | cut -d '"' -f 4 | head -1)
+json_semantic_version=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 json | cut -d '"' -f 4 | tail -1)
+search_module_name=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 search | cut -d '"' -f 4 | head -1)
+search_semantic_version=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 search | cut -d '"' -f 4 | tail -1)
+timeseries_module_name=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 timeseries | cut -d '"' -f 4 | head -1)
+timeseries_semantic_version=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 timeseries | cut -d '"' -f 4 | tail -1)
 
-json_module_name=$(sudo docker exec --user root -it re-node1 bash -c "grep -i json /opt/module_list.txt | cut -d ' ' -f 2")
-json_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c "grep -i json /opt/module_list.txt | cut -d ' ' -f 4")
-search_module_name=$(sudo docker exec --user root -it re-node1 bash -c "grep -i search /opt/module_list.txt | cut -d ' ' -f 3")
-search_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c "grep -i search /opt/module_list.txt | cut -d ' ' -f 5")
-timeseries_module_name=$(sudo docker exec --user root -it re-node1 bash -c "grep -i timeseries /opt/module_list.txt | cut -d ' ' -f 2")
-timeseries_semantic_version=$(sudo docker exec --user root -it re-node1 bash -c "grep -i timeseries /opt/module_list.txt | cut -d ' ' -f 4")
+while [[ "$(curl -o ./acl -w ''%{http_code}'' -u demo@redis.com:redislabs -X POST -H "Content-Type: application/json" -d "{\"email\": \"redisconnect@redis.com\",\"password\": \"Redis123\",\"name\": \"redisconnect\",\"email_alerts\": false,\"role\": \"db_member\"}" -k https://localhost:19443/v1/users)" != "200" ]]; do sleep 5; done
+echo "ACL.." && cat ./acl
 
 echo "Creating databases..."
-tee -a create_demodb.sh <<EOF
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "Target", "port": 12000, "memory_size": 1000000000, "type" : "redis", "replication": false, "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "$search_module_name", "semantic_version": "$search_semantic_version"}, {"module_args": "", "module_name": "$json_module_name", "semantic_version": "$json_semantic_version"} ] }' https://localhost:9443/v1/bdbs
-curl -v -k -L -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "JobManager", "type":"redis", "replication": false, "memory_size":1000000000, "port":12001, "module_list": [{"module_args": "", "module_name": "$timeseries_module_name", "semantic_version": "$timeseries_semantic_version"} ] }' https://localhost:9443/v1/bdbs
-EOF
+echo Creating Redis Target database with "${search_module_name}" version "${search_semantic_version}" and "${json_module_name}" version "${json_semantic_version}"
+while [[ "$(curl -o ./Target -w ''%{http_code}'' -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{ "name": "Target", "port": 12000, "memory_size": 500000000, "type" : "redis", "replication": false, "default_user": true, "authentication_redis_pass": "Redis123", "roles_permissions": [{"role_uid": 4, "redis_acl_uid": 1}], "module_list": [ {"module_args": "PARTITIONS AUTO", "module_name": "'"$search_module_name"'", "semantic_version": "'"$search_semantic_version"'"}, {"module_args": "", "module_name": "'"$json_module_name"'", "semantic_version": "'"$json_semantic_version"'"} ] }' -k https://localhost:19443/v1/bdbs)" != "200" ]]; do sleep 5; done
+echo "Database Target.." && cat ./Target
 
-sleep 20
-
-sudo docker cp create_demodb.sh re-node1:/opt/create_demodb.sh
-sudo docker exec --user root -it re-node1 bash -c "chmod 777 /opt/create_demodb.sh"
-sudo docker exec --user root -it re-node1 bash -c "sed -i "s///g" /opt/create_demodb.sh"
-sudo docker exec -it re-node1 bash -c "/opt/create_demodb.sh"
-echo ""
-
-echo Created Redis Target database with
-echo "$search_module_name"
-echo "$search_semantic_version"
-echo "$json_module_name"
-echo "$json_semantic_version"
-echo "modules."
-echo Created Redis JobManger database with
-echo "$timeseries_module_name"
-echo "$timeseries_semantic_version"
-echo "module."
+echo Creating Redis JobManager database with "${timeseries_module_name}" version "${timeseries_semantic_version}"
+while [[ "$(curl -o ./JobManager -w ''%{http_code}'' -u demo@redis.com:redislabs --location-trusted -H "Content-type:application/json" -d '{"name": "JobManager", "type":"redis", "replication": false, "memory_size": 250000000, "port": 12001, "default_user": true, "authentication_redis_pass": "Redis123", "roles_permissions": [{"role_uid": 4, "redis_acl_uid": 1}], "module_list": [{"module_args": "", "module_name": "'"$timeseries_module_name"'", "semantic_version": "'"$timeseries_semantic_version"'"} ] }' -k https://localhost:19443/v1/bdbs)" != "200" ]]; do sleep 5; done
+echo "Database JobManager.." && cat ./JobManager
 
 echo "Creating idx_emp index for search.."
-sleep 10
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx_emp on hash prefix 1 'EMP:' schema EMPNO numeric sortable FNAME text sortable LNAME text JOB tag sortable MGR numeric HIREDATE text SAL numeric COMM numeric DEPT numeric"
-sudo docker exec -it re-node1 bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx_emp"
+docker exec -it "${container_name}" bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.create idx_emp on hash prefix 1 'EMP:' schema EMPNO numeric sortable FNAME text sortable LNAME text JOB tag sortable MGR numeric HIREDATE text SAL numeric COMM numeric DEPT numeric"
+docker exec -it "${container_name}" bash -c "/opt/redislabs/bin/redis-cli -p 12000 ft.info idx_emp"
+
 echo "Database port mappings per node. We are using mDNS so use the IP and exposed port to connect to the databases."
 echo "node1:"
-sudo docker port re-node1 | grep -E "12000|12001"
+docker port "${container_name}" | grep -E "12000|12001"
+
+# Enable bdb name
+docker exec -it "${container_name}" bash -c "/opt/redislabs/bin/ccs-cli hset cluster_settings metrics_exporter_expose_bdb_name enabled"
+docker exec -it "${container_name}" bash -c "/opt/redislabs/bin/supervisorctl restart metrics_exporter"
+
 echo "------- RLADMIN status -------"
-sudo docker exec -it re-node1 bash -c "rladmin status"
+docker exec "${container_name}" bash -c "rladmin status"
+echo ""
+echo "Creating Grafana with redis-datasource in docker container.."
+docker run -d \
+ -p 13000:3000 \
+ --name=grafana \
+ --network=redis-connect \
+ -e "GF_INSTALL_PLUGINS=redis-datasource" \
+ -e "GF_SECURITY_ADMIN_USER=redisconnect" \
+ -e "GF_SECURITY_ADMIN_PASSWORD=Redis@123" \
+ -e "GF_PATHS_PROVISIONING=/etc/grafana/provisioning" \
+ -v $(pwd)/config/samples/dashboard/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml \
+ -v $(pwd)/config/samples/dashboard/redis-connnnect-dashboard.json:/etc/grafana/provisioning/dashboards/redis-connnnect-dashboard.json \
+ grafana/grafana
+sleep 10
 echo ""
 echo "You can open a browser and access Redis Enterprise Admin UI at https://127.0.0.1:18443 (replace localhost with your ip/host) with username=demo@redis.com and password=redislabs."
-echo "To connect using RedisInsight or redis-cli, please use the exposed port from the node where master shard for the database resides."
-echo "Creating RedisInsight in docker container.."
-sudo docker run -d --name redisinsight -p 18001:8001 -v redisinsight:/db redislabs/redisinsight:latest
-echo "Creating Grafana with redis-datasource in docker container.."
-sudo docker run -d -p 3000:3000 --name=grafana -e "GF_INSTALL_PLUGINS=redis-datasource" grafana/grafana
-echo "You can open a browser and access RedisInsight client UI at http://127.0.0.1:18001 (replace localhost with your ip/host) and add databases to monitor."
-echo "Please visit, https://docs.redis.com/latest/ri/using-redisinsight/add-instance/ for steps to add these databases to RedisInsight."
-echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redis.com/latest/rs/getting-started/getting-started-docker"
+echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redis.com/latest/rs/installing-upgrading/quickstarts/docker-quickstart/"
 
 # Cleanup
-rm list_modules.sh
-sudo docker exec --user root -it re-node1 bash -c "rm /opt/list_modules.sh"
-sudo docker exec --user root -it re-node1 bash -c "rm /opt/module_list.txt"
-rm create_demodb.sh
-sudo docker exec --user root -it re-node1 bash -c "rm /opt/create_demodb.sh"
+rm bootstrap nodes cluster modules acl Target JobManager
 
+echo "🏄 Done!"
