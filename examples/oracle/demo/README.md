@@ -200,10 +200,11 @@ redislabs/redis-connect start
 
 ```bash
 -------------------------------
-Starting redis-connect v0.9.1.4 Instance using JAVA 11.0.15 on virag-cdc started by root in /opt/redislabs/redis-connect/bin
+Starting redis-connect v0.10.1.5 Instance using JAVA 11.0.19 on redis-connect started by root in /opt/redislabs/redis-connect/bin
 Loading redis-connect Instance configuration from /opt/redislabs/redis-connect/config/jobmanager.properties
 Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-connect/extlib/*
-02:04:12.114 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+Check redis-connect-manager-<PID>.log for cluster-level information, redis-connect-heartbeat-<PID>.log for heartbeat-lease renewals, and redis-connect-<PID>.log for the job-level information
+06:32:33.750 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
   /#######                  /## /##          	  /######                                                      /##
  | ##__  ##                | ## |__/          	 /##__  ##                                                    | ##
  | ##  \ ##  /######   /####### /##  /#######	| ##  \__/  /######  /#######  /#######   /######   /####### /######
@@ -211,27 +212,29 @@ Instance classpath /opt/redislabs/redis-connect/lib/*:/opt/redislabs/redis-conne
  | ##__  ##| ########| ##  | ##| ##|  ###### 	| ##      | ##  \ ##| ##  \ ##| ##  \ ##| ########| ##        | ##
  | ##  \ ##| ##_____/| ##  | ##| ## \____  ##	| ##    ##| ##  | ##| ##  | ##| ##  | ##| ##_____/| ##        | ## /##
  | ##  | ##|  #######|  #######| ## /#######/	|  ######/|  ######/| ##  | ##| ##  | ##|  #######|  #######  |  ####/
- |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/
+ |__/  |__/ \_______/ \_______/|__/|_______/ 	 \______/  \______/ |__/  |__/|__/  |__/ \_______/ \_______/   \___/   v0.10.1
 Powered by Redis Enterprise
-02:04:17.124 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
-02:04:18.935 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobManager
-02:04:18.957 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobReaper
-02:04:18.979 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - JobClaimer
-02:04:19.000 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - HeartbeatManager
-02:04:19.021 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully established Redis connection for JobManager - MetricsReporter
-02:04:19.110 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc skipped creating Job Claim Assignment Consumer Group since it already exists
-02:04:19.115 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobManager service
-02:04:19.118 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobReaper service
-02:04:19.118 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc Metrics are not enabled so MetricsReporter threadpool will not be instantiated
-02:04:19.121 [main] INFO  redis-connect-manager - Instance: 29@virag-cdc successfully started JobClaimer service
-02:04:24.929 [main] INFO  redis-connect-manager - Started Redis Connect REST API listening on ["http-nio-8282"]
-02:04:24.930 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
-02:04:24.930 [main] INFO  redis-connect-manager -
-02:04:24.930 [main] INFO  redis-connect-manager - Started Redis Connect Instance
-02:04:24.930 [main] INFO  redis-connect-manager -
-02:04:24.930 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
-02:04:29.116 [JobManagerThreadpool-1] INFO  redis-connect-manager - Instance: 29@virag-cdc was successfully elected Redis Connect cluster leader
-02:04:29.119 [JobManagerThreadpool-2] INFO  redis-connect-heartbeat - Instance: 29@virag-cdc successfully refreshed Heartbeat: {connect}:cluster:leader:heartbeat with value: 29@virag-cdc to new Lease: 5000
+06:32:38.758 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:32:40.351 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: JobManager
+06:32:40.360 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: JobReaper
+06:32:40.369 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: JobClaimer
+06:32:40.377 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: JobOrchestrator
+06:32:40.385 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: HeartbeatManager
+06:32:40.392 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: MetricsReporter
+06:32:40.399 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: CredentialsRotationEventListener
+06:32:40.406 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully established Redis connection with ClientId: JobManager ConnectionId: ChangeEventQueue
+06:32:40.487 [main] INFO  redis-connect-manager - Instance: 30@redis-connect skipped creating Job Claim Assignment Consumer Group since it already exists
+06:32:40.491 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully started JobManager service
+06:32:40.493 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully started JobReaper service
+06:32:40.495 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully started JobClaimer service
+06:32:40.497 [main] INFO  redis-connect-manager - Instance: 30@redis-connect successfully started MetricsReporter service
+06:32:44.370 [main] INFO  redis-connect-manager - Instance: 30@redis-connect started Redis Connect REST API listening on ["http-nio-8282"]
+06:32:44.371 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:32:44.371 [main] INFO  redis-connect-manager -
+06:32:44.372 [main] INFO  redis-connect-manager - Started Redis Connect Instance v0.10.1
+06:32:44.372 [main] INFO  redis-connect-manager -
+06:32:44.372 [main] INFO  redis-connect-manager - ----------------------------------------------------------------------------------------------------------------------------
+06:32:50.492 [JOB_MANAGER_THREADPOOL-2] INFO  redis-connect-manager - Instance: 30@redis-connect was successfully elected Redis Connect cluster leader
 ```
 
 </p>
@@ -457,7 +460,7 @@ demo$ sudo docker exec -it re-node1 bash -c 'redis-cli -p 12000 ft.search idx_em
 
 #### Prerequisites
 1. Redis Connect cluster timeseries metrics should be [enabled](../demo/config/jobmanager.properties#L9).
-2. Redis Connect job metrics should be enabled [enabled](../demo/config/samples/payloads/cdc-custom-job.json#L23).
+2. Redis Connect job metrics should be [enabled](../demo/config/samples/payloads/cdc-custom-job.json#L23).
 
 ###### Standalone Grafana
 Use your existing Grafana install and add [redis-datasource](https://redisgrafana.github.io/redis-datasource/overview/) plugin.
