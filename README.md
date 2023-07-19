@@ -20,8 +20,8 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
     <tr>
         <td><a href="/examples/mongodb/demo/README.md"><img src="/images/icons/MongoDB Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect MongoDB demo"/></a></td>
         <td><a href="/examples/gemfire/demo/README.md"><img src="/images/icons/Geode Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Gemfire/Apache Geode demo"/></a></td>
-        <td><a href="/examples/splunk/demo/README.md"><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Splunk HEC demo"/></a>></td>
-        <td><a href="/examples/files/demo/README.md"><img src="/images/icons/CSV Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Files demo"/></a>></td>
+        <td><a href="/examples/splunk/demo/README.md"><img src="/images/icons/Splunk HEC Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Splunk HEC demo"/></a></td>
+        <td><a href="/examples/files/demo/README.md"><img src="/images/icons/CSV Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Files demo"/></a></td>
         <td><a href="/examples/vertica/demo/README.md"><img src="/images/icons/Vertica Icon.png" style="float: center;" width="100" height="100" alt="Redis Connect Vertica demo"/></a></td>
     </tr>
 </table>
