@@ -27,14 +27,14 @@
 <li><a href="#environment">4.1. Environment</a></li>
 <li><a href="#operating-system-and-jvm">4.2. Operating System and JVM</a></li>
 <li><a href="#jvm-flags">4.3. JVM Flags</a></li>
-<li><a href="#redis-connect-management">4.4. Redis Connect Management</a></li>
-<li><a href="#logging">4.5. Logging</a></li>
-<li><a href="#monitoring">4.6. Monitoring</a></li>
-<li><a href="#secret-management">4.7. Secret Management</a></li>
-<li><a href="#high-availability">High Availability</a></li>
-<li><a href="#scaling-out">4.8. Scaling out</a></li>
-<li><a href="#supported-source-databases">4.9. Supported Source Databases</a></li>
-<li><a href="#redis-requirements">4.10. Redis Requirements</a></li>
+<li><a href="#redis-requirements">4.4. Redis Requirements</a></li>
+<li><a href="#redis-connect-management">4.5. Redis Connect Management</a></li>
+<li><a href="#logging">4.6. Logging</a></li>
+<li><a href="#monitoring">4.7. Monitoring</a></li>
+<li><a href="#security">4.8. Security</a></li>
+<li><a href="#high-availability">4.9. High Availability</a></li>
+<li><a href="#scaling-out">4.10. Scaling out</a></li>
+<li><a href="#supported-source-databases">4.11. Supported Source Databases</a></li>
 </ul>
 </li>
 <li><a href="#cluster-and-job-configuration">5. Cluster and Job Configuration</a>
@@ -146,7 +146,8 @@ it may run as one or more coordinated instances.</p>
 <dt class="hdlist1">Partition</dt>
 <dd>
 <p>A way of dividing jobs to scale them horizontally. Each job may be divided into
-one or more partitions. Partitions are divided among Redis Connect instances.</p>
+one or more partitions. Partitions are divided automatically among Redis Connect instances.
+If a Redis Connect instances becomes unavailable, all jobs partitions will be migrated to another available instance.</p>
 </dd>
 </dl>
 </div>
@@ -170,6 +171,11 @@ to download the latest distributions of Redis Connect.</p>
 <dt class="hdlist1">lib</dt>
 <dd>
 <p>JARs for Redis Connect and its dependencies.</p>
+</dd>
+<dt class="hdlist1">extlib</dt>
+<dd>
+<p>JARs for Redis Connect custom stages and database drivers not included the Redis Connect
+distribution (e.g., Oracle and DB2). These database driver must be provided by the Redis Connect user.</p>
 </dd>
 <dt class="hdlist1">config</dt>
 <dd>
@@ -205,7 +211,7 @@ environment.</p>
 <p>4 CPU cores</p>
 </li>
 <li>
-<p>1 GB memory</p>
+<p>2 GB memory</p>
 </li>
 <li>
 <p>20 GB of free disk space</p>
@@ -214,6 +220,14 @@ environment.</p>
 <p>1 Gbps networking</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>We recommend allocating one thread per job partition.
+You can deploy more than one Redis Connect instance on a single VM.
+The number of Redis Connect instances that can effectively be deployed on a single machine or VM
+will depend on that VM&#8217;s physical memory and number of CPU cores.
+However, for high availability, you must deploy your Redis Connect instances
+across more than one physical server or VM. See High Availability below for more details.</p>
 </div>
 </div>
 <div class="sect2">
@@ -226,7 +240,7 @@ However, for production deployments, we recommend Linux.</p>
 <p>Redis Connect is supported on Java versions 11 and greater.</p>
 </div>
 <div class="paragraph">
-<p>For information on Kubernetes deployments, see the
+<p>For information on deploying to Kubernetes environments, see the
 <a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/k8s-docs">Redis Connect Kubernetes documentation</a>.</p>
 </div>
 <div class="sect3">
@@ -268,7 +282,7 @@ You can see example of these in the startup scripts included in the Redis Connec
 <div class="sect2">
 <h3 id="jvm-flags"><a class="anchor" href="#jvm-flags"></a>4.3. JVM Flags</h3>
 <div class="paragraph">
-<p>We recommend the following JVM flags for Redis Connect processes:</p>
+<p>We recommend the following JVM flags for each Redis Connect JVM instance:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -285,55 +299,204 @@ You can see example of these in the startup scripts included in the Redis Connec
 </div>
 </div>
 <div class="sect2">
-<h3 id="redis-connect-management"><a class="anchor" href="#redis-connect-management"></a>4.4. Redis Connect Management</h3>
+<h3 id="redis-requirements"><a class="anchor" href="#redis-requirements"></a>4.4. Redis Requirements</h3>
 <div class="paragraph">
-<p>Once Redis Connect is installed and running, you manage Redis Connect using its REST API or command line interface.</p>
+<p>Redis Connect requires a working <a href="https://docs.redis.com/latest/rs/">Redis Enterprise Software</a> or
+<a href="https://docs.redis.com/latest/rc/">Redis Cloud</a> installation.</p>
 </div>
 <div class="paragraph">
-<p>To make it easier to interact with the REST API and the provided management endpoints,
-Redis Connect exposes a Swagger API. See the complete <a href="https://redis-field-engineering.github.io/redis-connect-api-docs/">Redis Connect Swagger API Docs</a>
-for the list of supported endpoints.</p>
+<p>We recommend provisioning two Redis databases. These database can reside in the same Redis Enterprise cluster.</p>
 </div>
 <div class="paragraph">
-<p>In a production environment, the Swagger API may require an open port in a firewall.
-By default, the API uses port 8282.</p>
+<p>The first database will serve as your Redis Connect cluster&#8217;s configuration store. This database should be configured
+as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Data persistence enabled (RDF + AOF every second)</p>
+</li>
+<li>
+<p><a href="https://docs.redis.com/latest/rs/databases/durability-ha/replication/">High availability</a> enabled</p>
+</li>
+<li>
+<p>ACLs enabled (See Security below)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The second database will serve as the target for replication from the source database. Since this is an operational
+database receiving change-data events, the sizing for this database depends on the sizes of the tables being replicated
+and on the volume of change-data events. In all cases, we still recommend:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.redis.com/latest/rs/databases/durability-ha/replication/">High availability</a> enabled</p>
+</li>
+<li>
+<p>ACLs enabled (See Security below)</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="logging"><a class="anchor" href="#logging"></a>4.5. Logging</h3>
+<h3 id="redis-connect-management"><a class="anchor" href="#redis-connect-management"></a>4.5. Redis Connect Management</h3>
+<div class="paragraph">
+<p>Once Redis Connect is installed and running, you manage Redis Connect using its REST API or command line interface (CLI).</p>
+</div>
+<div class="sect3">
+<h4 id="rest-api"><a class="anchor" href="#rest-api"></a>4.5.1. REST API</h4>
+<div class="paragraph">
+<p>Each Redis Connect instance can be configured to expose a REST API with a Swagger interface for ease of use.</p>
+</div>
+<div class="paragraph">
+<p>The table below shows a few of the commonly-used REST endpoints.
+For the complete REST API documentation, see the
+<a href="https://redis-field-engineering.github.io/redis-connect-api-docs/">Redis Connect Swagger API Docs</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Common REST API Endpoints</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Endpoint name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create job</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Saves job configuration for the provided <code>jobName</code>.</p>
+<p class="tableblock">Many of the optional job configuration attributes have default values which can be reviewed once the job configuration
+is saved or found in the documentation.</p>
+<p class="tableblock">Example Redis key: {connect}:job:config:jobName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/QUICK%20START/saveUsingPOST_1">Create job Swagger endpoint</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start job</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Starts a job, including all job partitions.</p>
+<p class="tableblock">This includes both initial load and stream jobs.
+For a job start, all job partitions must be stopped or never before started.
+There is no guarantee on which cluster instance will claim a job partition, and there is no advantage to initiating this
+operation from a specific cluster member.
+Before a start is initiated, a job configuration must be created and a validated to confirm enough remaining capacity
+exists across the cluster for all job partitions (this does not apply to initial load).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/QUICK%20START/startUsingPOST">Start job Swagger endpoint</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop job</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stops a job, including all job partitions.</p>
+<p class="tableblock">You cannot stop initial load jobs since they are removed automatically upon completion.
+For a job to be stopped, all job partitions must be active.
+Job claims, metrics, and checkpoints will all be preserved upon a job stop.
+This ensures that the job can later resume from where it was stopped.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/QUICK%20START/stopUsingPOST">Stop job Swagger endpoint</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job claim status</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns job claims from across the cluster that match the requested jobStatus.</p>
+<p class="tableblock">Valid job statuses are <code>staged</code>, <code>stopped</code>, and <code>all</code>.</p>
+<p class="tableblock">Use this endpoint to see which jobs the cluster is managing, and their status.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/QUICK%20START/getJobClaimsByStatusUsingGET">Job claim status Swagger endpoint</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="rest-api-security"><a class="anchor" href="#rest-api-security"></a>4.5.2. REST API Security</h4>
+<div class="paragraph">
+<p>In a production environment, the Swagger API may require an open port in a firewall.
+By default, the API is available on port 8282, but this is configurable.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="cli"><a class="anchor" href="#cli"></a>4.5.3. CLI</h4>
+<div class="paragraph">
+<p>Redis Connect includes a command line interface that exposes the management functions provided
+by the REST API. You can start a CLI instance from the command line as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">$ ./bin/redisconnect.sh cli</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the CLI has started, type <code>help</code> to see the available commands.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="logging"><a class="anchor" href="#logging"></a>4.6. Logging</h3>
 <div class="paragraph">
 <p>Redis Connect uses <a href="https://logback.qos.ch/">Logback</a> for logging.
 See your Redis Connect distribution&#8217;s <code>config/logback.xml</code> for a sample Logback configuration file.</p>
 </div>
 <div class="paragraph">
-<p>Redis Connect has been designed to provide descriptive log to make troubleshooting easier.
-If you need to change your application log level at runtime, you do this using the REST API.
+<p>Redis Connect has been designed to provide descriptive logs to make troubleshooting easier.</p>
+</div>
+<div class="paragraph">
+<p>If you need to change your application log level at runtime, you can do this using the REST API.
 See the <a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/LOG%20MANAGEMENT/listLogLevelUsingGET">loglevel REST endpoint documentation</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>Note that log level changes are not global; they apply only to the instance whose REST API you are connected to.
+To change the log level for a given instance, connect directly to that instance&#8217;s REST API.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="monitoring"><a class="anchor" href="#monitoring"></a>4.6. Monitoring</h3>
+<h3 id="monitoring"><a class="anchor" href="#monitoring"></a>4.7. Monitoring</h3>
 <div class="paragraph">
-<p>Redis Connect publishes performance metrics to Redis, taking advantage of Redis' time series capabilities.
-You can view these metrics in Grafana using
+<p>Redis Connect publishes performance metrics to job manager&#8217;s configuration database.
+This takes advantage of <a href="https://redis.io/docs/data-types/timeseries/">Redis' time series capabilities</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can view these metrics in Grafana using
 the <a href="https://grafana.com/grafana/plugins/redis-datasource/">Redis Datasource for Grafana</a>.</p>
 </div>
 <div class="paragraph">
 <p>Your Redis Connect distribution includes a pre-configured dashboard for viewing key operational metrics.
-Important metrics include the following:</p>
+You can find this dashboard and its Grafana configuration at <code>config/samples/dashboard</code>, and this
+configuration can be modified to fit your monitoring requirements.</p>
+</div>
+<div class="paragraph">
+<p>The sample dashboard looks like this:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="dashboard.png" alt="dashboard">
+</div>
+</div>
+<div class="paragraph">
+<p>Important metrics include the following:</p>
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1">Staged jobs</dt>
+<dd>
+<p>The list of all configured jobs in the Redis Connect cluster.</p>
+</dd>
+<dt class="hdlist1">Job heartbeats</dt>
+<dd>
+<p>Heartbeats for the currently active job partitions.
+Each active partition records a heartbeat every second,
+indicating that the job is actively being run by a Redis Connect instance.</p>
+</dd>
 <dt class="hdlist1">Ops per second</dt>
 <dd>
-<p>Number of write operations completed per second.</p>
+<p>The number of write operations against the target database completed per second.</p>
 </dd>
 <dt class="hdlist1">Lag</dt>
 <dd>
 <p>The average elapsed time between the moment a change event is published to the source database
 and the moment that event is written to the target database (i.e., Redis).
 High lag values may indicate that your Redis Connect cluster is failing to keep up with
-the volume of CDC changes.</p>
+the volume of CDC changes. Note that this metric only applies to stream jobs.</p>
 </dd>
 <dt class="hdlist1">Latency</dt>
 <dd>
@@ -343,43 +506,148 @@ the volume of CDC changes.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="secret-management"><a class="anchor" href="#secret-management"></a>4.7. Secret Management</h3>
-<div class="sect3">
-<h4 id="keystore-and-truststore"><a class="anchor" href="#keystore-and-truststore"></a>4.7.1. KeyStore and TrustStore</h4>
+<h3 id="security"><a class="anchor" href="#security"></a>4.8. Security</h3>
 <div class="paragraph">
-<p>Redis Connect can take advantage of Java KeyStores and TrustStores for managing certificate-based authentication.
+<p>Redis Connect should be run in a secure network environment.
+Because Redis Connect connects to source and target databases,
+those connections may be secured with TLS/SSL and must be secured
+using authentication credentials.</p>
+</div>
+<div class="paragraph">
+<p>To support additional security requirements, Redis Connect supports
+file-based credential rotation, optionally powered by secrets management
+frameworks like Hashicorp Vault.</p>
+</div>
+<div class="sect3">
+<h4 id="tlsssl-support"><a class="anchor" href="#tlsssl-support"></a>4.8.1. TLS/SSL Support</h4>
+<div class="paragraph">
+<p>Most database systems support one-way and mutual TLS, and TLS authentication is often required in production environments.</p>
+</div>
+<div class="paragraph">
+<p>Redis Connect manages certificate-based authentication using Java&#8217;s KeyStore and TrustStore support.
 To configure the Java KeyStore and TrustStore, see the <a href="#truststore-link">KeyStore and TrustStore configuration reference</a>.</p>
 </div>
+<div class="paragraph">
+<p>To configure Redis Enterprise with TLS, see the documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.redis.com/latest/rc/security/database-security/tls-ssl/">TLS with Redis Cloud</a></p>
+</li>
+<li>
+<p><a href="https://docs.redis.com/latest/rs/security/tls/">TLS with Redis Enterprise Software</a></p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect3">
-<h4 id="authentication-credentials"><a class="anchor" href="#authentication-credentials"></a>4.7.2. Authentication Credentials</h4>
-
-</div>
-</div>
-<div class="sect2">
-<h3 id="high-availability"><a class="anchor" href="#high-availability"></a>High Availability</h3>
-
-</div>
-<div class="sect2">
-<h3 id="scaling-out"><a class="anchor" href="#scaling-out"></a>4.8. Scaling out</h3>
-
-</div>
-<div class="sect2">
-<h3 id="supported-source-databases"><a class="anchor" href="#supported-source-databases"></a>4.9. Supported Source Databases</h3>
+<h4 id="database-acls"><a class="anchor" href="#database-acls"></a>4.8.2. Database ACLs</h4>
 <div class="paragraph">
-<p>Redis Connect can capture change data from MySql, Oracle, Postgres, SQLServer, MongoDB, and Gemfire.
+<p>The Redis job manager and the job target databases should have ACLs enabled.
+To keep your Redis databases secure and prevent accidental misconfigurations,
+we recommend the following policis:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create separate Redis database users for your Redis Connect instances, Redis Connect administrators, and developers.</p>
+</li>
+<li>
+<p>Developers should be provided with read-only access to these Redis databases.</p>
+</li>
+<li>
+<p>Ensure that any application user connecting Redis Connect&#8217;s Redis databases has <code>dangerous</code> commands disabled.</p>
+</li>
+<li>
+<p>User should not have permission to delete keys starting with "{connect}". This prevents accidental deletion
+of important configuration.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="authentication-credentials"><a class="anchor" href="#authentication-credentials"></a>4.8.3. Authentication Credentials</h4>
+<div class="paragraph">
+<p>pair
+source and sink
+source starts with source name
+3 credentails file at minimim
+1 for the instance
+1 for source
+1 for sink
+we have examples in sample
+the location is in jobmanager.properties</p>
+</div>
+<div class="paragraph">
+<p>property files</p>
+</div>
+<div class="paragraph">
+<p>linux permissions for these files?
+these contain actual passwords</p>
+</div>
+<div class="paragraph">
+<p>passwords are in plain text</p>
+</div>
+<div class="paragraph">
+<p>we listen to these files so that you can rotate these credentails
+can enable for jobmanager, source, or target</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="high-availability"><a class="anchor" href="#high-availability"></a>4.9. High Availability</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="scaling-out"><a class="anchor" href="#scaling-out"></a>4.10. Scaling out</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="supported-source-databases"><a class="anchor" href="#supported-source-databases"></a>4.11. Supported Source Databases</h3>
+<div class="paragraph">
+<p>Redis Connect can capture change data from several RDBMS and NoSQL databases.</p>
+</div>
+<div class="paragraph">
+<p>The following database are supported.
+Here, each supported database links to a sa</p>
+</div>
+<div class="paragraph">
+<p>MySql, Oracle, Postgres, SQLServer, MongoDB, and Gemfire.
 DB2, Splunk, Vertica, and text files are supported only for initial load jobs.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="redis-requirements"><a class="anchor" href="#redis-requirements"></a>4.10. Redis Requirements</h3>
 <div class="paragraph">
-<p>Redis Connect requires a working <a href="https://docs.redis.com/latest/rs/">Redis Enterprise Software</a> or
-<a href="https://docs.redis.com/latest/rc/">Redis Cloud</a> installation.</p>
+<p>Define stream vs initial load.</p>
 </div>
 <div class="paragraph">
-<p>You will need to provision one Redis database</p>
+<p>Link to the example in dist.
+Link to debezium connectors: <a href="https://debezium.io/documentation/reference/2.3/connectors/index.html" class="bare">https://debezium.io/documentation/reference/2.3/connectors/index.html</a></p>
 </div>
+<div class="paragraph">
+<p>Note that source database needs to be configured according to Debezium docs
+- For Demo and POC purposes, you can refer to our container example</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Supported source databases</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Database name</th>
+<th class="tableblock halign-left valign-top">Stream</th>
+<th class="tableblock halign-left valign-top">Initial Load</th>
+<th class="tableblock halign-left valign-top">Debezium Documentation</th>
+</tr>
+</thead>
+</table>
 </div>
 </div>
 </div>
@@ -388,6 +656,9 @@ DB2, Splunk, Vertica, and text files are supported only for initial load jobs.</
 <div class="sectionbody">
 <div class="sect3">
 <h4 id="configuration"><a class="anchor" href="#configuration"></a>5.1. Configuration</h4>
+<div class="paragraph">
+<p>TODO: Link to the Postgres example and explain how it works.</p>
+</div>
 <div class="paragraph">
 <p>The "jobmanager.properties" file in the "/config" directory is Redis Connect&#8217;s main configuration file.</p>
 </div>
@@ -412,7 +683,7 @@ The location of the credentials files for the job sources &amp; sinks, ‘creden
 <div class="sect2">
 <h3 id="cluster-properties"><a class="anchor" href="#cluster-properties"></a>5.2. Cluster properties</h3>
 <table id="properties" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Cluster properties</caption>
+<caption class="title">Table 3. Cluster properties</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -463,7 +734,7 @@ RedisTimeSeries is a dependency for this capability. See (Section X.X) for insta
 <div class="sect2">
 <h3 id="job-manager-services-properties"><a class="anchor" href="#job-manager-services-properties"></a>5.3. Job manager services properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Job manager services properties</caption>
+<caption class="title">Table 4. Job manager services properties</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -548,7 +819,7 @@ If a sparse topology across many Redis Connect instances is desired, then loweri
 <div class="sect2">
 <h3 id="rest-api-properties"><a class="anchor" href="#rest-api-properties"></a>5.4. REST API Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. REST API properties</caption>
+<caption class="title">Table 5. REST API properties</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -586,7 +857,7 @@ for its REST API.</p></td>
 <div class="sect2">
 <h3 id="job-management-database-properties"><a class="anchor" href="#job-management-database-properties"></a>5.5. Job Management Database Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Job Management Database Properties</caption>
+<caption class="title">Table 6. Job Management Database Properties</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -699,7 +970,7 @@ is scanned for changes.</p>
 <div class="sect2">
 <h3 id="email-alerting-properties"><a class="anchor" href="#email-alerting-properties"></a>5.6. Email Alerting Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Email Alerting Properties</caption>
+<caption class="title">Table 7. Email Alerting Properties</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -772,7 +1043,7 @@ Multiple recipients can be added by delimiting them with a comma.</p></td>
 <div class="sect2">
 <h3 id="job-properties"><a class="anchor" href="#job-properties"></a>6.1. Job properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Job properties</caption>
+<caption class="title">Table 8. Job properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -843,7 +1114,7 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 <div class="sect2">
 <h3 id="job-source-properties"><a class="anchor" href="#job-source-properties"></a>6.2. Job Source Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Job Source Properties</caption>
+<caption class="title">Table 9. Job Source Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -998,7 +1269,7 @@ Factor</p></td>
 <div class="sect3">
 <h4 id="4-2-2-job-source-table-properties"><a class="anchor" href="#4-2-2-job-source-table-properties"></a>6.3.1. 4.2.2 Job Source Table Properties</h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Job Source Table Properties</caption>
+<caption class="title">Table 10. Job Source Table Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1092,7 +1363,7 @@ Column[]</p></td>
 <div class="sect2">
 <h3 id="job-source-table-column-properties"><a class="anchor" href="#job-source-table-column-properties"></a>6.4. Job Source Table Column Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Job Source Table Column Properties</caption>
+<caption class="title">Table 11. Job Source Table Column Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1192,7 +1463,7 @@ generate a "_id" key which can be used as a targetKey but has no value as a fiel
 <div class="sect2">
 <h3 id="job-source-table-initial-load-properties"><a class="anchor" href="#job-source-table-initial-load-properties"></a>6.5. Job Source Table Initial Load Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Job Source Table Column Properties</caption>
+<caption class="title">Table 12. Job Source Table Column Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1259,7 +1530,7 @@ This is only supported for RDB sources and only for initial load only / ETL jobs
 <div class="sect2">
 <h3 id="job-pipeline-properties"><a class="anchor" href="#job-pipeline-properties"></a>6.6. Job Pipeline Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Job Pipeline Properties</caption>
+<caption class="title">Table 13. Job Pipeline Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1322,7 +1593,7 @@ Stage[]</p></td>
 <div class="sect2">
 <h3 id="job-pipeline-stage-properties"><a class="anchor" href="#job-pipeline-stage-properties"></a>6.7. Job Pipeline Stage Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Job Pipeline Stage Properties</caption>
+<caption class="title">Table 14. Job Pipeline Stage Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1445,7 +1716,7 @@ This is only required if Redis is not the target destination, which is only supp
 <div class="sect2">
 <h3 id="database-properties"><a class="anchor" href="#database-properties"></a>6.8. Database Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Database Properties</caption>
+<caption class="title">Table 15. Database Properties</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -1522,8 +1793,9 @@ Configuration</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.1<br>
-Last updated 2023-08-18 01:10:12 -0600
+Last updated 2023-08-18 16:17:23 -0600
 </div>
 </div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
 </body>
 </html>
