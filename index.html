@@ -1536,8 +1536,7 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pipelineBuffer
-Size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pipelineBufferSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Redis Connect’s pipeline is powered by the LMAX Disruptor library (High Performance Inter-Thread Messaging).</p>
 <p class="tableblock">The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".</p>
@@ -1869,16 +1868,14 @@ This is currently only supported for MongoDB, Redis Streams Broker, and Files.</
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">prefixTableNameToTargetKey
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">prefixTableNameToTargetKeyEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, adds the tableName (defined in the tables configuration) as a prefix to the target Redis key before all other targetKey enabled columns are computed and applied.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">deleteOnPrimaryKeyUpdate
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deleteOnPrimaryKeyUpdateEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, if the primary key is changed at the source, then an additional operation to DELETE the existing target
 key will accompany the UPDATE event.</p>
@@ -2071,8 +2068,7 @@ Only the following sources are supported:</p>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">rowIndexUsedAsTargetKey
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rowIndexUsedAsTargetKeyEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RDB sources can have tables without primary keys. For those cases, rowIndex can be used as a unique identifier for partitioning purposes.
 This is only supported for RDB sources and only for initial load only / ETL jobs.</p></td>
@@ -2168,7 +2164,7 @@ Measured in milliseconds. Minimum=60000</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.3<br>
-Last updated 2023-08-21 10:43:32 -0600
+Last updated 2023-08-21 10:55:26 -0600
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
