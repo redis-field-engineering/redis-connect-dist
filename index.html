@@ -1548,8 +1548,7 @@ Must be a power of 2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">preprocessor
-Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">preprocessorName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run before changed-data events are transformed and published to the pipeline.</p>
 <p class="tableblock">This is currently not extendable by end users.</p></td>
@@ -1557,8 +1556,7 @@ Name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">postprocessor
-Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postprocessorName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run after changed-data events are transformed and published to the pipeline.</p>
 <p class="tableblock">This is currently not extendable by end users.</p></td>
@@ -1630,8 +1628,7 @@ RedisTimeSeries. This can subsequently be visualized in Grafana.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">checkpointStage
-Indicator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpointStageIndicator</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indicates which sink will be responsible for committing the checkpoint to the target database.
 This is typically performed by the last stage of the pipeline and, often times, it is the only stage in the pipeline.</p></td>
@@ -1640,9 +1637,7 @@ This is typically performed by the last stage of the pipeline and, often times, 
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Checkpoint
-Transactions
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CheckpointTransactionsEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Although the producer’s polling event loop enqueues changed-data events in batches, each event is processed
 individually through the pipeline. This is because Redis Connect updates the checkpoint at the changed-data event level
@@ -1688,8 +1683,7 @@ Configuration for all target database configuration.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint
-Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpointDatabase</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-properties">Database Properties</a>
 Checkpoint database configuration.
@@ -1722,8 +1716,7 @@ This is only required if Redis is not the target destination, which is only supp
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pollSource
-Interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pollSourceInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate interval representing how long to pause the producer’s polling event loop if no new change events were found in the batch.
 Measured in milliseconds.</p></td>
@@ -1738,19 +1731,14 @@ Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">source
-Transaction
-TimeSequence
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceTransactionTimeSequenceEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the source commit/transaction timestamp (and sequence# if the timestamp is the same) will be used to calculate latency metrics and passed along as metadata for Redis Streams sink(s).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">slowConsumer
-MaxRetry
-Attempts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">slowConsumerMaxRetryAttempts</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1 = UNLIMITED</p>
 <p class="tableblock">0 = DISABLED</p>
@@ -1761,9 +1749,7 @@ If the maximum attempts limit is reached, the job will be stopped for purposes o
 <td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">intermittent
-EventSleep
-Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">intermittentEventSleepDuration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used as part of back-pressure support for the data pipeline in the event of a slow consumer or the circuit breaker is open.
 Forces the event loop to pause for the configured duration of time.
@@ -1772,10 +1758,7 @@ Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">source
-Connection
-MaxRetry
-Attempts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionMaxRetryAttempts</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 = DISABLED</p>
 <p class="tableblock">1+ = MAX_ATTEMPTS</p>
@@ -1784,10 +1767,7 @@ Attempts</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">source
-Connection
-MaxRetry
-Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionMaxRetryDuration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">In addition to sourceConnectionMaxRetryAttempts, you can also add a max duration, after which retries will stop if the max attempts haven’t already been reached.</p>
 <p class="tableblock">Measured in minutes.</p></td>
@@ -1795,10 +1775,7 @@ Duration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">source
-Connection
-RetryDelay
-Interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionRetryDelayInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed delay in between sourceConnectionMaxRetryAttempts.</p>
 <p class="tableblock">Measured in seconds.</p></td>
@@ -1808,10 +1785,7 @@ sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayI
 <td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">source
-Connection
-RetryMaxDelay
-Interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionRetryMaxDelayInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides an upper bound to calculate the delay interval when sourceConnectionRetryDelayFactor is enabled.</p>
 <p class="tableblock">Measured in seconds.</p></td>
@@ -1819,10 +1793,7 @@ Interval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">240</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">source
-Connection
-RetryDelay
-Factor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionRetryDelayFactor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 = DISABLED</p>
 <p class="tableblock">1+ = DELAY_FACTOR</p>
@@ -1877,9 +1848,7 @@ Factor</p></td>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">autoConfig
-Columns
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">autoConfigColumnsEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, source metadata is queried during the (re)start process to determine sourceColumn names so users do not
 need to enumerate each within the column&#8217;s configuration.</p>
@@ -2011,8 +1980,7 @@ This is currently only supported for RDB sources.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">passThrough
-Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">passThroughEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When disabled, the source column value will not be published to the pipeline therefore it cannot be accessed within a
 custom stage nor any sink.
@@ -2092,8 +2060,7 @@ Disclaimer: If the source table has fewer than 500 rows, which is common in a PO
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">customWhere
-Clause</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">customWhereClause</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users can specify a WHERE clause to filter the rows required for initial load.
 Only the following sources are supported:</p>
@@ -2104,8 +2071,7 @@ Only the following sources are supported:</p>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">rowIndexUsed
-AsTargetKey
+<td class="tableblock halign-left valign-top"><p class="tableblock">rowIndexUsedAsTargetKey
 Enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RDB sources can have tables without primary keys. For those cases, rowIndex can be used as a unique identifier for partitioning purposes.
@@ -2180,9 +2146,7 @@ No data will be lost in this process.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">credentials
-RotationEvent
-ListenerInterval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">credentialsRotationEventListenerInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate scheduled interval that scans the credentialsDirectoryPath for changes when credentialsRotationEventListenerEnabled is enabled.
 Measured in milliseconds. Minimum=60000</p></td>
@@ -2204,7 +2168,7 @@ Measured in milliseconds. Minimum=60000</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.3<br>
-Last updated 2023-08-21 10:15:08 -0600
+Last updated 2023-08-21 10:43:32 -0600
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
