@@ -365,6 +365,10 @@ This ensures that the job can later resume from where it was stopped.</p></td>
 <p>In a production environment, the Swagger API may require an open port in a firewall.
 By default, the API is available on port 8282, but this is configurable.</p>
 </div>
+<div class="paragraph">
+<p>If you are running multiple Redis Connect instances on the same server, each instance will require a different port
+for its REST API.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="cli"><a class="anchor" href="#cli"></a>5.3. CLI</h3>
@@ -1119,8 +1123,7 @@ Runs on each Redis Connect Instance (JVM) when <code>job.manager.services.enable
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cluster.timeseries.metrics.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables creation of a scheduled thread for job metrics reporting to RedisTimeSeries within the Job Management database.
-RedisTimeSeries is a dependency for this capability. See (Section X.X) for installation instructions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables creation of a scheduled thread for job metrics reporting to RedisTimeSeries within the Job Management database.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 </tbody>
@@ -1233,9 +1236,7 @@ If a sparse topology across many Redis Connect instances is desired, then loweri
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rest.api.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instantiates an embedded Spring Boot Application to host the REST API and/or CLI.</p>
-<p class="tableblock">To initiate the interactive CLI, start a Redis Connect instance (Java process) from the command line, and pass in the
-argument "CLI".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instantiates an embedded Spring Boot Application to host the REST API and CLI.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
@@ -2143,7 +2144,7 @@ This is only supported for RDB sources and only for initial load only / ETL jobs
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">databaseType</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The following database types are supported:</p>
 <p class="tableblock">[DB2, FILES, GEMFIRE, MONGODB, PostgreSQL, ORACLE, POSTGRES, REDIS, REDIS_STREAMS_MESSAGE_BROKER, SPLUNK, SQL_SERVER, VERTICA]</p>
 <p class="tableblock">NONE is used for custom stages. Also see userDefinedType.</p>
@@ -2163,12 +2164,11 @@ This is only supported for RDB sources and only for initial load only / ETL jobs
 <td class="tableblock halign-left valign-top"><p class="tableblock">Each database type other than NONE (used for custom jobs) requires a credentials property file,
 even if the credentials are not required.
 Credentials property files must adhere to the following filename pattern:
-redisconnect_credentials_{source_type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">target_type}_{job_name}.properties</p>
+redisconnect_credentials_{source_type | target_type}_{job_name}.properties</p>
 <p class="tableblock">The only exception is for Job Manager which has fixed name: redisconnect_credentials_jobmanager.properties</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentialsRotationEventListenerEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the credentialsDirectoryPath will be periodically scanned for changes that are specific to the
@@ -2177,23 +2177,23 @@ property file associated with this database.</p>
 nor stopping the job. There might be a momentary pause in pipeline processing while the connection is being reestablished.
 No data will be lost in this process.</p>
 <p class="tableblock">Disclaimer: if the new credentials cannot be used to create a connection, the job will be stopped for manual intervention.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentials
 RotationEvent
 ListenerInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate scheduled interval that scans the credentialsDirectoryPath for changes when credentialsRotationEventListenerEnabled is enabled.
 Measured in milliseconds. Minimum=60000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom
-Configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">customConfiguration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See Custom Configurations.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Map
 &lt;String, String&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
@@ -2204,7 +2204,7 @@ Configuration</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.3<br>
-Last updated 2023-08-21 00:44:22 -0600
+Last updated 2023-08-21 10:15:08 -0600
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
