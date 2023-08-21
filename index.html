@@ -14,49 +14,59 @@
 <div id="header">
 <h1>Redis Connect</h1>
 <div class="details">
-<span id="revnumber">version 0.10.1</span>
+<span id="revnumber">version 0.10.3</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">1. Introduction</a></li>
 <li><a href="#key-terms">2. Key Terms</a></li>
-<li><a href="#source-distributions">3. Source distributions</a></li>
-<li><a href="#production-deployment">4. Production Deployment</a>
+<li><a href="#source-distributions">3. Source Distributions</a></li>
+<li><a href="#supported-sources">4. Supported Sources</a></li>
+<li><a href="#redis-connect-management">5. Redis Connect Management</a>
 <ul class="sectlevel2">
-<li><a href="#environment">4.1. Environment</a></li>
-<li><a href="#operating-system-and-jvm">4.2. Operating System and JVM</a></li>
-<li><a href="#jvm-flags">4.3. JVM Flags</a></li>
-<li><a href="#redis-requirements">4.4. Redis Requirements</a></li>
-<li><a href="#redis-connect-management">4.5. Redis Connect Management</a></li>
-<li><a href="#logging">4.6. Logging</a></li>
-<li><a href="#monitoring">4.7. Monitoring</a></li>
-<li><a href="#security">4.8. Security</a></li>
-<li><a href="#high-availability">4.9. High Availability</a></li>
-<li><a href="#scaling-out">4.10. Scaling out</a></li>
-<li><a href="#supported-source-databases">4.11. Supported Source Databases</a></li>
+<li><a href="#rest-api">5.1. REST API</a></li>
+<li><a href="#rest-api-security">5.2. REST API Security</a></li>
+<li><a href="#cli">5.3. CLI</a></li>
 </ul>
 </li>
-<li><a href="#cluster-and-job-configuration">5. Cluster and Job Configuration</a>
-<ul class="sectlevel3">
-<li><a href="#configuration">5.1. Configuration</a></li>
-<li><a href="#cluster-properties">5.2. Cluster properties</a></li>
-<li><a href="#job-manager-services-properties">5.3. Job manager services properties</a></li>
-<li><a href="#rest-api-properties">5.4. REST API Properties</a></li>
-<li><a href="#job-management-database-properties">5.5. Job Management Database Properties</a></li>
-<li><a href="#email-alerting-properties">5.6. Email Alerting Properties</a></li>
+<li><a href="#production-deployment">6. Production Deployment</a>
+<ul class="sectlevel2">
+<li><a href="#environment">6.1. Environment</a></li>
+<li><a href="#operating-system-and-jvm">6.2. Operating System and JVM</a></li>
+<li><a href="#jvm-flags">6.3. JVM Flags</a></li>
+<li><a href="#redis-requirements">6.4. Redis Requirements</a></li>
+<li><a href="#logging">6.5. Logging</a></li>
+<li><a href="#monitoring">6.6. Monitoring</a></li>
+<li><a href="#security">6.7. Security</a></li>
+<li><a href="#high-availability">6.8. High availability</a></li>
 </ul>
 </li>
-<li><a href="#job-execution-configuration">6. Job execution configuration</a>
+<li><a href="#configuration-overview">7. Configuration Overview</a>
 <ul class="sectlevel2">
-<li><a href="#job-properties">6.1. Job properties</a></li>
-<li><a href="#job-source-properties">6.2. Job Source Properties</a></li>
-<li><a href="#job-source-database-properties">6.3. Job Source Database Properties</a></li>
-<li><a href="#job-source-table-column-properties">6.4. Job Source Table Column Properties</a></li>
-<li><a href="#job-source-table-initial-load-properties">6.5. Job Source Table Initial Load Properties</a></li>
-<li><a href="#job-pipeline-properties">6.6. Job Pipeline Properties</a></li>
-<li><a href="#job-pipeline-stage-properties">6.7. Job Pipeline Stage Properties</a></li>
-<li><a href="#database-properties">6.8. Database Properties</a></li>
+<li><a href="#job-configuration">7.1. Job Configuration</a></li>
+<li><a href="#credentials-files">7.2. Credentials files</a></li>
+</ul>
+</li>
+<li><a href="#cluster-configuration">8. Cluster Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#cluster-properties">8.1. Cluster properties</a></li>
+<li><a href="#job-manager-services-properties">8.2. Job manager services properties</a></li>
+<li><a href="#rest-api-properties">8.3. REST API Properties</a></li>
+<li><a href="#job-management-database-properties">8.4. Job Management Database Properties</a></li>
+<li><a href="#email-alerting-properties">8.5. Email Alerting Properties</a></li>
+</ul>
+</li>
+<li><a href="#job-configuration-main">9. Job Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#job-properties">9.1. Job properties</a></li>
+<li><a href="#job-pipeline-properties">9.2. Job Pipeline Properties</a></li>
+<li><a href="#job-pipeline-stage-properties">9.3. Job Pipeline Stage Properties</a></li>
+<li><a href="#job-source-properties">9.4. Job Source Properties</a></li>
+<li><a href="#job-source-database-properties">9.5. Job Source Database Properties</a></li>
+<li><a href="#job-source-table-column-properties">9.6. Job Source Table Column Properties</a></li>
+<li><a href="#job-source-table-initial-load-properties">9.7. Job Source Table Initial Load Properties</a></li>
+<li><a href="#database-properties">9.8. Database Properties</a></li>
 </ul>
 </li>
 </ul>
@@ -91,7 +101,13 @@ definitions for the various configuration directives for Redis Connect clusters 
 <p><a href="#production-deployment">Production Deployment</a></p>
 </li>
 <li>
-<p><a href="#cluster-and-job-configuration">Configuration</a></p>
+<p><a href="#configuration-overview">Configuration Overview</a></p>
+</li>
+<li>
+<p><a href="#cluster-configuration">Cluster Configuration</a></p>
+</li>
+<li>
+<p><a href="#job-configuration-main">Job Configuration</a></p>
 </li>
 </ul>
 </div>
@@ -107,7 +123,7 @@ definitions for the various configuration directives for Redis Connect clusters 
 <dl>
 <dt class="hdlist1">Source</dt>
 <dd>
-<p>A database, such as MySQL, whose data will be replicated to Redis. Redis Connect replicates data from a source database to Redis.</p>
+<p>A database, such as PostgreSQL, whose data will be replicated to Redis. Redis Connect replicates data from a source database to Redis.</p>
 </dd>
 <dt class="hdlist1">Target</dt>
 <dd>
@@ -116,7 +132,7 @@ definitions for the various configuration directives for Redis Connect clusters 
 <dt class="hdlist1">Job</dt>
 <dd>
 <p>A stream of change-data events replicating from source to target.
-For example, you can replicate all changes from a given set of MySQL tables to Redis
+For example, you can replicate all changes from a given set of PostgreSQL tables to Redis
 and maintain consistency between these tables and their Redis representations in real time.</p>
 </dd>
 <dt class="hdlist1">Job Types</dt>
@@ -154,7 +170,7 @@ If a Redis Connect instances becomes unavailable, all jobs partitions will be mi
 </div>
 </div>
 <div class="sect1">
-<h2 id="source-distributions"><a class="anchor" href="#source-distributions"></a>3. Source distributions</h2>
+<h2 id="source-distributions"><a class="anchor" href="#source-distributions"></a>3. Source Distributions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Redis Connect releases are distributed on Github.</p>
@@ -164,7 +180,7 @@ If a Redis Connect instances becomes unavailable, all jobs partitions will be mi
 to download the latest distributions of Redis Connect.</p>
 </div>
 <div class="paragraph">
-<p>The source distribution contains three relevant folders:</p>
+<p>The source distribution contains four relevant folders:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -175,7 +191,7 @@ to download the latest distributions of Redis Connect.</p>
 <dt class="hdlist1">extlib</dt>
 <dd>
 <p>JARs for Redis Connect custom stages and database drivers not included the Redis Connect
-distribution (e.g., Oracle and DB2). These database driver must be provided by the Redis Connect user.</p>
+distribution (e.g., Oracle and DB2). These database drivers must be provided by the Redis Connect user.</p>
 </dd>
 <dt class="hdlist1">config</dt>
 <dd>
@@ -190,163 +206,98 @@ distribution (e.g., Oracle and DB2). These database driver must be provided by t
 </div>
 </div>
 <div class="sect1">
-<h2 id="production-deployment"><a class="anchor" href="#production-deployment"></a>4. Production Deployment</h2>
+<h2 id="supported-sources"><a class="anchor" href="#supported-sources"></a>4. Supported Sources</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Redis Connect is deployed as one or more JVM instances coordinated as a cluster.
-Below are recommendations for running Redis Connect in production.</p>
-</div>
-<div class="sect2">
-<h3 id="environment"><a class="anchor" href="#environment"></a>4.1. Environment</h3>
-<div class="paragraph">
-<p>Redis Connect can be deployed on physical servers, virtual machines, or using Docker or any Kubernetes-based
-environment.</p>
+<p>Redis Connect can capture change data from several RDBMS and NoSQL databases.
+Redis Connect can also load data from CSV and JSON files.</p>
 </div>
 <div class="paragraph">
-<p>The minimum resource requirements per Redis Connect instance are as follows:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>4 CPU cores</p>
-</li>
-<li>
-<p>2 GB memory</p>
-</li>
-<li>
-<p>20 GB of free disk space</p>
-</li>
-<li>
-<p>1 Gbps networking</p>
-</li>
-</ul>
+<p>The table below show the complete list of supported sources.
+Each source database name links to a demo with sample configuration and data.</p>
 </div>
 <div class="paragraph">
-<p>We recommend allocating one thread per job partition.
-You can deploy more than one Redis Connect instance on a single VM.
-The number of Redis Connect instances that can effectively be deployed on a single machine or VM
-will depend on that VM&#8217;s physical memory and number of CPU cores.
-However, for high availability, you must deploy your Redis Connect instances
-across more than one physical server or VM. See High Availability below for more details.</p>
+<p>Under the hood, Redis Connect uses <a href="https://debezium.io/">Debezium</a> to access most of its source
+databases. In production, it&#8217;s important that your source database is configured as Debezium
+expects. Be sure to review the Debezium doc links below.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Supported source databases</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Database name</th>
+<th class="tableblock halign-left valign-top">Job types</th>
+<th class="tableblock halign-left valign-top">Debezium Docs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/db2">DB2</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/db2.html">Debezium docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/files">Files</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/gemfire">Gemfire</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/mongodb">MongoDB</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/mongodb.html">Debezium docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/mysql">MySQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/mysql.html">Debezium docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/oracle">Oracle</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/oracle.html">Debezium docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/oracle">PostgreSQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html">Debezium docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/splunk">Splunk</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/mssql">SQLServer</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/sqlserver.html">Debezium docs</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/vertica">Vertica</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial load</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="operating-system-and-jvm"><a class="anchor" href="#operating-system-and-jvm"></a>4.2. Operating System and JVM</h3>
-<div class="paragraph">
-<p>Redis Connect can run on any operating system hosting a Java runtime environment.
-However, for production deployments, we recommend Linux.</p>
-</div>
-<div class="paragraph">
-<p>Redis Connect is supported on Java versions 11 and greater.</p>
-</div>
-<div class="paragraph">
-<p>For information on deploying to Kubernetes environments, see the
-<a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/k8s-docs">Redis Connect Kubernetes documentation</a>.</p>
-</div>
-<div class="sect3">
-<h4 id="environment-variables"><a class="anchor" href="#environment-variables"></a>4.2.1. Environment Variables</h4>
-<div class="paragraph">
-<p>Redis Connect recognizes and depends upon several environment variables.
-You can see example of these in the startup scripts included in the Redis Connect distribution.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>REDISCONNECT_MIN_JAVA_VERSION="11"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_HOME="${REDIS_CONNECT_HOME_DIR}"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_JOB_MANAGER_CONFIG_PATH="$REDISCONNECT_HOME/config/jobmanager.properties"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_LOGBACK_CONFIG="$REDISCONNECT_HOME/config/logback.xml"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_LOGBACK_CLI_CONFIG="$REDISCONNECT_HOME/config/logback-cli.xml"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_JAVA_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx2g"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_EXTLIB_DIR="$REDISCONNECT_HOME/extlib"</code></p>
-</li>
-<li>
-<p><code>REDISCONNECT_LIB_DIR="$REDISCONNECT_HOME/lib/<strong>:$REDISCONNECT_EXTLIB_DIR/</strong>"</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="jvm-flags"><a class="anchor" href="#jvm-flags"></a>4.3. JVM Flags</h3>
-<div class="paragraph">
-<p>We recommend the following JVM flags for each Redis Connect JVM instance:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Enable heap dump on OOM: <code>-XX:+HeapDumpOnOutOfMemoryError</code></p>
-</li>
-<li>
-<p>Min heap size of 1 GB: <code>-Xms1g</code></p>
-</li>
-<li>
-<p>Max heap size of 2 GB: <code>-Xmx2g</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="redis-requirements"><a class="anchor" href="#redis-requirements"></a>4.4. Redis Requirements</h3>
-<div class="paragraph">
-<p>Redis Connect requires a working <a href="https://docs.redis.com/latest/rs/">Redis Enterprise Software</a> or
-<a href="https://docs.redis.com/latest/rc/">Redis Cloud</a> installation.</p>
-</div>
-<div class="paragraph">
-<p>We recommend provisioning two Redis databases. These database can reside in the same Redis Enterprise cluster.</p>
-</div>
-<div class="paragraph">
-<p>The first database will serve as your Redis Connect cluster&#8217;s configuration store. This database should be configured
-as follows:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Data persistence enabled (RDF + AOF every second)</p>
-</li>
-<li>
-<p><a href="https://docs.redis.com/latest/rs/databases/durability-ha/replication/">High availability</a> enabled</p>
-</li>
-<li>
-<p>ACLs enabled (See Security below)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The second database will serve as the target for replication from the source database. Since this is an operational
-database receiving change-data events, the sizing for this database depends on the sizes of the tables being replicated
-and on the volume of change-data events. In all cases, we still recommend:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://docs.redis.com/latest/rs/databases/durability-ha/replication/">High availability</a> enabled</p>
-</li>
-<li>
-<p>ACLs enabled (See Security below)</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="redis-connect-management"><a class="anchor" href="#redis-connect-management"></a>4.5. Redis Connect Management</h3>
+<div class="sect1">
+<h2 id="redis-connect-management"><a class="anchor" href="#redis-connect-management"></a>5. Redis Connect Management</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Once Redis Connect is installed and running, you manage Redis Connect using its REST API or command line interface (CLI).</p>
 </div>
-<div class="sect3">
-<h4 id="rest-api"><a class="anchor" href="#rest-api"></a>4.5.1. REST API</h4>
+<div class="sect2">
+<h3 id="rest-api"><a class="anchor" href="#rest-api"></a>5.1. REST API</h3>
 <div class="paragraph">
 <p>Each Redis Connect instance can be configured to expose a REST API with a Swagger interface for ease of use.</p>
 </div>
@@ -356,7 +307,7 @@ For the complete REST API documentation, see the
 <a href="https://redis-field-engineering.github.io/redis-connect-api-docs/">Redis Connect Swagger API Docs</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Common REST API Endpoints</caption>
+<caption class="title">Table 2. Common REST API Endpoints</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -371,7 +322,7 @@ For the complete REST API documentation, see the
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Create job</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="create-job-endpoint"></a>Create job</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Saves job configuration for the provided <code>jobName</code>.</p>
 <p class="tableblock">Many of the optional job configuration attributes have default values which can be reviewed once the job configuration
 is saved or found in the documentation.</p>
@@ -408,15 +359,15 @@ This ensures that the job can later resume from where it was stopped.</p></td>
 </tbody>
 </table>
 </div>
-<div class="sect3">
-<h4 id="rest-api-security"><a class="anchor" href="#rest-api-security"></a>4.5.2. REST API Security</h4>
+<div class="sect2">
+<h3 id="rest-api-security"><a class="anchor" href="#rest-api-security"></a>5.2. REST API Security</h3>
 <div class="paragraph">
 <p>In a production environment, the Swagger API may require an open port in a firewall.
 By default, the API is available on port 8282, but this is configurable.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="cli"><a class="anchor" href="#cli"></a>4.5.3. CLI</h4>
+<div class="sect2">
+<h3 id="cli"><a class="anchor" href="#cli"></a>5.3. CLI</h3>
 <div class="paragraph">
 <p>Redis Connect includes a command line interface that exposes the management functions provided
 by the REST API. You can start a CLI instance from the command line as follows:</p>
@@ -431,17 +382,188 @@ by the REST API. You can start a CLI instance from the command line as follows:<
 </div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="production-deployment"><a class="anchor" href="#production-deployment"></a>6. Production Deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Redis Connect is deployed as one or more JVM instances coordinated as a cluster.
+Below are recommendations for running Redis Connect in production.</p>
+</div>
 <div class="sect2">
-<h3 id="logging"><a class="anchor" href="#logging"></a>4.6. Logging</h3>
+<h3 id="environment"><a class="anchor" href="#environment"></a>6.1. Environment</h3>
+<div class="paragraph">
+<p>Redis Connect can be deployed on physical servers, virtual machines, or using Docker or any Kubernetes-based
+environment.</p>
+</div>
+<div class="paragraph">
+<p>The minimum resource requirements per Redis Connect instance are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>4 CPU cores</p>
+</li>
+<li>
+<p>2 GB memory</p>
+</li>
+<li>
+<p>20 GB of free disk space</p>
+</li>
+<li>
+<p>1 Gbps networking</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We recommend allocating one thread per job partition.
+You can deploy more than one Redis Connect instance on a single VM.
+The number of Redis Connect instances that can effectively be deployed on a single machine or VM
+will depend on that VM&#8217;s physical memory and number of CPU cores.
+However, for high availability, you must deploy your Redis Connect instances
+across more than one physical server or VM. See <a href="#high-availability">High Availability</a> below for more details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="operating-system-and-jvm"><a class="anchor" href="#operating-system-and-jvm"></a>6.2. Operating System and JVM</h3>
+<div class="paragraph">
+<p>Redis Connect can run on any operating system hosting a Java runtime environment.
+However, for production deployments, we recommend Linux.</p>
+</div>
+<div class="paragraph">
+<p>Redis Connect is supported on Java versions 11 and greater.</p>
+</div>
+<div class="paragraph">
+<p>For information on deploying to Kubernetes environments, see the
+<a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/k8s-docs">Redis Connect Kubernetes documentation</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="environment-variables"><a class="anchor" href="#environment-variables"></a>6.2.1. Environment Variables</h4>
+<div class="paragraph">
+<p>Redis Connect recognizes and depends upon several environment variables.
+You can see example of these in the startup scripts included in the Redis Connect distribution.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REDISCONNECT_MIN_JAVA_VERSION="11"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_HOME="${REDIS_CONNECT_HOME_DIR}"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_JOB_MANAGER_CONFIG_PATH="$REDISCONNECT_HOME/config/jobmanager.properties"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_LOGBACK_CONFIG="$REDISCONNECT_HOME/config/logback.xml"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_LOGBACK_CLI_CONFIG="$REDISCONNECT_HOME/config/logback-cli.xml"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_JAVA_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx2g"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_EXTLIB_DIR="$REDISCONNECT_HOME/extlib"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_LIB_DIR="$REDISCONNECT_HOME/lib/*:$REDISCONNECT_EXTLIB_DIR/\*"</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jvm-flags"><a class="anchor" href="#jvm-flags"></a>6.3. JVM Flags</h3>
+<div class="paragraph">
+<p>We recommend the following JVM flags for each Redis Connect JVM instance:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enable heap dump on OOM: <code>-XX:+HeapDumpOnOutOfMemoryError</code></p>
+</li>
+<li>
+<p>Min heap size of 1 GB: <code>-Xms1g</code></p>
+</li>
+<li>
+<p>Max heap size of 2 GB: <code>-Xmx2g</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To set Redis Connect&#8217;s JVM options, use the <code>REDISCONNECT_JAVA_OPTIONS</code> environment variable:</p>
+</div>
+<div class="paragraph">
+<p><code>REDISCONNECT_JAVA_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx2g"</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="redis-requirements"><a class="anchor" href="#redis-requirements"></a>6.4. Redis Requirements</h3>
+<div class="paragraph">
+<p>Redis Connect requires a working <a href="https://docs.redis.com/latest/rs/">Redis Enterprise Software</a> or
+<a href="https://docs.redis.com/latest/rc/">Redis Cloud</a> installation.</p>
+</div>
+<div class="paragraph">
+<p>We recommend provisioning two Redis databases. These database can reside in the same Redis Enterprise cluster.</p>
+</div>
+<div class="paragraph">
+<p>The first database will serve as your Redis Connect cluster&#8217;s configuration store. This database should be configured
+as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Data persistence enabled (RDF + AOF every second)</p>
+</li>
+<li>
+<p><a href="https://docs.redis.com/latest/rs/databases/durability-ha/replication/">High availability</a> enabled</p>
+</li>
+<li>
+<p>ACLs enabled (See <a href="#security">Security</a> below)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The second database will serve as the target for replication from the source database. Since this is an operational
+database receiving change-data events, the sizing for this database depends on the sizes of the tables being replicated
+and on the volume of change-data events. In all cases, we still recommend:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.redis.com/latest/rs/databases/durability-ha/replication/">High availability</a> enabled</p>
+</li>
+<li>
+<p>ACLs enabled (See <a href="#security">Security</a> below)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="logging"><a class="anchor" href="#logging"></a>6.5. Logging</h3>
 <div class="paragraph">
 <p>Redis Connect uses <a href="https://logback.qos.ch/">Logback</a> for logging.
 See your Redis Connect distribution&#8217;s <code>config/logback.xml</code> for a sample Logback configuration file.</p>
 </div>
 <div class="paragraph">
+<p>Redis connect locates its logging config files using the following environment variables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REDISCONNECT_LOGBACK_CONFIG="$REDISCONNECT_HOME/config/logback.xml"</code></p>
+</li>
+<li>
+<p><code>REDISCONNECT_LOGBACK_CLI_CONFIG="$REDISCONNECT_HOME/config/logback-cli.xml"</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>Redis Connect has been designed to provide descriptive logs to make troubleshooting easier.</p>
 </div>
 <div class="paragraph">
-<p>If you need to change your application log level at runtime, you can do this using the REST API.
+<p>If you need to change your application log level at runtime, you can do this using the <a href="#rest-api">REST API</a>.
 See the <a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/LOG%20MANAGEMENT/listLogLevelUsingGET">loglevel REST endpoint documentation</a> for details.</p>
 </div>
 <div class="paragraph">
@@ -450,7 +572,7 @@ To change the log level for a given instance, connect directly to that instance&
 </div>
 </div>
 <div class="sect2">
-<h3 id="monitoring"><a class="anchor" href="#monitoring"></a>4.7. Monitoring</h3>
+<h3 id="monitoring"><a class="anchor" href="#monitoring"></a>6.6. Monitoring</h3>
 <div class="paragraph">
 <p>Redis Connect publishes performance metrics to job manager&#8217;s configuration database.
 This takes advantage of <a href="https://redis.io/docs/data-types/timeseries/">Redis' time series capabilities</a>.</p>
@@ -506,11 +628,11 @@ the volume of CDC changes. Note that this metric only applies to stream jobs.</p
 </div>
 </div>
 <div class="sect2">
-<h3 id="security"><a class="anchor" href="#security"></a>4.8. Security</h3>
+<h3 id="security"><a class="anchor" href="#security"></a>6.7. Security</h3>
 <div class="paragraph">
 <p>Redis Connect should be run in a secure network environment.
 Because Redis Connect connects to source and target databases,
-those connections may be secured with TLS/SSL and must be secured
+those connections <strong>may</strong> be secured with TLS/SSL and <strong>must</strong> be secured
 using authentication credentials.</p>
 </div>
 <div class="paragraph">
@@ -519,7 +641,7 @@ file-based credential rotation, optionally powered by secrets management
 frameworks like Hashicorp Vault.</p>
 </div>
 <div class="sect3">
-<h4 id="tlsssl-support"><a class="anchor" href="#tlsssl-support"></a>4.8.1. TLS/SSL Support</h4>
+<h4 id="tlsssl-support"><a class="anchor" href="#tlsssl-support"></a>6.7.1. TLS/SSL Support</h4>
 <div class="paragraph">
 <p>Most database systems support one-way and mutual TLS, and TLS authentication is often required in production environments.</p>
 </div>
@@ -542,11 +664,11 @@ To configure the Java KeyStore and TrustStore, see the <a href="#truststore-link
 </div>
 </div>
 <div class="sect3">
-<h4 id="database-acls"><a class="anchor" href="#database-acls"></a>4.8.2. Database ACLs</h4>
+<h4 id="database-acls"><a class="anchor" href="#database-acls"></a>6.7.2. Database ACLs</h4>
 <div class="paragraph">
 <p>The Redis job manager and the job target databases should have ACLs enabled.
 To keep your Redis databases secure and prevent accidental misconfigurations,
-we recommend the following policis:</p>
+we recommend the following policies:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -560,128 +682,401 @@ we recommend the following policis:</p>
 <p>Ensure that any application user connecting Redis Connect&#8217;s Redis databases has <code>dangerous</code> commands disabled.</p>
 </li>
 <li>
-<p>User should not have permission to delete keys starting with "{connect}". This prevents accidental deletion
+<p>Users should not have permission to delete keys starting with "{connect}". This prevents accidental deletion
 of important configuration.</p>
 </li>
 </ol>
 </div>
 </div>
 <div class="sect3">
-<h4 id="authentication-credentials"><a class="anchor" href="#authentication-credentials"></a>4.8.3. Authentication Credentials</h4>
+<h4 id="authentication-credentials"><a class="anchor" href="#authentication-credentials"></a>6.7.3. Authentication Credentials</h4>
 <div class="paragraph">
-<p>pair
-source and sink
-source starts with source name
-3 credentails file at minimim
-1 for the instance
-1 for source
-1 for sink
-we have examples in sample
-the location is in jobmanager.properties</p>
+<p>Redis Connect gets its database authentication credentials from properties files stored on the filesystem.</p>
 </div>
 <div class="paragraph">
-<p>property files</p>
+<p>The file <code>redisconnect_credentials_jobmanager.properties</code> is common to all Redis Connect instances.
+This file provides the following authentication credentials:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Username and password for the Redis database used to store Redis Connect&#8217;s configuration</p>
+</li>
+<li>
+<p>Password for the certificate TrustStore (when applicable)</p>
+</li>
+<li>
+<p>Password for the certificate KeyStore (when applicable)</p>
+</li>
+<li>
+<p>Password for an SMTP mail server, when email alerts are enabled</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>linux permissions for these files?
-these contain actual passwords</p>
+<p>In addition to the job manager&#8217;s credentials, Redis Connect requires two credential files for each job:
+one for the source database and another for the target Redis database.</p>
 </div>
 <div class="paragraph">
-<p>passwords are in plain text</p>
+<p><strong>Source database credential files</strong> are named according to this scheme:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">redisconnect_credentials_[SOURCE_DB_NAME]_[JOB_NAME].properties</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>we listen to these files so that you can rotate these credentails
-can enable for jobmanager, source, or target</p>
+<p>For example, if you have a job where PostgreSQL is the source database, and the job is called "user-replication",
+then you will need a properties file called:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">redisconnect_credentials_PostgreSQL_user-replication.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <strong>target database credentials files</strong> are named as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">redisconnect_credentials_redis_[JOB_NAME].properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For job called "user-replication", the Redis target database credentials file will be named:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">redisconnect_credentials_redis_user-replication.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see examples of credentials files in the <code>config/samples/credentials</code> directory of the Redis Connect
+distribution.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="securing-credentials-files"><a class="anchor" href="#securing-credentials-files"></a>6.7.4. Securing Credentials Files</h4>
+<div class="paragraph">
+<p>Because credentials files store sensitive information in plain text on the filesystem, these files must
+have strict permissions. Only authorized users should be able to read and write to these files.</p>
+</div>
+<div class="paragraph">
+<p>As with private key files, these credentials files should be user read/write only (e.g., chmod 600).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="credential-rotation"><a class="anchor" href="#credential-rotation"></a>6.7.5. Credential Rotation</h4>
+<div class="paragraph">
+<p>Redis Connect instances listen for changes to the credentials files. When the contents of these files changes,
+Redis Connect will read the changes to ensure that database connectivity is maintained.</p>
+</div>
+<div class="paragraph">
+<p>To enable support for credential rotation in Redis Connection, open <code>jobmanager.properties</code> and ensure that the
+credential rotation directives are uncommented. The following configuration enabled the credential file listener
+and sets it to check for changes every 60 seconds:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>credentials.rotation.event.listener.enabled=true</code></p>
+</li>
+<li>
+<p><code>credentials.rotation.event.listener.interval=60000</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="secrets-management"><a class="anchor" href="#secrets-management"></a>6.7.6. Secrets Management</h4>
+<div class="paragraph">
+<p>You can use a secrets management framework such as Hashicorp Vault to securely store and rotate credentials.
+To use a secrets management framework:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that framework can write property files in a given mounted path on your filesystem.</p>
+</li>
+<li>
+<p>In <code>jobmanager.properties</code>, set the <code>credentials.dir.path</code> to this mounted path.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="high-availability"><a class="anchor" href="#high-availability"></a>4.9. High Availability</h3>
+<h3 id="high-availability"><a class="anchor" href="#high-availability"></a>6.8. High availability</h3>
 <div class="paragraph">
-<p>TODO</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="scaling-out"><a class="anchor" href="#scaling-out"></a>4.10. Scaling out</h3>
-<div class="paragraph">
-<p>TODO</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="supported-source-databases"><a class="anchor" href="#supported-source-databases"></a>4.11. Supported Source Databases</h3>
-<div class="paragraph">
-<p>Redis Connect can capture change data from several RDBMS and NoSQL databases.</p>
+<p>For high-availability, we recommend that you employ <em>n</em>+1 redundancy as part of your Redis Connect cluster.
+In this case, <em>n</em> is defined as the minimum number of Redis Connect instances required to provision all of the
+jobs that you intend to run.</p>
 </div>
 <div class="paragraph">
-<p>The following database are supported.
-Here, each supported database links to a sa</p>
+<p>We also recommend that you deploy each Redis Connect instance on a separate VM. When running in the cloud,
+you should ensure that your Redis Connect instances are distributed across cloud availability zones.</p>
+</div>
+<div class="sect3">
+<h4 id="instance-failure-behavior"><a class="anchor" href="#instance-failure-behavior"></a>6.8.1. Instance failure behavior</h4>
+<div class="paragraph">
+<p>In the event of a Redis Connect instance (JVM) failure, the heartbeat lease of each job partition owned by that instance
+expires. Once expired, the job reaper will identify each partition without a heartbeat and immediately publish a job claim
+request.</p>
 </div>
 <div class="paragraph">
-<p>MySql, Oracle, Postgres, SQLServer, MongoDB, and Gemfire.
-DB2, Splunk, Vertica, and text files are supported only for initial load jobs.</p>
+<p>Even if a JVM was restarted on the same machine, on which it just failed, it would still need to compete with the other
+instances with available capacity to claim the job partitions.</p>
 </div>
 <div class="paragraph">
-<p>Define stream vs initial load.</p>
+<p>It&#8217;s important to understand each job’s capacity requirements and related settings to calculate how many instances are needed.
+For example, if a job with 4 partitions and a setting of <code>maxPartitionsPerClusterMember=2</code> is deployed across a 2-instance cluster,
+then even if there are 20 available capacity on each Redis Connect instance, they would be blocked from claiming more of this job’s
+unclaimed partitions in the event of a node failure.</p>
 </div>
 <div class="paragraph">
-<p>Link to the example in dist.
-Link to debezium connectors: <a href="https://debezium.io/documentation/reference/2.3/connectors/index.html" class="bare">https://debezium.io/documentation/reference/2.3/connectors/index.html</a></p>
+<p>It&#8217;s also important to set the Job Manager property <code>job.claim.max.capacity</code> appropriate to the desired redundancy requirement
+with respect to all job partitions planned for deployment across the cluster.
+For example, if there are 3 cluster nodes each with a goal to deploy a job with 4 partitions, then in order to achieve n+1 redundancy,
+each node would have to configure job.claim.max.capacity=2, or more, since the loss of one node would still allow for all 4 partitions
+to be claimed.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="instance-failures"><a class="anchor" href="#instance-failures"></a>6.8.2. Instance failures</h4>
+<div class="paragraph">
+<p>For high-availability, it is recommended to deploy each Redis Connect instance on a separate VM or cloud availability zone.
+For on-premises deployments, extra care should be taken to ensure that each VM is deployed on different underlying server racks
+to avoid a single point of failure.</p>
 </div>
 <div class="paragraph">
-<p>Note that source database needs to be configured according to Debezium docs
-- For Demo and POC purposes, you can refer to our container example</p>
+<p>Each VM / cloud availability zone should have access to each job’s source, job’s target, and the Redis Connect Job Manager database.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Supported source databases</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Database name</th>
-<th class="tableblock halign-left valign-top">Stream</th>
-<th class="tableblock halign-left valign-top">Initial Load</th>
-<th class="tableblock halign-left valign-top">Debezium Documentation</th>
-</tr>
-</thead>
-</table>
+<div class="paragraph">
+<p>For deployment on Kubernetes, see the
+<a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/k8s-docs">Redis Connect Kubernetes Docs</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="network-partitions"><a class="anchor" href="#network-partitions"></a>6.8.3. Network partitions</h4>
+<div class="paragraph">
+<p>If a network partition occurs, then one side or the other (or both) of the partition needs to stop responding to requests
+to maintain the consistency guarantee. If both sides continue to respond to reads and writes while they are unable to communicate
+with each other, they will diverge and no longer be consistent. This state where both sides of the partition remain
+available is called "split brain".</p>
+</div>
+<div class="paragraph">
+<p>To avoid "split brain", Redis Connect jobs make a call to the Job Management database as the initial stage of their
+producer’s source event-loop to check if their claim is still valid. Here’s why that matters.
+A job cannot be claimed unless the Job Reaper identifies a staged job without a heartbeat, so until that lease expires,
+the claim is intact. Once the heartbeat expires due to the network partition, the Job Reaper will first remove the claim
+from the Job Management database before publishing a new job claim request.
+So even if the original Redis Connect instance has not died, it cannot continue to process additional batches once its
+claim is removed nor can it regain its ownership by default when the network partition is remedied.</p>
+</div>
+<div class="paragraph">
+<p>By relying on Redis Enterprise as its source of truth, this cluster architecture is guaranteed to always have a single
+job owner at any one point-in-time. This is because the metadata stored within Redis Enterprise has its own split-brain
+protection.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="source-connection-failures"><a class="anchor" href="#source-connection-failures"></a>6.8.4. Source Connection Failures</h4>
+<div class="paragraph">
+<p>Connections fail for many reasons both intermittently and for prolonged outages. Since Redis Connect does not know the
+cause of a connection issue, the cluster will always assume that the connection failure is intermittent and attempt to
+re-establish the connection.</p>
+</div>
+<div class="paragraph">
+<p>For this purpose, it’s important to set the following configurations within the job source:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sourceConnectionMaxRetryAttempts</code></p>
+</li>
+<li>
+<p><code>sourceConnectionMaxRetryDuration</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayInterval</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryMaxDelayInterval</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayFactor</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of their use:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sourceConnectionMaxRetryAttempts=3</code></p>
+</li>
+<li>
+<p><code>sourceConnectionMaxRetryDuration=10</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayInterval=60</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryMaxDelayInterval=600</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayFactor=3</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Based on the above, if the first attempt to connect fails, then the process waits 60 seconds before attempting its first retry.</p>
+</div>
+<div class="paragraph">
+<p>If the retry fails, then the process waits 60 * 3 = 180 seconds for its second retry, and so on, up until the max delay interval between retries.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="target-redis-connection-failures"><a class="anchor" href="#target-redis-connection-failures"></a>6.8.5. Target Redis Connection Failures</h4>
+<div class="paragraph">
+<p>Just like sources, Redis target connections have a retry mechanism.
+However, these retries are built into the underlying Redis client (a.k.a., <a href="https://lettuce.io/">Lettuce</a>).
+For production environments, we recommend using the default Redis connection settings.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="target-redis-slow-consumer"><a class="anchor" href="#target-redis-slow-consumer"></a>6.8.6. Target Redis Slow Consumer</h4>
+<div class="paragraph">
+<p>It’s possible that the rate of incoming changed-data events and outgoing sink commits becomes unbalanced due to a slowdown
+on the target database, usually because of network congestion. To avoid overwhelming the job pipeline queue, the combination of the
+following settings helps to provide back-pressure support:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>slowConsumerMaxRetryAttempts</p>
+</li>
+<li>
+<p>intermittentEventSleepDuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Once the pipeline queue becomes full, a circuit breaker will be triggered to disable the producer’s polling event-loop
+until the requisite pipeline capacity becomes available.
+While the pipeline is iterating through its queued events,
+the job’s producer will periodically attempt to publish the remainder of its current batch.</p>
+</div>
+<div class="paragraph">
+<p>In between each attempt, the producer will sleep (based on intermittentEventSleepDuration), which allows the pipeline
+time to catch up.
+This loop will continue until either the required capacity becomes available or the <code>slowConsumerMaxRetryAttempts</code> limit
+is reached. Once reached, the job will stop.</p>
+</div>
+<div class="paragraph">
+<p>In production, we recommend that you set <code>slowConsumerMaxRetryAttempts</code> to a reasonable setting instead of making
+it unlimited or disabling it.
+This is where proper capacity estimation and partitioning will become critical since you don’t want to stop the job
+unnecessarily due to a network disruption nor large spike in volume.
+In other words, even if a single partition can handle the entire throughput on a regular basis,
+it might be worthwhile to partition the deployment so that a sudden spike in throughput or a slow consumer does not
+bring down the job.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="recovery-time-considerations"><a class="anchor" href="#recovery-time-considerations"></a>6.8.7. Recovery Time Considerations</h4>
+<div class="paragraph">
+<p>Redis Connect’s job management processes are scheduled threads that periodically wake up to perform their service.
+While it’s not critical to understand the internals of the cluster architecture, it is relevant to be aware of the balance
+between job claim heartbeats and the Job Reaper service.</p>
+</div>
+<div class="paragraph">
+<p>As mentioned previously, when a job partition is claimed it begins a heartbeat lease which has a
+TTL set by <code>job.claim.heartbeat.lease.renewal.ttl</code>. If the lease cannot be renewed before expiry, the Job Reaper
+service will remove the current owner’s claim based on the assumption that its Redis Connect instance is no longer alive.</p>
+</div>
+<div class="paragraph">
+<p>This service is performed based on a fixed interval set by job.reap.attempt.interval. Once the job claim is removed,
+each eligible Redis Connect instance will attempt to claim the job partition.
+This Job Claim service is also based on a fixed interval set by job.claim.attempt.interval.</p>
+</div>
+<div class="paragraph">
+<p>Since each interval is started at a different point-in-time (and some services have more work to do than others),
+it’s impossible to synchronize all the moving parts. However, it is critical to avoid scenarios that can cause unexpected
+behavior by giving enough buffer between associated services. For example, <code>job.reap.attempt.interval</code> must be at least
+2 seconds more than <code>job.claim.attempt.interval</code> to avoid sending multiple job claim requests for the same partition.
+This relates to recovery because each default interval can potentially add up to over a minute in recovery time inclusive
+of the actual start job process. Therefore, if instant recovery is critical to production SLAs, our recommendation is to
+consider the balance between separate services and as well as the stability of your network.
+If these settings are set too low, it’s possible that a network disruption can unnecessarily
+start the recovery process on a healthy job.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#cluster-configuration">Cluster Configuration</a> for details on setting these properties.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="cluster-and-job-configuration"><a class="anchor" href="#cluster-and-job-configuration"></a>5. Cluster and Job Configuration</h2>
+<h2 id="configuration-overview"><a class="anchor" href="#configuration-overview"></a>7. Configuration Overview</h2>
 <div class="sectionbody">
-<div class="sect3">
-<h4 id="configuration"><a class="anchor" href="#configuration"></a>5.1. Configuration</h4>
 <div class="paragraph">
-<p>TODO: Link to the Postgres example and explain how it works.</p>
+<p>Redis Connect&#8217;s main configuration file is called "jobmanager.properties".
+You can find an example of this file in your distribution&#8217;s "/config" directory.</p>
 </div>
 <div class="paragraph">
-<p>The "jobmanager.properties" file in the "/config" directory is Redis Connect&#8217;s main configuration file.</p>
+<p>The location of this file is provided to Redis Connect with the <code>REDISCONNECT_JOB_MANAGER_CONFIG_PATH</code> environment
+variable. Here&#8217;s an example of its use:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REDISCONNECT_JOB_MANAGER_CONFIG_PATH="$REDISCONNECT_HOME/config/jobmanager.properties"</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Redis Connect runs one or more change-data capture jobs.
-Each job represents a stream of change-data events that are replicated from a source database to Redis.</p>
+<p>The most basic Redis Connect configuration includes the url of the Redis database used to store this state.
+This URL is stored at the parameter <code>redis.connection.url</code> is <code>jobmanager.properties</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="job-configuration"><a class="anchor" href="#job-configuration"></a>7.1. Job Configuration</h3>
+<div class="paragraph">
+<p>Redis Connect runs one or more <strong>change-data capture jobs</strong>.
+Each job is defined by a JSON configuration payload submitted using the REST API or CLI.
+To see examples of this JSON configuration, open the <code>config/samples/payloads</code> folder in the Redis Connect distribution.</p>
 </div>
 <div class="paragraph">
-<p>To keep track of each of its jobs, Redis Connect stores its state in a Redis database.</p>
-</div>
-<div class="paragraph">
-<p>The most basic Redis Connect configuration includes the url of the Redis database used to store this state.</p>
-</div>
-<div class="paragraph">
-<p>This URL is stored at the parameter <code>redis.connection.url</code>.
-The location of the credentials files for the job sources &amp; sinks, ‘credentials.file.path’.</p>
-</div>
-<div class="paragraph">
-<p>This last value should point to the directory where any and all credential files for different jobs will be located.</p>
+<p>To save a job configuration, construct your JSON payload and then submit it using the REST API&#8217;s
+<a href="#create-job-endpoint">create job endpoint</a>. When you submit this configuration, you will also
+provide a unique job name. This job name will be used in the naming of your credentials files.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="cluster-properties"><a class="anchor" href="#cluster-properties"></a>5.2. Cluster properties</h3>
+<h3 id="credentials-files"><a class="anchor" href="#credentials-files"></a>7.2. Credentials files</h3>
+<div class="paragraph">
+<p>Credentials files store authentication credentials for the databases used by Redis Connect.</p>
+</div>
+<div class="paragraph">
+<p>The location of these credentials files is specified at the <code>credentials.dir.path</code> properties in <code>jobmanager.properties</code>.
+To learn about which credentials are required, see the <a href="#authentication-credentials">authentication credentials</a>
+subsection.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cluster-configuration"><a class="anchor" href="#cluster-configuration"></a>8. Cluster Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes the configuration directives in <code>jobmanager.properties</code>.
+Each of the subsections below corresponds to a configuration block in <code>jobmanager.properties</code>.
+To see a sample <code>jobmanager.properties</code> file, open <code>config/jobmanager.properties</code> in your Redis Connect distribution.</p>
+</div>
+<div class="sect2">
+<h3 id="cluster-properties"><a class="anchor" href="#cluster-properties"></a>8.1. Cluster properties</h3>
 <table id="properties" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Cluster properties</caption>
 <colgroup>
@@ -732,7 +1127,7 @@ RedisTimeSeries is a dependency for this capability. See (Section X.X) for insta
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-manager-services-properties"><a class="anchor" href="#job-manager-services-properties"></a>5.3. Job manager services properties</h3>
+<h3 id="job-manager-services-properties"><a class="anchor" href="#job-manager-services-properties"></a>8.2. Job manager services properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Job manager services properties</caption>
 <colgroup>
@@ -817,7 +1212,7 @@ If a sparse topology across many Redis Connect instances is desired, then loweri
 </table>
 </div>
 <div class="sect2">
-<h3 id="rest-api-properties"><a class="anchor" href="#rest-api-properties"></a>5.4. REST API Properties</h3>
+<h3 id="rest-api-properties"><a class="anchor" href="#rest-api-properties"></a>8.3. REST API Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. REST API properties</caption>
 <colgroup>
@@ -855,7 +1250,7 @@ for its REST API.</p></td>
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-management-database-properties"><a class="anchor" href="#job-management-database-properties"></a>5.5. Job Management Database Properties</h3>
+<h3 id="job-management-database-properties"><a class="anchor" href="#job-management-database-properties"></a>8.4. Job Management Database Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Job Management Database Properties</caption>
 <colgroup>
@@ -968,7 +1363,7 @@ is scanned for changes.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="email-alerting-properties"><a class="anchor" href="#email-alerting-properties"></a>5.6. Email Alerting Properties</h3>
+<h3 id="email-alerting-properties"><a class="anchor" href="#email-alerting-properties"></a>8.5. Email Alerting Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. Email Alerting Properties</caption>
 <colgroup>
@@ -1038,10 +1433,17 @@ Multiple recipients can be added by delimiting them with a comma.</p></td>
 </div>
 </div>
 <div class="sect1">
-<h2 id="job-execution-configuration"><a class="anchor" href="#job-execution-configuration"></a>6. Job execution configuration</h2>
+<h2 id="job-configuration-main"><a class="anchor" href="#job-configuration-main"></a>9. Job Configuration</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This section describes the fields in job configuration payloads.</p>
+</div>
+<div class="paragraph">
+<p>Each of the subsections below corresponds to a configuration block in <code>jobmanager.properties</code>.
+To see a sample <code>jobmanager.properties</code> file, open <code>config/jobmanager.properties</code> in your Redis Connect distribution.</p>
+</div>
 <div class="sect2">
-<h3 id="job-properties"><a class="anchor" href="#job-properties"></a>6.1. Job properties</h3>
+<h3 id="job-properties"><a class="anchor" href="#job-properties"></a>9.1. Job properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. Job properties</caption>
 <colgroup>
@@ -1096,15 +1498,15 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pipeline</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Section 4.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-pipeline-properties">Job Pipeline Properties</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">source</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Section 4.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-properties">Job Source Properties</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
@@ -1112,9 +1514,195 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-source-properties"><a class="anchor" href="#job-source-properties"></a>6.2. Job Source Properties</h3>
+<h3 id="job-pipeline-properties"><a class="anchor" href="#job-pipeline-properties"></a>9.2. Job Pipeline Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Job Source Properties</caption>
+<caption class="title">Table 9. Job Pipeline Properties</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pipelineBuffer
+Size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis Connect’s pipeline is powered by the LMAX Disruptor library (High Performance Inter-Thread Messaging).</p>
+<p class="tableblock">The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".</p>
+<p class="tableblock">Increasing the buffer size will impact the JVM heap space required to store all transient changed data events within the queue.
+For most cases, this can be left as default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=1024
+Must be a power of 2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">preprocessor
+Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run before changed-data events are transformed and published to the pipeline.</p>
+<p class="tableblock">This is currently not extendable by end users.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postprocessor
+Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run after changed-data events are transformed and published to the pipeline.</p>
+<p class="tableblock">This is currently not extendable by end users.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job
+Pipeline
+Stage[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-pipeline-stage-properties">Job Pipeline Stage Properties</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="job-pipeline-stage-properties"><a class="anchor" href="#job-pipeline-stage-properties"></a>9.3. Job Pipeline Stage Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Job Pipeline Stage Properties</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stageName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique name which is used as an exact match reference to a custom-built target sink or a user-defined custom stage.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">index</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the sequence in which the stages of the pipeline should be orchestrated.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p>
+<p class="tableblock">Begins with 1 and each subsequent index should increment by 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metricsEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the target sink stage will report throughput and latency related metrics for persistence in
+RedisTimeSeries. This can subsequently be visualized in Grafana.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metricsRetentionInHours</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration for metrics samples as compared to the highest reported timestamp before they expire.</p>
+<p class="tableblock">Measured in hours.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpointStage
+Indicator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates which sink will be responsible for committing the checkpoint to the target database.
+This is typically performed by the last stage of the pipeline and, often times, it is the only stage in the pipeline.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job pipeline can only have a single stage with checkpointStage
+<code>Indicator=true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checkpoint
+Transactions
+Enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Although the producer’s polling event loop enqueues changed-data events in batches, each event is processed
+individually through the pipeline. This is because Redis Connect updates the checkpoint at the changed-data event level
+and not the batch.</p>
+<p class="tableblock">When enabled, the checkpoint will be committed as part of an atomic Redis transaction.
+This eliminates consistency issues and improves performance.
+Rollback capability is built in to handle any failure scenarios during the transaction so that no data will be lost.</p>
+<p class="tableblock">When disabled, the checkpoint will be committed after the the changed-data events are written.
+This adds another network round trip for each changed-data event.</p>
+<p class="tableblock">While distributed checkpoints have distinct advantages, there is a small tradeoff. Because Redis keys are bound by their
+hash-slots, distributed checkpoints require that we store one checkpoint per hash slot.</p>
+<p class="tableblock">When enabled, each job partition will have its own 16384 checkpoint keys created in the target database.
+With ~250 bytes per checkpoint, each partition’s estimated overhead is ~4MB. When disabled, there is only a single
+checkpoint key in the target per partition.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Distributed checkpoints require RediSearch. We use RediSearch to index checkpoint keys so that recovery from the
+latest checkpoint is immediate.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyPrefix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a prefix to the target Redis key before the tableName and composition of targetKey enabled columns.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userDefinedType</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">To create a custom stage, a factory interface must be extended so that Redis Connect can have visibility to it from a
+class loading perspective. See section X.X.X.</p>
+<p class="tableblock">The interface will force the user to create a <code>getType()</code> method which returns a unique String to represent the custom
+factory.
+This property must exactly match that custom unique String so that Redis Connect can properly discover and handle it as a custom stage.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">database</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See Database Properties (Section 4.4)
+Configuration for all target database configuration.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint
+Database</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-properties">Database Properties</a>
+Checkpoint database configuration.
+This is only required if Redis is not the target destination, which is only supported for Splunk.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="job-source-properties"><a class="anchor" href="#job-source-properties"></a>9.4. Job Source Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Job Source Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1244,7 +1832,7 @@ Factor</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">database</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Section 4.4</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-properties">Database Properties</a></p>
 <p class="tableblock">Configuration for all source databases.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
@@ -1252,7 +1840,7 @@ Factor</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">tables</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Map&lt;String, Table&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See section 4.2.2</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-table-column-properties">Job Source Table Column Properties</a></p>
 <p class="tableblock">Configuration for all source tables/collections/regions/logs properties.</p>
 <p class="tableblock">Each table within the map requires a unique name which will be used as part of target key composition.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
@@ -1262,14 +1850,14 @@ Factor</p></td>
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-source-database-properties"><a class="anchor" href="#job-source-database-properties"></a>6.3. Job Source Database Properties</h3>
+<h3 id="job-source-database-properties"><a class="anchor" href="#job-source-database-properties"></a>9.5. Job Source Database Properties</h3>
 <div class="paragraph">
-<p>See Section 4.4</p>
+<p>See <a href="#database-properties">Database Properties</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="4-2-2-job-source-table-properties"><a class="anchor" href="#4-2-2-job-source-table-properties"></a>6.3.1. 4.2.2 Job Source Table Properties</h4>
+<h4 id="job-source-table-properties"><a class="anchor" href="#job-source-table-properties"></a>9.5.1. Job Source Table Properties</h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Job Source Table Properties</caption>
+<caption class="title">Table 12. Job Source Table Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1345,14 +1933,14 @@ When enabled, the column-level changedColumnOnlyEnabled flag will be overridden 
 Source
 Table
 Column[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Job Source Table Column Properties (Section 4.2.2.1)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-table-column-properties">Job Source Table Column Properties</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">initialLoad</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Initial Load</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Initial Load Properties (See Section 4.2.2.2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-table-initial-load-properties">Job Source Table Initial Load Properties</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
 </tr>
@@ -1361,9 +1949,9 @@ Column[]</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="job-source-table-column-properties"><a class="anchor" href="#job-source-table-column-properties"></a>6.4. Job Source Table Column Properties</h3>
+<h3 id="job-source-table-column-properties"><a class="anchor" href="#job-source-table-column-properties"></a>9.6. Job Source Table Column Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Job Source Table Column Properties</caption>
+<caption class="title">Table 13. Job Source Table Column Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1461,9 +2049,9 @@ generate a "_id" key which can be used as a targetKey but has no value as a fiel
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-source-table-initial-load-properties"><a class="anchor" href="#job-source-table-initial-load-properties"></a>6.5. Job Source Table Initial Load Properties</h3>
+<h3 id="job-source-table-initial-load-properties"><a class="anchor" href="#job-source-table-initial-load-properties"></a>9.7. Job Source Table Initial Load Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Job Source Table Column Properties</caption>
+<caption class="title">Table 14. Job Source Table Column Properties</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1528,193 +2116,7 @@ This is only supported for RDB sources and only for initial load only / ETL jobs
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-pipeline-properties"><a class="anchor" href="#job-pipeline-properties"></a>6.6. Job Pipeline Properties</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Job Pipeline Properties</caption>
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pipelineBuffer
-Size</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Redis Connect’s pipeline is powered by the LMAX Disruptor library (High Performance Inter-Thread Messaging).</p>
-<p class="tableblock">The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".</p>
-<p class="tableblock">Increasing the buffer size will impact the JVM heap space required to store all transient changed data events within the queue.
-For most cases, this can be left as default.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1024
-Must be a power of 2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">preprocessor
-Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run before changed-data events are transformed and published to the pipeline.</p>
-<p class="tableblock">This is currently not extendable by end-users.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">postprocessor
-Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run after changed-data events are transformed and published to the pipeline.</p>
-<p class="tableblock">This is currently not extendable by end-users.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stages</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Job
-Pipeline
-Stage[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Job Pipeline Stage Properties (Section 4.3.1)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="job-pipeline-stage-properties"><a class="anchor" href="#job-pipeline-stage-properties"></a>6.7. Job Pipeline Stage Properties</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Job Pipeline Stage Properties</caption>
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stageName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unique name which is used as an exact match reference to a custom-built target sink or a user-defined custom stage.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">index</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the sequence in which the stages of the pipeline should be orchestrated.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p>
-<p class="tableblock">Begins with 1 and each subsequent index should increment by 1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">metricsEnabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the target sink stage will report throughput and latency related metrics for persistence in
-RedisTimeSeries. This can subsequently be visualized in Grafana.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">metricsRetentionInHours</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration for metrics samples as compared to the highest reported timestamp before they expire.</p>
-<p class="tableblock">Measured in hours.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">checkpointStage
-Indicator</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates which sink will be responsible for committing the checkpoint to the target database.
-This is typically performed by the last stage of the pipeline and, often times, it is the only stage in the pipeline.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Job pipeline can only have a single stage with checkpointStage
-<code>Indicator=true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Checkpoint
-Transactions
-Enabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Although the producer’s polling event loop enqueues changed-data events in batches, each event is processed
-individually through the pipeline. This is because Redis Connect updates the checkpoint at the changed-data event level
-and not the batch.</p>
-<p class="tableblock">When enabled, the checkpoint will be committed as part of an atomic Redis transaction.
-This eliminates consistency issues and improves performance.
-Rollback capability is built in to handle any failure scenarios during the transaction so that no data will be lost.</p>
-<p class="tableblock">When disabled, the checkpoint will be committed after the the changed-data events are written.
-This adds another network round trip for each changed-data event.</p>
-<p class="tableblock">While distributed checkpoints have distinct advantages, there is a small tradeoff. Because Redis keys are bound by their
-hash-slots, distributed checkpoints require that we store one checkpoint per hash slot.</p>
-<p class="tableblock">When enabled, each job partition will have its own 16384 checkpoint keys created in the target database.
-With ~250 bytes per checkpoint, each partition’s estimated overhead is ~4MB. When disabled, there is only a single
-checkpoint key in the target per partition.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Distributed checkpoints require RediSearch. We use RediSearch to index checkpoint keys so that recovery from the
-latest checkpoint is immediate.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">keyPrefix</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a prefix to the target Redis key before the tableName and composition of targetKey enabled columns.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">userDefinedType</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">To create a custom stage, a factory interface must be extended so that Redis Connect can have visibility to it from a
-class loading perspective. See section X.X.X.</p>
-<p class="tableblock">The interface will force the user to create a <code>getType()</code> method which returns a unique String to represent the custom
-factory.
-This property must exactly match that custom unique String so that Redis Connect can properly discover and handle it as a custom stage.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">database</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Database Properties (Section 4.4)
-Configuration for all target database configuration.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint
-Database</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Database Properties (Section 4.4)
-Checkpoint database configuration.
-This is only required if Redis is not the target destination, which is only supported for Splunk.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="database-properties"><a class="anchor" href="#database-properties"></a>6.8. Database Properties</h3>
+<h3 id="database-properties"><a class="anchor" href="#database-properties"></a>9.8. Database Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 15. Database Properties</caption>
 <colgroup>
@@ -1743,46 +2145,55 @@ This is only required if Redis is not the target destination, which is only supp
 <td class="tableblock halign-left valign-top"><p class="tableblock">databaseType</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The following database types are supported:</p>
-<p class="tableblock">[DB2, FILES, GEMFIRE, MONGODB, MYSQL, ORACLE, POSTGRES, REDIS, REDIS_STREAMS_MESSAGE_BROKER, SPLUNK, SQL_SERVER, VERTICA]</p>
+<p class="tableblock">[DB2, FILES, GEMFIRE, MONGODB, PostgreSQL, ORACLE, POSTGRES, REDIS, REDIS_STREAMS_MESSAGE_BROKER, SPLUNK, SQL_SERVER, VERTICA]</p>
 <p class="tableblock">NONE is used for custom stages. Also see userDefinedType.</p>
 <p class="tableblock">This is a required field.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">databaseURL</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">credentials
-DirectoryPath</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database URLs specify the subprotocol (the database connectivity mechanism), the database, or server identifier, and a list of properties.</p>
+<p class="tableblock">Not required for Gemfire, Splunk, and Files databaseTypes.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">credentials
-RotationEvent
-ListenerEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">credentialsDirectoryPath</p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each database type other than NONE (used for custom jobs) requires a credentials property file,
+even if the credentials are not required.
+Credentials property files must adhere to the following filename pattern:
+redisconnect_credentials_{source_type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">target_type}_{job_name}.properties</p>
+<p class="tableblock">The only exception is for Job Manager which has fixed name: redisconnect_credentials_jobmanager.properties</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">credentialsRotationEventListenerEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the credentialsDirectoryPath will be periodically scanned for changes that are specific to the
+property file associated with this database.</p>
+<p class="tableblock">If a change is identified, the listener will create a new connection without bringing down the Redis Connect instance
+nor stopping the job. There might be a momentary pause in pipeline processing while the connection is being reestablished.
+No data will be lost in this process.</p>
+<p class="tableblock">Disclaimer: if the new credentials cannot be used to create a connection, the job will be stopped for manual intervention.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentials
 RotationEvent
 ListenerInterval</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate scheduled interval that scans the credentialsDirectoryPath for changes when credentialsRotationEventListenerEnabled is enabled.
+Measured in milliseconds. Minimum=60000</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom
 Configuration</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See Custom Configurations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map
+&lt;String, String&gt;</p></td>
 </tr>
 </tbody>
 </table>
@@ -1792,8 +2203,8 @@ Configuration</p></td>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.10.1<br>
-Last updated 2023-08-18 16:17:23 -0600
+Version 0.10.3<br>
+Last updated 2023-08-21 00:44:22 -0600
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
