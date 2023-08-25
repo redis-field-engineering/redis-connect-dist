@@ -19,7 +19,11 @@
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">1. Introduction</a></li>
+<li><a href="#introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#table-of-contents">1.1. Table of Contents</a></li>
+</ul>
+</li>
 <li><a href="#key-terms">2. Key Terms</a></li>
 <li><a href="#source-distributions">3. Source Distributions</a></li>
 <li><a href="#supported-sources">4. Supported Sources</a></li>
@@ -44,8 +48,9 @@
 </li>
 <li><a href="#configuration-overview">7. Configuration Overview</a>
 <ul class="sectlevel2">
-<li><a href="#job-configuration">7.1. Job Configuration</a></li>
-<li><a href="#credentials-files">7.2. Credentials files</a></li>
+<li><a href="#cluster-instance-configuration">7.1. Cluster Instance Configuration</a></li>
+<li><a href="#job-configuration">7.2. Job Configuration</a></li>
+<li><a href="#credentials-files">7.3. Credentials files</a></li>
 </ul>
 </li>
 <li><a href="#cluster-configuration">8. Cluster Configuration</a>
@@ -53,8 +58,9 @@
 <li><a href="#cluster-properties">8.1. Cluster properties</a></li>
 <li><a href="#job-manager-services-properties">8.2. Job manager services properties</a></li>
 <li><a href="#rest-api-properties">8.3. REST API Properties</a></li>
-<li><a href="#job-management-database-properties">8.4. Job Management Database Properties</a></li>
-<li><a href="#email-alerting-properties">8.5. Email Alerting Properties</a></li>
+<li><a href="#job-manager-database-properties">8.4. Job Manager Database Properties</a></li>
+<li><a href="#job-manager-credentials-properties">8.5. Job Manager Credentials Properties</a></li>
+<li><a href="#email-alerting-properties">8.6. Email Alerting Properties</a></li>
 </ul>
 </li>
 <li><a href="#job-configuration-main">9. Job Configuration</a>
@@ -66,7 +72,19 @@
 <li><a href="#job-source-database-properties">9.5. Job Source Database Properties</a></li>
 <li><a href="#job-source-table-column-properties">9.6. Job Source Table Column Properties</a></li>
 <li><a href="#job-source-table-initial-load-properties">9.7. Job Source Table Initial Load Properties</a></li>
-<li><a href="#database-properties">9.8. Database Properties</a></li>
+</ul>
+</li>
+<li><a href="#database-configuration">10. Database Configuration</a></li>
+<li><a href="#custom-database-properties">11. Custom Database Properties</a>
+<ul class="sectlevel2">
+<li><a href="#rdbms-properties">11.1. RDBMS Properties</a></li>
+<li><a href="#mongodb-properties">11.2. MongoDB Properties</a></li>
+<li><a href="#files-connector-properties">11.3. Files Connector Properties</a></li>
+<li><a href="#gemfire-properties">11.4. Gemfire Properties</a></li>
+<li><a href="#redis-target-properties">11.5. Redis Target Properties</a></li>
+<li><a href="#redis-message-broker-properties">11.6. Redis Message Broker Properties</a></li>
+<li><a href="#splunk-stream-properties">11.7. Splunk Stream Properties</a></li>
+<li><a href="#in-memory-queue-properties">11.8. In-Memory Queue Properties</a></li>
 </ul>
 </li>
 </ul>
@@ -87,8 +105,10 @@ You can then use Redis to serve this data to downstream applications at low late
 </div>
 <div class="paragraph">
 <p>This document outlines key terms, installation instructions, production readiness guidelines, and
-definitions for the various configuration directives for Redis Connect clusters and jobs.</p>
+definitions for the various configuration directives for Redis Connect clusters and jobs<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>.</p>
 </div>
+<div class="sect2">
+<h3 id="table-of-contents"><a class="anchor" href="#table-of-contents"></a>1.1. Table of Contents</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -109,7 +129,14 @@ definitions for the various configuration directives for Redis Connect clusters 
 <li>
 <p><a href="#job-configuration-main">Job Configuration</a></p>
 </li>
+<li>
+<p><a href="#database-configuration">Database Configuration</a></p>
+</li>
+<li>
+<p><a href="#custom-database-properties">Custom Database Properties</a></p>
+</li>
 </ul>
+</div>
 </div>
 </div>
 </div>
@@ -117,7 +144,7 @@ definitions for the various configuration directives for Redis Connect clusters 
 <h2 id="key-terms"><a class="anchor" href="#key-terms"></a>2. Key Terms</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To understand how Redis Connect works, it&#8217;s important review some key terms:</p>
+<p>To understand how Redis Connect works, it&#8217;s important to review some key terms:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -190,7 +217,7 @@ to download the latest distributions of Redis Connect.</p>
 </dd>
 <dt class="hdlist1">extlib</dt>
 <dd>
-<p>JARs for Redis Connect custom stages and database drivers not included the Redis Connect
+<p>JARs for Redis Connect custom stages and database drivers not including the Redis Connect
 distribution (e.g., Oracle and DB2). These database drivers must be provided by the Redis Connect user.</p>
 </dd>
 <dt class="hdlist1">config</dt>
@@ -209,7 +236,7 @@ distribution (e.g., Oracle and DB2). These database drivers must be provided by 
 <h2 id="supported-sources"><a class="anchor" href="#supported-sources"></a>4. Supported Sources</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Redis Connect can capture change data from several RDBMS and NoSQL databases.
+<p>Redis Connect can capture change data from several RDBMSMS and NoSQL databases.
 Redis Connect can also load data from CSV and JSON files.</p>
 </div>
 <div class="paragraph">
@@ -267,7 +294,7 @@ expects. Be sure to review the Debezium doc links below.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/oracle.html">Debezium docs</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/oracle">PostgreSQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/postgres">PostgreSQL</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Initial load &amp; Stream</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://debezium.io/documentation/reference/stable/connectors/postgresql.html">Debezium docs</a></p></td>
 </tr>
@@ -323,7 +350,7 @@ For the complete REST API documentation, see the
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="create-job-endpoint"></a>Create job</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Saves job configuration for the provided <code>jobName</code>.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Saves job configuration for the provided <code class="lime">jobName</code>.</p>
 <p class="tableblock">Many of the optional job configuration attributes have default values which can be reviewed once the job configuration
 is saved or found in the documentation.</p>
 <p class="tableblock">Example Redis key: {connect}:job:config:jobName</p></td>
@@ -352,7 +379,7 @@ This ensures that the job can later resume from where it was stopped.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Job claim status</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns job claims from across the cluster that match the requested jobStatus.</p>
-<p class="tableblock">Valid job statuses are <code>staged</code>, <code>stopped</code>, and <code>all</code>.</p>
+<p class="tableblock">Valid job statuses are: <code class="lime">staged</code>, <code class="lime">stopped</code>, and <code class="lime">all</code>.</p>
 <p class="tableblock">Use this endpoint to see which jobs the cluster is managing, and their status.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/QUICK%20START/getJobClaimsByStatusUsingGET">Job claim status Swagger endpoint</a></p></td>
 </tr>
@@ -509,7 +536,7 @@ You can see example of these in the startup scripts included in the Redis Connec
 <a href="https://docs.redis.com/latest/rc/">Redis Cloud</a> installation.</p>
 </div>
 <div class="paragraph">
-<p>We recommend provisioning two Redis databases. These database can reside in the same Redis Enterprise cluster.</p>
+<p>We recommend provisioning two Redis databases. These databases can reside in the same Redis Enterprise cluster.</p>
 </div>
 <div class="paragraph">
 <p>The first database will serve as your Redis Connect cluster&#8217;s configuration store. This database should be configured
@@ -766,7 +793,7 @@ distribution.</p>
 have strict permissions. Only authorized users should be able to read and write to these files.</p>
 </div>
 <div class="paragraph">
-<p>As with private key files, these credentials files should be user read/write only (e.g., chmod 600).</p>
+<p>As with private key files, these credentials files should be owned by the redis connect user be set read/write only (e.g., chmod 600).</p>
 </div>
 </div>
 <div class="sect3">
@@ -777,7 +804,7 @@ Redis Connect will read the changes to ensure that database connectivity is main
 </div>
 <div class="paragraph">
 <p>To enable support for credential rotation in Redis Connection, open <code>jobmanager.properties</code> and ensure that the
-credential rotation directives are uncommented. The following configuration enabled the credential file listener
+credential rotation directives are uncommented. The following configuration enables the credential file listener
 and sets it to check for changes every 60 seconds:</p>
 </div>
 <div class="ulist">
@@ -818,7 +845,7 @@ jobs that you intend to run.</p>
 </div>
 <div class="paragraph">
 <p>We also recommend that you deploy each Redis Connect instance on a separate VM. When running in the cloud,
-you should ensure that your Redis Connect instances are distributed across cloud availability zones.</p>
+you should ensure that your Redis Connect instances are distributed evenly across cloud availability zones.</p>
 </div>
 <div class="sect3">
 <h4 id="instance-failure-behavior"><a class="anchor" href="#instance-failure-behavior"></a>6.8.1. Instance failure behavior</h4>
@@ -869,11 +896,11 @@ with each other, they will diverge and no longer be consistent. This state where
 available is called "split brain".</p>
 </div>
 <div class="paragraph">
-<p>To avoid "split brain", Redis Connect jobs make a call to the Job Management database as the initial stage of their
+<p>To avoid "split brain", Redis Connect jobs make a call to the job manager database as the initial stage of their
 producer’s source event-loop to check if their claim is still valid. Here’s why that matters.
 A job cannot be claimed unless the Job Reaper identifies a staged job without a heartbeat, so until that lease expires,
 the claim is intact. Once the heartbeat expires due to the network partition, the Job Reaper will first remove the claim
-from the Job Management database before publishing a new job claim request.
+from the job manager database before publishing a new job claim request.
 So even if the original Redis Connect instance has not died, it cannot continue to process additional batches once its
 claim is removed nor can it regain its ownership by default when the network partition is remedied.</p>
 </div>
@@ -886,7 +913,7 @@ protection.</p>
 <div class="sect3">
 <h4 id="source-connection-failures"><a class="anchor" href="#source-connection-failures"></a>6.8.4. Source Connection Failures</h4>
 <div class="paragraph">
-<p>Connections fail for many reasons both intermittently and for prolonged outages. Since Redis Connect does not know the
+<p>Connections fail for many reasons, both intermittent drop-outs and prolonged outages. Since Redis Connect does not know the
 cause of a connection issue, the cluster will always assume that the connection failure is intermittent and attempt to
 re-establish the connection.</p>
 </div>
@@ -1027,12 +1054,16 @@ start the recovery process on a healthy job.</p>
 <h2 id="configuration-overview"><a class="anchor" href="#configuration-overview"></a>7. Configuration Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Redis Connect&#8217;s main configuration file is called "jobmanager.properties".
+<p>A Redis Connect cluster consists of one more JVM instances.
+These instances coordinate to process configured jobs.</p>
+</div>
+<div class="paragraph">
+<p>Every Redis Connect instances has a main configuration file called <code>jobmanager.properties</code>.
 You can find an example of this file in your distribution&#8217;s "/config" directory.</p>
 </div>
 <div class="paragraph">
-<p>The location of this file is provided to Redis Connect with the <code>REDISCONNECT_JOB_MANAGER_CONFIG_PATH</code> environment
-variable. Here&#8217;s an example of its use:</p>
+<p>The location of this file is provided to each Redis Connect instance with the
+<code>REDISCONNECT_JOB_MANAGER_CONFIG_PATH</code> environment variable. Here&#8217;s an example of its use:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1041,25 +1072,194 @@ variable. Here&#8217;s an example of its use:</p>
 </li>
 </ul>
 </div>
+<div class="sect2">
+<h3 id="cluster-instance-configuration"><a class="anchor" href="#cluster-instance-configuration"></a>7.1. Cluster Instance Configuration</h3>
 <div class="paragraph">
-<p>The most basic Redis Connect configuration includes the url of the Redis database used to store this state.
-This URL is stored at the parameter <code>redis.connection.url</code> is <code>jobmanager.properties</code>.</p>
+<p>The most basic Redis Connect instance configuration includes the URL of the Redis database used to store the cluster&#8217;s state.
+This URL is specified with the property <code>redis.connection.url</code> in <code>jobmanager.properties</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a sample <code>jobmanager.properties</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="comment">#####     Cluster properties                                  </span><i class="conum" data-value="1"></i><b>(1)</b>
+<span class="error">cluster.name=default</span>
+
+<span class="comment">#####     Job Manager Database properties                     </span><i class="conum" data-value="2"></i><b>(2)</b>
+<span class="error">redis.connection.url=redis://127.0.0.1:14001</span>
+<span class="error">redis.connection.auto.reconnect=true</span>
+
+<span class="comment">#####     Credentials properties                              </span><i class="conum" data-value="3"></i><b>(3)</b>
+<span class="error">credentials.dir.path=/usr/local/redis-connect/credentials</span>
+<span class="error">credentials.rotation.event.listener.enabled=true</span>
+
+<span class="comment">#####     REST properties                                     </span><i class="conum" data-value="4"></i><b>(4)</b>
+<span class="error">rest.api.enabled=true</span>
+<span class="error">rest.api.port=8282</span>
+
+<span class="comment">#####     Job Manager Services properties                     </span><i class="conum" data-value="5"></i><b>(5)</b>
+<span class="error">job.manager.services.enabled=true</span>
+<span class="error">job.manager.services.threadpool.size=2</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <strong><a href="#cluster-properties">cluster properties</a></strong> define general Redis Connect cluster configuration.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <strong><a href="#job-manager-database-properties">job manager database properties</a></strong> determine which database Redis Connect uses to store its configuration.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <strong><a href="#job-manager-credentials-properties">credentials properties</a></strong> tell Redis Connect where to find <a href="#secrets-management">credentials files</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The <strong><a href="#redis-connect-management">REST properties</a></strong> determine whether the REST API is enabled and how it runs.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The <strong><a href="#job-manager-services-properties">job manager services properties</a></strong> lets you specify the resources to
+allocate for job managements on this JVM.</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
-<h3 id="job-configuration"><a class="anchor" href="#job-configuration"></a>7.1. Job Configuration</h3>
+<h3 id="job-configuration"><a class="anchor" href="#job-configuration"></a>7.2. Job Configuration</h3>
 <div class="paragraph">
 <p>Redis Connect runs one or more <strong>change-data capture jobs</strong>.
-Each job is defined by a JSON configuration payload submitted using the REST API or CLI.
-To see examples of this JSON configuration, open the <code>config/samples/payloads</code> folder in the Redis Connect distribution.</p>
+Each job reads data from a source database and ultimately writes that data to a Redis target database.
+A job is defined by a JSON document.
+To create a job, you submit this JSON document using the <a href="#redis-connect-management">REST API or CLI</a>.
+Once a job is submitted, the Redis Connect cluster leader will schedule the job among available instances.</p>
 </div>
+<div class="paragraph">
+<p>The following section shows how to construct a JSON-based configuration for a job.
+To see several real-world Job configurations, open the <code>config/samples/payloads</code> folder in the Redis Connect distribution.</p>
+</div>
+<div class="sect3">
+<h4 id="job-configuration-format"><a class="anchor" href="#job-configuration-format"></a>7.2.1. Job configuration format</h4>
+<div class="paragraph">
+<p>Every job configuration has at least three top-level keys: partitions, source, and pipeline.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">partitions</span><span class="delimiter">&quot;</span></span> : <span class="error">N</span><span class="error">U</span><span class="error">M</span><span class="error">B</span><span class="error">E</span><span class="error">R</span><span class="error">_</span><span class="error">O</span><span class="error">F</span><span class="error">_</span><span class="error">P</span><span class="error">A</span><span class="error">R</span><span class="error">T</span><span class="error">I</span><span class="error">T</span><span class="error">I</span><span class="error">O</span><span class="error">N</span><span class="error">S</span>,    <i class="conum" data-value="1"></i><b>(1)</b>
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>: { <span class="error">S</span><span class="error">O</span><span class="error">U</span><span class="error">R</span><span class="error">C</span><span class="error">E</span><span class="error">_</span><span class="error">J</span><span class="error">S</span><span class="error">O</span><span class="error">N</span><span class="error">_</span><span class="error">D</span><span class="error">E</span><span class="error">F</span><span class="error">I</span><span class="error">N</span><span class="error">I</span><span class="error">T</span><span class="error">I</span><span class="error">O</span><span class="error">N</span> },   <i class="conum" data-value="2"></i><b>(2)</b>
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">pipeline</span><span class="delimiter">&quot;</span></span>: { <span class="error">T</span><span class="error">A</span><span class="error">R</span><span class="error">G</span><span class="error">E</span><span class="error">T</span><span class="error">_</span><span class="error">J</span><span class="error">S</span><span class="error">O</span><span class="error">N</span><span class="error">_</span><span class="error">D</span><span class="error">E</span><span class="error">F</span><span class="error">I</span><span class="error">N</span><span class="error">I</span><span class="error">T</span><span class="error">I</span><span class="error">O</span><span class="error">N</span> }  <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <strong><a href="#partitions-property">partitions</a></strong> field defines the level of parallelism to use when running the job.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <strong><a href="#job-source-properties">Job Source Properties</a></strong> field stores configuration for the job&#8217;s source database (e.g., MySQL, Oracle, etc.)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <strong><a href="#job-pipeline-properties">Job Pipeline Properties</a></strong> field stores configuration for the target of the job.
+This includes custom transformations and the target Redis database.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a more detailed job configuration with some of these valued filled in:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">partitions</span><span class="delimiter">&quot;</span></span> : <span class="integer">1</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">database</span><span class="delimiter">&quot;</span></span>: {                      <i class="conum" data-value="1"></i><b>(1)</b>
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">databaseType</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">POSTGRES</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">databaseURL</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">jdbc:postgresql://127.0.0.1:5432/RedisConnect</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">customConfiguration</span><span class="delimiter">&quot;</span></span>: {         <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">database.dbname</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">RedisConnect</span><span class="delimiter">&quot;</span></span>,
+      }
+    },
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">tables</span><span class="delimiter">&quot;</span></span>: {                        <i class="conum" data-value="2"></i><b>(2)</b>
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">public.emp</span><span class="delimiter">&quot;</span></span>: {
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">columns</span><span class="delimiter">&quot;</span></span>: [
+          { <span class="key"><span class="delimiter">&quot;</span><span class="content">targetColumn</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">empno</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">sourceColumn</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">empno</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">targetKey</span><span class="delimiter">&quot;</span></span>: <span class="value">true</span>},
+          { <span class="key"><span class="delimiter">&quot;</span><span class="content">targetColumn</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hiredate</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">sourceColumn</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hiredate</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">DATE_TIME</span><span class="delimiter">&quot;</span></span>}
+        ],
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">initialLoad</span><span class="delimiter">&quot;</span></span>: {
+          <span class="key"><span class="delimiter">&quot;</span><span class="content">partitions</span><span class="delimiter">&quot;</span></span>: <span class="integer">4</span>
+        },
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">autoConfigColumnsEnabled</span><span class="delimiter">&quot;</span></span>: <span class="value">true</span>
+      }
+    }
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">pipeline</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">stages</span><span class="delimiter">&quot;</span></span>: [                         <i class="conum" data-value="3"></i><b>(3)</b>
+      {
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">index</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">stageName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">REDIS_HASH_SINK</span><span class="delimiter">&quot;</span></span>,
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">database</span><span class="delimiter">&quot;</span></span>: {                   <i class="conum" data-value="4"></i><b>(4)</b>
+          <span class="key"><span class="delimiter">&quot;</span><span class="content">credentialsDirectoryPath</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">../config/samples/credentials</span><span class="delimiter">&quot;</span></span>,
+          <span class="key"><span class="delimiter">&quot;</span><span class="content">databaseURL</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">redis://127.0.0.1:14000</span><span class="delimiter">&quot;</span></span>,
+          <span class="key"><span class="delimiter">&quot;</span><span class="content">databaseType</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">REDIS</span><span class="delimiter">&quot;</span></span>,
+          <span class="key"><span class="delimiter">&quot;</span><span class="content">customConfiguration</span><span class="delimiter">&quot;</span></span>: {      <i class="conum" data-value="5"></i><b>(5)</b>
+            <span class="key"><span class="delimiter">&quot;</span><span class="content">redis.connection.sslEnabled</span><span class="delimiter">&quot;</span></span>: <span class="value">false</span>,
+            <span class="key"><span class="delimiter">&quot;</span><span class="content">truststore.file.path</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">../config/samples/credentials/client-truststore.jks</span><span class="delimiter">&quot;</span></span>
+          }
+        }
+      }
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A <strong><a href="#database-configuration">database configuration</a></strong> for the database that Redis Connect reads from.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A <strong><a href="#job-source-table-properties">tables configuration</a></strong> specifying which tables to read from.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The list of <strong><a href="#job-pipeline-stage-properties">stages</a></strong>, which always ends with the Redis target database.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The <strong><a href="#database-configuration">database configuration</a></strong> for the target database. The final stage in the pipeline is
+always the Redis target database.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note that all <strong><a href="#database-configuration">database configuration</a></strong> objects include a
+<strong><a href="#custom-database-properties">customConfiguration</a></strong> field.
+&lt;5&gt; The <strong><a href="#custom-database-properties">customConfiguration</a></strong> field lets you pass in database-specific configurations.
+For example, Postgres has a <code>database.dbName</code> field that is unique to Postgres.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="submitting-a-job-configuration"><a class="anchor" href="#submitting-a-job-configuration"></a>7.2.2. Submitting a job configuration</h4>
 <div class="paragraph">
 <p>To save a job configuration, construct your JSON payload and then submit it using the REST API&#8217;s
 <a href="#create-job-endpoint">create job endpoint</a>. When you submit this configuration, you will also
 provide a unique job name. This job name will be used in the naming of your credentials files.</p>
 </div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="credentials-files"><a class="anchor" href="#credentials-files"></a>7.2. Credentials files</h3>
+<h3 id="credentials-files"><a class="anchor" href="#credentials-files"></a>7.3. Credentials files</h3>
 <div class="paragraph">
 <p>Credentials files store authentication credentials for the databases used by Redis Connect.</p>
 </div>
@@ -1084,17 +1284,17 @@ To see a sample <code>jobmanager.properties</code> file, open <code>config/jobma
 <table id="properties" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Cluster properties</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1105,10 +1305,9 @@ To see a sample <code>jobmanager.properties</code> file, open <code>config/jobma
 <td class="tableblock halign-left valign-top"><p class="tableblock">default</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">cluster.leader.heartbeat.
-lease.renewal.ttl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cluster.leader.heartbeat.lease.renewal.ttl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TTL (Time-to-Live) which is renewed upon each <code>cluster.election.attempt.interval</code> iteration by the cluster leader.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TTL (Time-to-Live) which is renewed upon each <code class="lime">cluster.election.attempt.interval</code> iteration by the cluster leader.</p>
 <p class="tableblock">Measured in milliseconds with a minimum of 1 second (1000 ms).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5000</p></td>
 </tr>
@@ -1116,14 +1315,14 @@ lease.renewal.ttl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cluster.election.attempt.interval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate scheduled thread which either renews or elects a new cluster leader.
-Runs on each Redis Connect Instance (JVM) when <code>job.manager.services.enabled=true</code>.</p>
+Runs on each Redis Connect Instance (JVM) when <code class="lime">job.manager.services.enabled=true</code>.</p>
 <p class="tableblock">Measured in milliseconds with a minimum of 1 second (1000 ms)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5000</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cluster.timeseries.metrics.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables creation of a scheduled thread for job metrics reporting to RedisTimeSeries within the Job Management database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables creation of a scheduled thread for job metrics reporting to RedisTimeSeries within the job manager database.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 </tbody>
@@ -1134,17 +1333,17 @@ Runs on each Redis Connect Instance (JVM) when <code>job.manager.services.enable
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Job manager services properties</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1170,7 +1369,7 @@ In production, we recommend two threads.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The interval between attempts to identify staged jobs without a heartbeat lease.
 Implemented as a scheduled thread that runs on each Redis Connect Instance (JVM)
-when <code>job.manager.services.enabled=true</code>.</p>
+when <code class="lime">job.manager.services.enabled=true</code>.</p>
 <p class="tableblock">Measured in milliseconds with a minimum of 1 second (1000 ms)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7000</p></td>
 </tr>
@@ -1187,7 +1386,7 @@ facilitate REST API / CLI, and perform Job Reaper services.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">job.claim.attempt.interval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Interval at which this scheduled thread attempts to claim ownership for UNASSIGNED staged jobs.</p>
-<p class="tableblock">Runs on each Redis Connect Instance (JVM) when <code>job.claim.service.enabled=true</code>.</p>
+<p class="tableblock">Runs on each Redis Connect Instance (JVM) when <code class="lime">job.claim.service.enabled=true</code>.</p>
 <p class="tableblock">Measured in milliseconds with a minimum of 1 second (1000 ms)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5000</p></td>
 </tr>
@@ -1219,17 +1418,17 @@ If a sparse topology across many Redis Connect instances is desired, then loweri
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. REST API properties</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1251,21 +1450,21 @@ for its REST API.</p></td>
 </table>
 </div>
 <div class="sect2">
-<h3 id="job-management-database-properties"><a class="anchor" href="#job-management-database-properties"></a>8.4. Job Management Database Properties</h3>
+<h3 id="job-manager-database-properties"><a class="anchor" href="#job-manager-database-properties"></a>8.4. Job Manager Database Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Job Management Database Properties</caption>
+<caption class="title">Table 6. Job Manager Database Properties</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1279,7 +1478,7 @@ for its REST API.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.insecure</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Passed to Lettuce&#8217;s <code>RedisURI.verifyPeer</code>.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Passed to Lettuce&#8217;s <code class="lime">RedisURI.verifyPeer</code>.</p>
 <p class="tableblock">If true then verifyMode=FULL. Otherwise, if false, then verifyMode=NONE.</p>
 <p class="tableblock">When peer verification is disabled, Lettuce uses Netty&#8217;s InsecureTrustManagerFactory.INSTANCE as the trust manager factory.
 Its javadoc notes that it should never be used in production and that it is purely for testing purposes.</p></td>
@@ -1303,7 +1502,7 @@ Measured in seconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.suspend.reconnect.
 on.protocol.failure</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, reconnect will be suspended on protocol errors.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code class="lime">true</code>, reconnect will be suspended on protocol errors.</p>
 <p class="tableblock">The reconnect itself has two phases:
 Socket connection and protocol/connection activation.
 In case a connection timeout occurs, a connection reset, or host lookup fails, this does not affect the cancellation of
@@ -1315,9 +1514,31 @@ connection failure, queued commands are canceled.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.sslEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables SSL for one-way or mutual authentication.
-If this flag is set to <code>false</code>, TrustStore and KeyStore will not be passed to the client.</p></td>
+If this flag is set to <code class="lime">false</code>, TrustStore and KeyStore will not be passed to the client.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="job-manager-credentials-properties"><a class="anchor" href="#job-manager-credentials-properties"></a>8.5. Job Manager Credentials Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Job Manager Credentials Properties</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="truststore-link"></a>truststore.file.path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
@@ -1335,11 +1556,8 @@ or any other secret keys used for various cryptographic purposes.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentials.dir.path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The name of the directory containing the Redis Connect credentials file.
-This directory path must include a properties file named <code>redisconnect_credentials_jobmanager.properties</code>.</p>
-<p class="tableblock">Redis Connect never caches or persists credentials. Therefore, on each connection with the source, target, or
-job manager database, the credentials are read from a file.
-This enhances security and allows for seamless credential rotations and integration with secret management frameworks
-such as HashiCorp Vault.</p></td>
+This directory path must include a properties file named <code class="lime">redisconnect_credentials_jobmanager.properties</code>
+<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">../config/
 samples/
 credentials</p></td>
@@ -1347,15 +1565,15 @@ credentials</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentials.rotation.event.listener.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, a listener will be created on the <code>redisconnect_credentials_jobmanager.properties</code> file within the
-<code>credentials.dir.path</code> to rotate credentials when they change.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code class="lime">true</code>, a listener will be created on the <code class="lime">redisconnect_credentials_jobmanager.properties</code> file within the
+<code class="">credentials.dir.path</code> to rotate credentials when they change.</p>
 <p class="tableblock">This lets you rotate credentials without restarting your Redis Connect instance.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentials.rotation.event.listener.interval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>credentials.rotation.event.listener.enabled</code> is set to <code>true</code>, this flag sets the frequency at which
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code class="lime">credentials.rotation.event.listener.enabled</code> is set to <code class="lime">true</code>, this flag sets the frequency at which
 is scanned for changes.</p>
 <p class="tableblock">Measured in milliseconds with a minimum of 60 seconds (60000 ms)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
@@ -1364,21 +1582,21 @@ is scanned for changes.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="email-alerting-properties"><a class="anchor" href="#email-alerting-properties"></a>8.5. Email Alerting Properties</h3>
+<h3 id="email-alerting-properties"><a class="anchor" href="#email-alerting-properties"></a>8.6. Email Alerting Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Email Alerting Properties</caption>
+<caption class="title">Table 8. Email Alerting Properties</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1403,9 +1621,7 @@ is scanned for changes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mail.smtp.start.tls.enable</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set or disable STARTTLS encryption.</p>
-<p class="tableblock">StartTLS is an extension of the SMTP protocol that tells the email server that the email client
-wants to use a secure connection using TLS or SSL.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set or disable STARTTLS encryption<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
@@ -1437,51 +1653,45 @@ Multiple recipients can be added by delimiting them with a comma.</p></td>
 <h2 id="job-configuration-main"><a class="anchor" href="#job-configuration-main"></a>9. Job Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes the fields in job configuration payloads.</p>
-</div>
-<div class="paragraph">
-<p>Each of the subsections below corresponds to a configuration block in <code>jobmanager.properties</code>.
-To see a sample <code>jobmanager.properties</code> file, open <code>config/jobmanager.properties</code> in your Redis Connect distribution.</p>
+<p>This section describes the fields in job configuration payload.</p>
 </div>
 <div class="sect2">
 <h3 id="job-properties"><a class="anchor" href="#job-properties"></a>9.1. Job properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Job properties</caption>
+<caption class="title">Table 9. Job properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">jobName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unique name which is used to derive all other Redis metadata keys related to the job execution workflow.
-jobName should not be confused with jobId. jobIds are created as part of a job claim. They add-on a namespace to the
-jobName to identify the jobType and partitionId (if jobType=PARTITIONED_STREAM).</p>
-<p class="tableblock">When jobName is used in logging or administrative processes (i.e., stopJob), the jobName represents ALL job partitions.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=4, max=50
-regex pattern="<sup>[</sup>\\s&lt;&gt;(){}\\[\\]'\"/\\\\;`!@#$%&amp;*|]*$"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique name for a job.</p>
+<p class="tableblock">This name is used to derive all other Redis metadata keys related to the job execution workflow.</p>
+<p class="tableblock">Note: the jobName property is submitted separately from the job configuration when saving a job.
+In other words, jobName does not appear in the job configuration payload.</p>
+<p class="tableblock">Note: jobName should not be confused with jobId. jobIds are created as part of a job claim.
+They add-on a namespace to the jobName to identify the jobType and partitionId (if jobType=PARTITIONED_STREAM)
+<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">partitions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="partitions-property"></a>partitions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indicates how many partitions to create during startJob process.
-This attribute is ONLY used to partition a job with jobType=PARTITIONED_STREAM. Not jobType=LOAD.
-CAUTION: Once a job has started, and job claims are created, a job cannot be repartitioned without deleting all job claims and existing checkpoints. Please reach out to Support to assist with the migration of checkpoints to avoid undesired outcomes.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
+This attribute is ONLY used to partition a job with jobType=PARTITIONED_STREAM. Not jobType=LOAD.</p>
+<p class="tableblock"><code class="red"><strong>CAUTION: Once a job has started, and job claims are created, a job cannot be repartitioned without deleting all job claims and existing checkpoints. Please reach out to Support to assist with the migration of checkpoints to avoid undesired outcomes.</strong></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 <tr>
@@ -1489,19 +1699,14 @@ CAUTION: Once a job has started, and job claims are created, a job cannot be rep
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The number of job partitions that can be claimed, and executed, on the same Redis Connect instance (JVM).</p>
 <p class="tableblock">If the limit forces partitions to span more instances than are currently deployed, then the job will not be able to
-start nor migrate.</p>
-<p class="tableblock">For example, if maxPartitionsPerClusterMember=1 and partitions=3, then the Redis Connect cluster will require at least 3
-instances (JVMs) each with at least 1 available capacity to claim a job partition.</p>
-<p class="tableblock">This is not a global limit; it is only specific at the job level.
-0 represents no limit.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0</p></td>
+start nor migrate
+<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pipeline</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JSON Object</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-pipeline-properties">Job Pipeline Properties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -1509,7 +1714,6 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 <td class="tableblock halign-left valign-top"><p class="tableblock">JSON Object</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-properties">Job Source Properties</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 </tbody>
 </table>
@@ -1517,21 +1721,19 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 <div class="sect2">
 <h3 id="job-pipeline-properties"><a class="anchor" href="#job-pipeline-properties"></a>9.2. Job Pipeline Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Job Pipeline Properties</caption>
+<caption class="title">Table 10. Job Pipeline Properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1539,11 +1741,8 @@ instances (JVMs) each with at least 1 available capacity to claim a job partitio
 <td class="tableblock halign-left valign-top"><p class="tableblock">pipelineBufferSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Redis Connect’s pipeline is powered by the LMAX Disruptor library (High Performance Inter-Thread Messaging).</p>
-<p class="tableblock">The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".</p>
-<p class="tableblock">Increasing the buffer size will impact the JVM heap space required to store all transient changed data events within the queue.
-For most cases, this can be left as default.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1024
-Must be a power of 2</p></td>
+<p class="tableblock">Must be a power of 2, minimum 1024
+<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
 </tr>
 <tr>
@@ -1551,7 +1750,6 @@ Must be a power of 2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run before changed-data events are transformed and published to the pipeline.</p>
 <p class="tableblock">This is currently not extendable by end users.</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -1559,7 +1757,6 @@ Must be a power of 2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Functional interface (Consumer) that can be run after changed-data events are transformed and published to the pipeline.</p>
 <p class="tableblock">This is currently not extendable by end users.</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -1569,7 +1766,6 @@ Pipeline
 Stage[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-pipeline-stage-properties">Job Pipeline Stage Properties</a></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
@@ -1577,21 +1773,19 @@ Stage[]</p></td>
 <div class="sect2">
 <h3 id="job-pipeline-stage-properties"><a class="anchor" href="#job-pipeline-stage-properties"></a>9.3. Job Pipeline Stage Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Job Pipeline Stage Properties</caption>
+<caption class="title">Table 11. Job Pipeline Stage Properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1599,14 +1793,12 @@ Stage[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">stageName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Unique name which is used as an exact match reference to a custom-built target sink or a user-defined custom stage.</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">index</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the sequence in which the stages of the pipeline should be orchestrated.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the sequence in which the stages of the pipeline should be orchestrated.</p>
 <p class="tableblock">Begins with 1 and each subsequent index should increment by 1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
@@ -1615,44 +1807,31 @@ Stage[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the target sink stage will report throughput and latency related metrics for persistence in
 RedisTimeSeries. This can subsequently be visualized in Grafana.</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">metricsRetentionInHours</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration for metrics samples as compared to the highest reported timestamp before they expire.</p>
-<p class="tableblock">Measured in hours.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
+<p class="tableblock">Measured in hours; minimum is 1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">checkpointStageIndicator</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indicates which sink will be responsible for committing the checkpoint to the target database.
-This is typically performed by the last stage of the pipeline and, often times, it is the only stage in the pipeline.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Job pipeline can only have a single stage with checkpointStage
-<code>Indicator=true</code></p></td>
+This is typically performed by the last stage of the pipeline and, often times, it is the only stage in the pipeline.
+Job pipeline can only have a single stage with checkpointStage
+<code class="lime">Indicator=true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CheckpointTransactionsEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpointTransactionsEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Although the producer’s polling event loop enqueues changed-data events in batches, each event is processed
 individually through the pipeline. This is because Redis Connect updates the checkpoint at the changed-data event level
-and not the batch.</p>
-<p class="tableblock">When enabled, the checkpoint will be committed as part of an atomic Redis transaction.
-This eliminates consistency issues and improves performance.
-Rollback capability is built in to handle any failure scenarios during the transaction so that no data will be lost.</p>
-<p class="tableblock">When disabled, the checkpoint will be committed after the the changed-data events are written.
-This adds another network round trip for each changed-data event.</p>
-<p class="tableblock">While distributed checkpoints have distinct advantages, there is a small tradeoff. Because Redis keys are bound by their
-hash-slots, distributed checkpoints require that we store one checkpoint per hash slot.</p>
-<p class="tableblock">When enabled, each job partition will have its own 16384 checkpoint keys created in the target database.
-With ~250 bytes per checkpoint, each partition’s estimated overhead is ~4MB. When disabled, there is only a single
-checkpoint key in the target per partition.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Distributed checkpoints require RediSearch. We use RediSearch to index checkpoint keys so that recovery from the
-latest checkpoint is immediate.</p></td>
+and not the batch
+<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -1660,34 +1839,30 @@ latest checkpoint is immediate.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Adds a prefix to the target Redis key before the tableName and composition of targetKey enabled columns.</p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">userDefinedType</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">To create a custom stage, a factory interface must be extended so that Redis Connect can have visibility to it from a
 class loading perspective. See section X.X.X.</p>
-<p class="tableblock">The interface will force the user to create a <code>getType()</code> method which returns a unique String to represent the custom
+<p class="tableblock">The interface will force the user to create a <code class="lime">getType()</code> method which returns a unique String to represent the custom
 factory.
 This property must exactly match that custom unique String so that Redis Connect can properly discover and handle it as a custom stage.</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">database</p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Database Properties (Section 4.4)
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-configuration">Database Configuration</a>
 Configuration for all target database configuration.</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">checkpointDatabase</p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-properties">Database Properties</a>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-configuration">Database Properties</a>
 Checkpoint database configuration.
-This is only required if Redis is not the target destination, which is only supported for Splunk.</p></td>
-<td class="tableblock halign-left valign-top"></td>
+This is required only if Redis is not the target destination (which is only supported when Splunk is the target).</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -1696,21 +1871,19 @@ This is only required if Redis is not the target destination, which is only supp
 <div class="sect2">
 <h3 id="job-source-properties"><a class="anchor" href="#job-source-properties"></a>9.4. Job Source Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Job Source Properties</caption>
+<caption class="title">Table 12. Job Source Properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1718,22 +1891,19 @@ This is only required if Redis is not the target destination, which is only supp
 <td class="tableblock halign-left valign-top"><p class="tableblock">pollSourceInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate interval representing how long to pause the producer’s polling event loop if no new change events were found in the batch.
-Measured in milliseconds.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=5</p></td>
+Measured in milliseconds; minimum is 5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">batchSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum # of events to dequeue from the source-event-queue AND maximum # of events to query from the source transaction log/table/queue upon each interval of the producer’s polling event loop.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum # of events to dequeue from the source-event-queue AND maximum # of events to query from the source transaction log/table/queue upon each interval of the producer’s polling event loop. Minimum is 1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceTransactionTimeSequenceEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the source commit/transaction timestamp (and sequence# if the timestamp is the same) will be used to calculate latency metrics and passed along as metadata for Redis Streams sink(s).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -1744,7 +1914,6 @@ Measured in milliseconds.</p></td>
 <p class="tableblock">1+ = MAX_ATTEMPTS</p>
 <p class="tableblock">Used as part of back-pressure support for the data pipeline in the event of a slow consumer.
 If the maximum attempts limit is reached, the job will be stopped for purposes of manual intervention.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=-1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
 </tr>
 <tr>
@@ -1752,8 +1921,7 @@ If the maximum attempts limit is reached, the job will be stopped for purposes o
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used as part of back-pressure support for the data pipeline in the event of a slow consumer or the circuit breaker is open.
 Forces the event loop to pause for the configured duration of time.
-Measured in milliseconds.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0</p></td>
+Measured in milliseconds, minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 </tr>
 <tr>
@@ -1761,34 +1929,28 @@ Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 = DISABLED</p>
 <p class="tableblock">1+ = MAX_ATTEMPTS</p>
-<p class="tableblock">Maximum retry attempts to reconnect with the source in the event that a connection is lost.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0</p></td>
+<p class="tableblock">Maximum retry attempts to reconnect with the source in the event that a connection is lost. Minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionMaxRetryDuration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">In addition to sourceConnectionMaxRetryAttempts, you can also add a max duration, after which retries will stop if the max attempts haven’t already been reached.</p>
-<p class="tableblock">Measured in minutes.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
+<p class="tableblock">Measured in minutes; minimum is 1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionRetryDelayInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed delay in between sourceConnectionMaxRetryAttempts.</p>
-<p class="tableblock">Measured in seconds.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0
-sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayInterval</p>
-<p class="tableblock">sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionMaxRetryDuration</p></td>
+<p class="tableblock">Measured in seconds; minimum is 0<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionRetryMaxDelayInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides an upper bound to calculate the delay interval when sourceConnectionRetryDelayFactor is enabled.</p>
-<p class="tableblock">Measured in seconds.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0</p></td>
+<p class="tableblock">Measured in seconds, minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">240</p></td>
 </tr>
 <tr>
@@ -1796,16 +1958,14 @@ sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayI
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 = DISABLED</p>
 <p class="tableblock">1+ = DELAY_FACTOR</p>
-<p class="tableblock">Factor by which delays are exponentially increased after each source connection retry attempt.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0</p></td>
+<p class="tableblock">Factor by which delays are exponentially increased after each source connection retry attempt. Minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">database</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-properties">Database Properties</a></p>
-<p class="tableblock">Configuration for all source databases.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#database-configuration">Database Configuration</a></p>
+<p class="tableblock">Configuration for all source databases. Not Null.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -1813,8 +1973,7 @@ sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayI
 <td class="tableblock halign-left valign-top"><p class="tableblock">Map&lt;String, Table&gt;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-table-column-properties">Job Source Table Column Properties</a></p>
 <p class="tableblock">Configuration for all source tables/collections/regions/logs properties.</p>
-<p class="tableblock">Each table within the map requires a unique name which will be used as part of target key composition.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Not Null</p></td>
+<p class="tableblock">Each table within the map requires a unique name which will be used as part of target key composition. Not Null.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 </tbody>
@@ -1823,26 +1982,24 @@ sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayI
 <div class="sect2">
 <h3 id="job-source-database-properties"><a class="anchor" href="#job-source-database-properties"></a>9.5. Job Source Database Properties</h3>
 <div class="paragraph">
-<p>See <a href="#database-properties">Database Properties</a>.</p>
+<p>See <a href="#database-configuration">Database Configuration</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="job-source-table-properties"><a class="anchor" href="#job-source-table-properties"></a>9.5.1. Job Source Table Properties</h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Job Source Table Properties</caption>
+<caption class="title">Table 13. Job Source Table Properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1855,8 +2012,7 @@ need to enumerate each within the column&#8217;s configuration.</p>
 designation cannot be overridden since only the source table’s primary key will be used.</p>
 <p class="tableblock">This is a common configuration in POCs and development environments since the design of Redis key names are less
 important than in production. It also allows for less knowledge about the source table schema.</p>
-<p class="tableblock">This is only supported for RDB sources.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<p class="tableblock">This is only supported for RDBMS sources.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -1864,14 +2020,12 @@ important than in production. It also allows for less knowledge about the source
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, columns that are not provided in the columns configuration will be passed through, as-is, to the target.
 This is currently only supported for MongoDB, Redis Streams Broker, and Files.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">prefixTableNameToTargetKeyEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, adds the tableName (defined in the tables configuration) as a prefix to the target Redis key before all other targetKey enabled columns are computed and applied.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -1879,9 +2033,8 @@ This is currently only supported for MongoDB, Redis Streams Broker, and Files.</
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, if the primary key is changed at the source, then an additional operation to DELETE the existing target
 key will accompany the UPDATE event.</p>
-<p class="tableblock">This is only supported for RDB sources since primary key changes require a delete and insert of a new row.</p>
+<p class="tableblock">This is only supported for RDBMS sources since primary key changes require a delete and insert of a new row.</p>
 <p class="tableblock">The DELETE event shares an offset with the UPDATE event both at the source and checkpoint. Redis Connect will handle them within a single pipeline iteration.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
@@ -1889,9 +2042,7 @@ key will accompany the UPDATE event.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, only allows changed (delta) column values to be replicated to the target. This does not include targetKey column(s) which cannot be bypassed.
 When disabled, all column values will be replicated to the target unless they are individually bypassed at the column-level using changedColumnOnlyEnabled. (See Section 4.2.2)
-When enabled, the column-level changedColumnOnlyEnabled flag will be overridden for all columns other than those designated as targetKey(s).</p>
-<p class="tableblock">This is currently only supported for RDB sources.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -1901,7 +2052,6 @@ Source
 Table
 Column[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-table-column-properties">Job Source Table Column Properties</a>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
 </tr>
 <tr>
@@ -1909,7 +2059,6 @@ Column[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Initial Load</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#job-source-table-initial-load-properties">Job Source Table Initial Load Properties</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
 </tr>
 </tbody>
 </table>
@@ -1918,21 +2067,19 @@ Column[]</p></td>
 <div class="sect2">
 <h3 id="job-source-table-column-properties"><a class="anchor" href="#job-source-table-column-properties"></a>9.6. Job Source Table Column Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Job Source Table Column Properties</caption>
+<caption class="title">Table 14. Job Source Table Column Properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1941,21 +2088,18 @@ Column[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Designates this column’s value as part of the target’s key composition process.
 When more than one column is designated, the order in which they are listed will impact the order in which they are appended to the key.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceColumn</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact match identifier for source column name.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">non-empty String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact match identifier for source column name. Must not be empty.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">targetColumn</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Preferred field name to be used in the target.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Not Empty String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preferred field name to be used in the target. Must not be empty.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -1964,16 +2108,14 @@ When more than one column is designated, the order in which they are listed will
 <td class="tableblock halign-left valign-top"><p class="tableblock">Identifies the source column’s data type which is used to transform the column value to a properly formatted String within the target.
 Supported types include: [STRING, VARCHAR, TEXT, INT, DATE, DATE_TIME, BYTE, DEC, NUMERIC, DECIMAL, DOUBLE, FLOAT, LONG, SHORT, RAW, BLOB, CLOB, HASHMAP, CUSTOM]</p>
 <p class="tableblock">CUSTOM data type is unique in that it bypasses column value transformation to a String which allows it to be converted manually within a Custom Stage. An example would be converting to a proprietary Oracle Timestamp format. Failure to convert this data type manually will cause errors in Redis-based sinks.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">regexp = "<sup>[</sup>\\s&lt;&gt;(){}\\[\\]'\"/\\\\;`!@#$%&amp;*|]*$"</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">STROING</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STRING</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">changedColumnOnlyEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, only allows changed (delta) column values to be replicated to the target unless targetKey is enabled.
 When changedColumnsOnlyEnabled=true at the table-level, this flag will be overridden.
-This is currently only supported for RDB sources.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+This is currently only supported for RDBMS sources.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -1984,14 +2126,12 @@ custom stage nor any sink.
 The purpose of this flag is to allow source column values to be used for targetKey composition without adding the
 column’s name/value pair as a field within the target. As an example, this is common for sources like MongoDB which
 generate a "_id" key which can be used as a targetKey but has no value as a field.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">index</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This is currently for metadata purposes only and has no functional value.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -2001,14 +2141,12 @@ generate a "_id" key which can be used as a targetKey but has no value as a fiel
 <p class="tableblock">Default formats are as follows:</p>
 <p class="tableblock">DATE = YYYY-MM-dd</p>
 <p class="tableblock">DATE_TIME = YYYY-MM-dd HH:mm:ss.S</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nullFormat</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users can define how a column value=NULL will be represented in the target.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default is an EMPTY String.</p></td>
 </tr>
 </tbody>
@@ -2017,33 +2155,33 @@ generate a "_id" key which can be used as a targetKey but has no value as a fiel
 <div class="sect2">
 <h3 id="job-source-table-initial-load-properties"><a class="anchor" href="#job-source-table-initial-load-properties"></a>9.7. Job Source Table Initial Load Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Job Source Table Column Properties</caption>
+<caption class="title">Table 15. Job Source Table Column Properties</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Constraints</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">partitions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates how many partitions to create during startJob process.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates the number of partitions to create during startJob process.</p>
 <p class="tableblock">This attribute is ONLY used to partition an initial load with jobType=LOAD.</p>
 <p class="tableblock">Each table should be partitioned based on its own size and release window SLAs.</p>
-<p class="tableblock">It’s common practice to leverage more partitions for an initial load than on streaming. Please see the Production Readiness section for more detail.
-Disclaimer: If the source table has fewer than 500 rows, which is common in a POC/dev environment, all but partition:1 will be stopped so all the rows are loaded from a single partition.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=1</p></td>
+<p class="tableblock">It’s common practice to leverage more partitions for an initial load than when streaming.
+Please see the Production Readiness section for more detail.
+Disclaimer: If the source table has fewer than 500 rows, which is common in a dev environment,
+all but partition:1 will be stopped so all the rows are loaded from a single partition.</p>
+<p class="tableblock">Minimum is 1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 <tr>
@@ -2052,8 +2190,7 @@ Disclaimer: If the source table has fewer than 500 rows, which is common in a PO
 <td class="tableblock halign-left valign-top"><p class="tableblock">Limits how many task partitions can be claimed, and executed, multi-tenant on the same Redis Connect instance (JVM).</p>
 <p class="tableblock">If the limit forces partitions to span more nodes than are currently deployed, then the initial load will queue the instantiation of tasks until capacity is reallocated (e.g. earlier tasks complete their load partition).</p>
 <p class="tableblock">This is not a job-level limit; it is only specific at the table level.
-0 represents no limit.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">min=0</p></td>
+0 represents no limit. Minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
@@ -2061,39 +2198,45 @@ Disclaimer: If the source table has fewer than 500 rows, which is common in a PO
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users can specify a WHERE clause to filter the rows required for initial load.
 Only the following sources are supported:</p>
-<p class="tableblock">- RDB sources support JDBC compliant WHERE statements</p>
+<p class="tableblock">- RDBMS sources support JDBC compliant WHERE statements</p>
 <p class="tableblock">- MongoDB supports a BSON filter</p>
 <p class="tableblock">- Gemfire supports an Apache Geode WHERE Clause</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rowIndexUsedAsTargetKeyEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RDB sources can have tables without primary keys. For those cases, rowIndex can be used as a unique identifier for partitioning purposes.
-This is only supported for RDB sources and only for initial load only / ETL jobs.</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RDBMS sources can have tables without primary keys. For those cases, rowIndex can be used as a unique identifier for partitioning purposes.
+This is only supported for RDBMS sources and only for initial load only / ETL jobs.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="database-properties"><a class="anchor" href="#database-properties"></a>9.8. Database Properties</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="database-configuration"><a class="anchor" href="#database-configuration"></a>10. Database Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These properties are available for all <strong>database</strong> configuration objects.
+You will find database configuration objects in a job configuration&#8217;s source and in the job configuration&#8217;s
+pipeline, which specified the target database.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. Database Properties</caption>
+<caption class="title">Table 16. Database Properties</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -2106,9 +2249,9 @@ This is only supported for RDB sources and only for initial load only / ETL jobs
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">databaseType</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enumeration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The following database types are supported:</p>
-<p class="tableblock">[DB2, FILES, GEMFIRE, MONGODB, PostgreSQL, ORACLE, POSTGRES, REDIS, REDIS_STREAMS_MESSAGE_BROKER, SPLUNK, SQL_SERVER, VERTICA]</p>
+<p class="tableblock">[DB2, FILES, GEMFIRE, MONGODB, ORACLE, POSTGRES, REDIS, REDIS_STREAMS_MESSAGE_BROKER, SPLUNK, SQL_SERVER, VERTICA]</p>
 <p class="tableblock">NONE is used for custom stages. Also see userDefinedType.</p>
 <p class="tableblock">This is a required field.</p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -2122,38 +2265,835 @@ This is only supported for RDB sources and only for initial load only / ETL jobs
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentialsDirectoryPath</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Each database type other than NONE (used for custom jobs) requires a credentials property file,
 even if the credentials are not required.
 Credentials property files must adhere to the following filename pattern:
 redisconnect_credentials_{source_type | target_type}_{job_name}.properties</p>
-<p class="tableblock">The only exception is for Job Manager which has fixed name: redisconnect_credentials_jobmanager.properties</p></td>
+<p class="tableblock">The only exception is for Job Manager which has fixed name: <code class="lime">redisconnect_credentials_jobmanager.properties</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentialsRotationEventListenerEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the credentialsDirectoryPath will be periodically scanned for changes that are specific to the
-property file associated with this database.</p>
-<p class="tableblock">If a change is identified, the listener will create a new connection without bringing down the Redis Connect instance
-nor stopping the job. There might be a momentary pause in pipeline processing while the connection is being reestablished.
-No data will be lost in this process.</p>
-<p class="tableblock">Disclaimer: if the new credentials cannot be used to create a connection, the job will be stopped for manual intervention.</p></td>
+property file associated with this database<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnotedef_10" title="View footnote.">10</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentialsRotationEventListenerInterval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate scheduled interval that scans the credentialsDirectoryPath for changes when credentialsRotationEventListenerEnabled is enabled.
-Measured in milliseconds. Minimum=60000</p></td>
+Measured in milliseconds; minimum is 60000.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
 </tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-database-properties"><a class="anchor" href="#custom-database-properties"></a>11. Custom Database Properties</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="rdbms-properties"><a class="anchor" href="#rdbms-properties"></a>11.1. RDBMS Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. Stream Job Type Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">customConfiguration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Custom Configurations.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map
-&lt;String, String&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">column.exclude.list</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An optional, comma-separated list of regular expressions that match the fully-qualified names of columns to exclude from change event record values. Fully-qualified names for columns are of the form <code class="aqua"><em>databaseName.tableName.columnName</em></code>.
+To match the name of a column, Debezium applies the regular expression that you specify as an anchored regular expression. That is, the specified expression is matched against the entire name string of the column; it does not match substrings that might be present in a column name. If you include this property in the configuration, do not also set the column.include.list property.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">decimal.handling.mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies how the connector should handle values for DECIMAL and NUMERIC types:
+“string” encodes values as formatted strings, which is easy to consume but semantic information about the real type is lost.
+“precise” represents them precisely using java.math.BigDecimal values represented in change events in a binary form.
+“double” represents them using double values, which may result in a loss of precision but is easier to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">heartbeat.interval.ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls how frequently the connector sends heartbeat messages.
+Heartbeat messages are useful for ensuring the source transaction/redo logs and checkpoint are updated on a predictable basis. This can avoid a long period without updates which may cause a gap between the latest checkpoint and an archived transaction log that has been deleted.
+Default (0) does not send heartbeat messages.
+Measured in milliseconds; minimum is 0.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">max.batch.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the maximum size of each batch of events that should be processed during each iteration of the producer’s polling event loop; minimum is 1.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2048</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">max.queue.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer value that specifies the maximum number of records that the blocking queue can hold. When Debezium reads events streamed from the database, it places the events in the blocking queue before it writes them to Kafka. The blocking queue can provide backpressure for reading change events from the database in cases where the connector ingests messages faster than it can write them to Kafka, or when Kafka becomes unavailable. Events that are held in the queue are disregarded when the connector periodically records offsets. Always set the value of max.queue.size to be larger than the value of max.batch.size.</p>
+<p class="tableblock"><code class="red"><strong>Note: max.queue.size &gt; max.batch.size</strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8192</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">snapshot.mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the criteria for running a snapshot when the connector starts. It is not recommended to use this debezium capability for initial load in Production. See <a href="#production-deployment">Production Deployment</a> for more information.
+MySQL, Postgres default to 'never'; Oracle, SQL Server default to 'schema_only'
+<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. Initial Load Job Type Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.connection.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration the pool will wait for a connection to become available. Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.keepalive.time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed interval to keep a connection alive, in order to prevent it from being timed out by the database or network infrastructure.
+A “keepalive” will only occur on an idle connection.
+Default: 0 (disabled)
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.idle.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Takes effect only when the jdbc.min.idle is less than jdbc.max.pool.size, and is removed when the number of idle connections exceeds the jdbc.min.idle and the idle time exceeds jdbc.idle.timeout.
+If (jdbc.idle.timeout + 1 second) &gt; jdbc.max.lifetime and jdbc.max.lifetime &gt; 0, it will be reset to 0.
+If jdbc.idle.timeout != 0 and less than 10 seconds, it will be reset to 10 seconds.
+If jdbc.idle.timeout=0, idle connections will never be removed from the connection pool.
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">600000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.max.lifetime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration a connection is allowed to remain open. When this timeout is exceeded, the next time the connection is released to the pool it is closed, and a new connection is opened to replace it.
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1800000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.max.pool.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections in the pool.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#partitions + 2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.min.idle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls the minimum number of connection pool idle connections. When the connection pool idle connections are less than jdbc.min.idle and the total number of connections is not more than jdbc.max.pool.size, it will try its best to supplement new connections.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#partitions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">truststore.file.path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Holds onto certificates that identify 3rd parties.
+truststore.type	JKS	String	For Java keystore file format, this property has the value jks (or JKS). You do not normally specify this property, because its default value is already jks.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keystore.file.path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stores private key entries, certificates with public keys, or just secret keys that we may use for various cryptographic purposes.
+keystore.type	JKS	String	Depending on what entries the keystore can store and how the keystore can store the entries, there are a few different types of keystores in Java: JKS, JCEKS, PKCS12, PKCS11 and DKS.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="mongodb-properties"><a class="anchor" href="#mongodb-properties"></a>11.2. MongoDB Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 19. Stream Job Type Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">connect.backoff.initial.delay.ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial delay when trying to reconnect to a primary after the first failed connection attempt or when no primary is available.
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">connect.backoff.max.delay.ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum delay when trying to reconnect to a primary after repeated failed connection attempts or when no primary is available.
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">120000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">connect.max.attempts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of failed connection attempts to a replica set primary before an exception occurs and task is aborted.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mongodb.authsource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database (authentication source) containing MongoDB credentials. This is required only when MongoDB is configured to use authentication with another authentication database than admin.</p></td>
 <td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">admin.connection.pool.max.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections opened in the pool.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">connection.pool.min.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of connections opened in the pool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">connection.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration to establish a connection before an error is thrown. Depending on network infrastructure and load on the server, the client may have to wait for a connection establishment. Possible scenarios where connection timeout can happen – the server gets shut down, network issues, wrong IP/DNS, port number etc.
+Measure in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mongodb.ssl.invalid.hostname.allowed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When SSL is enabled, this setting controls whether strict hostname checking is disabled during connection phase. If true, the connection will not prevent man-in-the-middle attacks.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">read.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration to send or receive on a socket before an error is thrown. “0” default indicates disabling the timeout. Measured in milliseconds."</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mongodb.ssl.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables TLS/SSL connection.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="files-connector-properties"><a class="anchor" href="#files-connector-properties"></a>11.3. Files Connector Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 20. Initial Load Job Type Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">amazon.s3.region</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon S3 creates buckets in a Region. To reduce latency, minimize costs, or address regulatory requirements, choose any AWS Region that is geographically close to Redis Connect.	N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">charset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines a mapping between sequences of sixteen-bit UTF-16 code units (that is, sequences of chars) and sequences of bytes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTF-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">column.names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If a header row is not provided, column names can be configured manually. Order matters for proper association.
+Supported for delimited types. CSV, PSV, TSV</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">continuation.identifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any arbitrary String (special characters) to concatenate multiple sequential lines.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">\\</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delimiter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sequence of one or more characters for specifying the boundary between separated column-values.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">,</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">google.cloud.storage.project.id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier for a project within the GCP console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gzip.file.format</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gzip is a file format and a software application used for file compression and decompression.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header.line</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies which row is the header line since some delimited file types have comments or other non-column related headers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">included.fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whitelist of fields/columns that should be included for replication. All others will be ignored.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">includes.header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Most delimited file types include a header row which can be used to name each column.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">initial.offset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies row/offset from which all scanning should begin inclusive of the header line in delimited types.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source.file.path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Location of the file to be loaded.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">quote.character</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Char</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avoids syntax errors when double quotes are used within field values. Any character can be used as a substitute.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported file formats include: CSV, JSON, PSV, TSV, XML.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="gemfire-properties"><a class="anchor" href="#gemfire-properties"></a>11.4. Gemfire Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 21. Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">function.filter.batch.size</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.free.connection.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds (ms) that the client waits for a free connection if max-connections limit is configured and all connections are in use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.idle.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds to wait for a connection to become idle for load balancing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.locator.host</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.locator.port</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.load.conditioning.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval in which the pool checks to see if a connection to a specific server should be moved to a different server to improve the load balance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">300000 (5m)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.max.connections</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections that the pool can create. If all connections are in use, an operation requiring a client-to server-connection is blocked until a connection is available or the free-connection-timeout is reached. If set to -1, there is no maximum. The setting must indicate a cap greater than min-connections
+<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnotedef_12" title="View footnote.">12</a>]</sup>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.min.connections</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections that must be created initially.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.multiuser.authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the pool to use multi-user secure mode. If in multiuser mode, then app needs to get RegionService instance of Cache</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.ping.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between pinging the server to show the client is alive, set in milliseconds. Pings are only sent when the ping-interval elapses between normal client messages. This must be set lower than the server’s maximum-time-between-pings.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.pr.single.hop.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting used for single-hop access to partitioned region data in the servers for some data operations. See PartitionResolver. See note in thread-local-connections below.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.read.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds to wait for a response from a server before the connection times out.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.retry.attempts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times to retry an operation after a time-out or exception for high availability. If set to -1, the pool tries every available server once until it succeeds or has tried all servers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.server.group</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Server group from which to select connections. If not specified, the global group of all connected servers is used.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.socket.buffer.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the socket buffer, in bytes, on each connection established.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32768</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.socket.connect.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amount of time (in seconds) to wait for a response after a socket connection attempt.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">59</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.statistic.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default frequency, in milliseconds, with which the client statistics are sent to the server. A value of -1 indicates that the statistics are not sent to the server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.subscription.ack.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds to wait before sending an acknowledgment to the server about events received from the subscriptions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.subscription.message.tracking.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds for which messages sent from a server to a client are tracked. The tracking is done to minimize duplicate events.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.subscription.redundancy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redundancy for servers that contain subscriptions established by the client. A value of -1 causes all available servers in the specified group to be made redundant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pool.subscription.timeout.multiplier</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gf:queue:seq</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="redis-target-properties"><a class="anchor" href="#redis-target-properties"></a>11.5. Redis Target Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 22. Event Handler Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain.strategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enumeration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the domain model that will be used to move data through the pipeline so that custom stages and
+targets are aligned.
+Domain Strategies include:
+DICTIONARY: passes all entities.</p>
+<p class="tableblock">KEY_ONLY: passes only key.</p>
+<p class="tableblock">STRING: passes key and single string blob.</p>
+<p class="tableblock">MESSAGE_BROKER: passes String[] with strict schema</p>
+<p class="tableblock">KEY_ONLY is used for invalidation and notification.
+STRING is used with REDIS_STRING_SINK.
+MESSAGE_BROKER is used for brokered deployments that stream data through Redis Streams.
+Only Splunk is currently supported for MESSAGE_BROKER.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See Lettuce’s documentation for Redis URI syntax -</p>
+<p class="tableblock"><a href="https://lettuce.io/core/release/api/io/lettuce/core/RedisURI.html" class="bare">https://lettuce.io/core/release/api/io/lettuce/core/RedisURI.html</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.insecure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Passed to Lettuce’s RedisURI.verifyPeer.
+If true then verifyMode=FULL, else if false then verifyMode=NONE.
+When peer verification is disabled, Lettuce uses Netty&#8217;s InsecureTrustManagerFactory.INSTANCE as the trust manager factory. It’s javadoc notes that it should never be used in production and that it is purely for testing purposes."	FALSE
+redis.connection.timeout.duration	Integer	"Command timeout begins:
+When the command is sent successfully to the transport.</p>
+<p class="tableblock">Queued while the connection was inactive.</p>
+<p class="tableblock">The timeout is canceled upon command completion/cancellation.
+Measured in seconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.auto.reconnect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-reconnect behavior on connections. As soon as a connection gets closed/reset without the intention to close it, the client will try to reconnect, activate the connection and re-issue any queued commands.
+This flag also has the effect that disconnected connections will refuse commands and cancel these with an exception.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.suspend.reconnect.on.protocol.failure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If this flag is true the reconnect will be suspended on protocol errors. The reconnect itself has two phases: Socket connection and protocol/connection activation.
+In case a connection timeout occurs, a connection reset, host lookup fails, this does not affect the cancellation of commands. In contrast, where the protocol/connection activation fails due to SSL errors or PING before activating connection failure, queued commands are canceled.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.sslEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables use of SSL for one-way or mutual authentication. If this flag is false, truststore and keystore will not be passed to the client.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.streams.max.length</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis will trim the stream from the oldest entries when it reaches the number of entries specified in redis.streams.max.length. The stream could have more entries than specified in the command before Redis starts deleting entries.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.streams.passthrough.source.tx.time.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis Stream IDs are specified by two numbers separated by a - character. The first part is the Unix time in milliseconds of the Redis instance generating the ID. The second part is just a sequence number and is used in order to distinguish IDs generated in the same millisecond.
+When enabled, the source commit timestamp can be used to manually set the first part of the Redis Stream ID.
+Caution - time order is strictly enforced.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.streams.sink.partitions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REDIS_STREAMS_SINK can partition the Redis Streams keys to which it will commit.
+This is complementary to job-level partitioning and does not replace it.
+If only the sink is partitioned a partition Id would be appended to the end of the Redis Streams key (e.g. key:2).
+If the sink is partitioned and the job was partitioned then first the job partition id would be appended to the Redis Streams key followed by the sink partition id (e.g. key:2:4).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.wait.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Blocks sink’s commit from successfully completing until acknowledgment that the data was replicated to a backup Redis database shard.
+If checkpointTransactionsEnabled=true, the checkpoint will be rolledback to before this change occurred to avoid inconsistency and duplication.
+If checkpointTransactionsEnabled=false, the checkpoint won&#8217;t be rolled back so on restart the operation would be duplicated.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.wait.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the timeout is reached, the sink’s commit will fail and the consequence will be based on redis.wait.timeout.stop.job.enabled.
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.wait.timeout.stop.job.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If enabled, the job will be stopped and the quiesce process will be bypassed on the assumption that Redis is unavailable.
+If disabled, the error will be logged but the job will continue to operation. This introduces the risk that the data could be lost if the primary shard fails.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="redis-message-broker-properties"><a class="anchor" href="#redis-message-broker-properties"></a>11.6. Redis Message Broker Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 23. Stream Job Type Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.broker.eviction.strategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enumeration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If domain.strategy=MESSAGE_BROKER, Redis Streams is used as an event-stream(s) therefore requires cleanup to avoid running out of memory.
+To evict change-data events that are beyond the need for recovery, the following two options exist:
+THRESHOLD - evicts based on queue depth.</p>
+<p class="tableblock">SCHEDULER - evicts based on a scheduled thread.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">THRESHOLD</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.broker.eviction.scheduled.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate scheduled thread that evicts Redis Stream offsets that occurred before the oldest existing checkpoint.
+Measured in seconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.broker.eviction.threshold</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed queue depth threshold which triggers a separate thread to evict Redis Stream offsets that occurred before the oldest existing checkpoint.</p>
+<p class="tableblock">If redis.streams.eviction.strategy=THRESHOLD
+and redis.streams.eviction.threshold is not provided
+and job type is PARTITIONED_STREAM
+then redis.streams.eviction.threshold=redis.streams.max.length / partitions;</p>
+<p class="tableblock">If redis.streams.eviction.strategy=THRESHOLD
+and redis.streams.eviction.threshold is not provided
+and job type is STREAM
+then (redis.broker.max.queue.depth * 7) / 10;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redis.broker.max.queue.depth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to calculate redis.broker.eviction.threshold if it’s not manually configured.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32768</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="splunk-stream-properties"><a class="anchor" href="#splunk-stream-properties"></a>11.7. Splunk Stream Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 24. Job Type Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">httpHeaders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source.time.field.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source.time.sequence.field.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authorization.stored.in.credentials.file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">splunk.forwarder.destination.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.post.max.retry.attempts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.post.max.retry.duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.post.retry.delay.factor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.post.retry.delay.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.post.retry.max.delay.interval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="in-memory-queue-properties"><a class="anchor" href="#in-memory-queue-properties"></a>11.8. In-Memory Queue Properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 25. Change Event Queue Custom Configurations</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 10%;">
+<col style="width: 47%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">poll.interval.ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate interval that specifies the number of milliseconds the connector should wait for new changed-data events to appear before it starts processing a batch of events.
+Measured in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">max.batch.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum events that can be dequeued by the source poll event loop within a single iteration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16384</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">max.queue.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the maximum number of records that the blocking queue can hold.
+<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32768</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queue.persistence.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, batches of changed-data events are persisted to Redis Stream, before they are enqueued within the in-memory queue, which effectively mimics a change-data-capture (CDC) process within Redis Connect.
+<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnotedef_14" title="View footnote.">14</a>]</sup>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queue.persistence.wait.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Blocks persistence from successfully completing until acknowledgment that the data was replicated to a backup Redis database shard completed.	FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queue.persistence.wait.timeout</p></td>
 </tr>
 </tbody>
 </table>
@@ -2161,10 +3101,55 @@ Measured in milliseconds. Minimum=60000</p></td>
 </div>
 </div>
 </div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. Some conventions used in this document include the following. <strong>Property names</strong>: <code class="lime">property.name</code>. <strong>Name formats</strong>: <code class="aqua"><em>Name Format</em></code>. <strong>Warnings</strong>: <code class="red"><strong>Warning</strong></code>
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. Redis Connect never caches or persists credentials. Therefore, on each connection with the source, target, or job manager database, the credentials are read from a file. This enhances security and allows for seamless credential rotations and integration with secret management frameworks such as HashiCorp Vault.
+</div>
+<div class="footnote" id="_footnotedef_3">
+<a href="#_footnoteref_3">3</a>. StartTLS is an extension of the SMTP protocol that tells the email server that the email client wants to use a secure connection using TLS or SSL.
+</div>
+<div class="footnote" id="_footnotedef_4">
+<a href="#_footnoteref_4">4</a>. When jobName is used in logging or administrative processes (i.e., stopJob), the jobName represents ALL job partitions. Must be between 4 and 50 characters.
+</div>
+<div class="footnote" id="_footnotedef_5">
+<a href="#_footnoteref_5">5</a>. For example, if maxPartitionsPerClusterMember=1 and partitions=3, then the Redis Connect cluster will require at least 3 instances (JVMs) each with at least 1 available capacity to claim a job partition.  This is not a global limit; it is only specific at the job level 0 represents no limit
+</div>
+<div class="footnote" id="_footnotedef_6">
+<a href="#_footnoteref_6">6</a>. The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".  Increasing the buffer size will impact the JVM heap space required to store all transient changed data events within the queue. For most cases, this can be left as default.
+</div>
+<div class="footnote" id="_footnotedef_7">
+<a href="#_footnoteref_7">7</a>. When enabled, the checkpoint will be committed as part of an atomic Redis transaction. This eliminates consistency issues and improves performance. Rollback capability is built in to handle any failure scenarios during the transaction so that no data will be lost.  When disabled, the checkpoint will be committed after the the changed-data events are written. This adds another network round trip for each changed-data event.  While distributed checkpoints have distinct advantages, there is a small tradeoff. Because Redis keys are bound by their hash-slots, distributed checkpoints require that we store one checkpoint per hash slot.  When enabled, each job partition will have its own 16384 checkpoint keys created in the target database. With ~250 bytes per checkpoint, each partition’s estimated overhead is ~4MB. When disabled, there is only a single checkpoint key in the target per partition. Distributed checkpoints require RediSearch. We use RediSearch to index checkpoint keys so that recovery from the latest checkpoint is immediate
+</div>
+<div class="footnote" id="_footnotedef_8">
+<a href="#_footnoteref_8">8</a>. sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayInterval
+</div>
+<div class="footnote" id="_footnotedef_9">
+<a href="#_footnoteref_9">9</a>. When enabled, the column-level changedColumnOnlyEnabled flag will be overridden for all columns other than those designated as targetKey(s).  This is currently only supported for RDBMS sources
+</div>
+<div class="footnote" id="_footnotedef_10">
+<a href="#_footnoteref_10">10</a>. If a change is identified, the listener will create a new connection without bringing down the Redis Connect instance nor stopping the job. There might be a momentary pause in pipeline processing while the connection is being reestablished. No data will be lost in this process.  Disclaimer: if the new credentials cannot be used to create a connection, the job will be stopped for manual intervention.
+</div>
+<div class="footnote" id="_footnotedef_11">
+<a href="#_footnoteref_11">11</a>. Possible settings are:  initial - the connector runs a snapshot only when no offsets have been recorded for the logical server name.  initial_only - the connector runs a snapshot only when no offsets have been recorded for the logical server name and then stops; i.e. it will not read change events from the binlog.  when_needed - the connector runs a snapshot upon startup whenever it deems it necessary. That is, when no offsets are available, or when a previously recorded offset specifies a binlog location or GTID that is not available in the server.  never - the connector never uses snapshots. Upon first startup with a logical server name, the connector reads from the beginning of the binlog. Configure this behavior with care. It is valid only when the binlog is guaranteed to contain the entire history of the database.  schema_only - the connector runs a snapshot of the schemas and not the data. This setting is useful when you do not need the topics to contain a consistent snapshot of the data but need them to have only the changes since the connector was started.  schema_only_recovery - this is a recovery setting for a connector that has already been capturing changes. When you restart the connector, this setting enables recovery of a corrupted or lost database schema history topic. You might set it periodically to "clean up" a database schema history topic that has been growing unexpectedly. Database schema history topics require infinite retention
+</div>
+<div class="footnote" id="_footnotedef_12">
+<a href="#_footnoteref_12">12</a>. If you use this setting to cap your pool connections, deactivate the pool attribute pr-single-hop-enabled. Leaving single hop activated can increase thrashing and lower performance.
+</div>
+<div class="footnote" id="_footnotedef_13">
+<a href="#_footnoteref_13">13</a>. The blocking queue provides backpressure for reading changed data events from the source in cases where the connector ingests messages faster than they are consumed. Events that are held in the queue are disregarded when the connector periodically records offsets. Always set the value of maxQueueSize to be larger than the value of maxBatchSize
+</div>
+<div class="footnote" id="_footnotedef_14">
+<a href="#_footnoteref_14">14</a>. Persistence allows for recovery of transient changed-data events which is critical for sources like Splunk that do not implement their own change-data-capture (CDC) process. Only supported by Gemfire and Splunk
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.3<br>
-Last updated 2023-08-21 10:55:26 -0600
+Last updated 2023-08-25 13:53:57 -0600
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
