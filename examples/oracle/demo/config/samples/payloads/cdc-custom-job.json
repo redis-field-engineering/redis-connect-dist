@@ -41,33 +41,33 @@
     "tables": {
       "C##RCUSER.CLOB_DATA1": {
         "columns": [
-          { "targetColumn": "ID", "sourceColumn": "ID", "primaryKey": true},
+          { "targetColumn": "ID", "sourceColumn": "ID", "targetKey": true},
           { "targetColumn": "CLOB_DATA1", "sourceColumn": "CLOB_DATA1", "type": "CLOB"}
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       },
       "C##RCUSER.CLOB_DATA2": {
         "columns": [
-          { "targetColumn": "ID", "sourceColumn": "ID", "primaryKey": true},
+          { "targetColumn": "ID", "sourceColumn": "ID", "targetKey": true},
           { "targetColumn": "CLOB_DATA2", "sourceColumn": "CLOB_DATA2", "type": "CLOB"}
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       },
       "C##RCUSER.BLOB_DATA1": {
         "columns": [
-          { "targetColumn": "ID", "sourceColumn": "ID", "primaryKey": true},
+          { "targetColumn": "ID", "sourceColumn": "ID", "targetKey": true},
           { "targetColumn": "BLOB_DATA1", "sourceColumn": "BLOB_DATA1", "type": "BLOB"}
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

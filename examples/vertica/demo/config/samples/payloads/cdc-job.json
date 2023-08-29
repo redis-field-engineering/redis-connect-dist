@@ -32,23 +32,23 @@
     "tables": {
       "public.employee_dimension": {
         "columns": [
-          { "targetColumn": "employee_key", "sourceColumn": "employee_key", "primaryKey": true }
+          { "targetColumn": "employee_key", "sourceColumn": "employee_key", "targetKey": true }
         ],
         "initialLoad": {
           "partitions": 2,
           "selectQuery": "SELECT * FROM (SELECT ALIAS.*, ROW_NUMBER() OVER (ORDER BY employee_key) RowIndex FROM public.employee_dimension ALIAS) ALIAS WHERE ALIAS.RowIndex >= ${start} AND ALIAS.RowIndex <= ${end}"
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       },
       "public.customer_dimension": {
         "columns": [
-          { "targetColumn": "customer_key", "sourceColumn": "customer_key", "primaryKey": true }
+          { "targetColumn": "customer_key", "sourceColumn": "customer_key", "targetKey": true }
         ],
         "initialLoad": {
           "partitions": 2,
           "selectQuery": "SELECT * FROM (SELECT ALIAS.*, ROW_NUMBER() OVER (ORDER BY customer_key) RowIndex FROM public.customer_dimension ALIAS) ALIAS WHERE ALIAS.RowIndex >= ${start} AND ALIAS.RowIndex <= ${end}"
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

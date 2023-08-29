@@ -35,7 +35,7 @@
           "partitions": 4,
           "maxPartitionsPerClusterMember": 1
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

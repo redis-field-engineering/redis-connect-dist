@@ -30,12 +30,12 @@
     "tables": {
       "emp": {
         "columns": [
-          { "primaryKey": true, "sourceColumn": "empno", "targetColumn": "empno" }
+          { "targetKey": true, "sourceColumn": "empno", "targetColumn": "empno" }
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

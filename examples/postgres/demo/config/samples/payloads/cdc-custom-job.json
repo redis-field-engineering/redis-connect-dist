@@ -42,12 +42,12 @@
     "tables": {
       "public.emp": {
         "columns": [
-          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true }
+          { "targetColumn": "empno", "sourceColumn": "empno", "targetKey": true }
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

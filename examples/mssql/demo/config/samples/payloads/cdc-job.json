@@ -34,13 +34,13 @@
     "tables": {
       "dbo.emp": {
         "columns": [
-          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
+          { "targetColumn": "empno", "sourceColumn": "empno", "targetKey": true },
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME" }
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

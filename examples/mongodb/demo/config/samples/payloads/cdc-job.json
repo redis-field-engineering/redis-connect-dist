@@ -34,13 +34,13 @@
     "tables": {
       "sample_airbnb.listingsAndReviews": {
         "columns": [
-          { "targetColumn": "primary_key", "sourceColumn": "_id", "primaryKey": true }
+          { "targetColumn": "primary_key", "sourceColumn": "_id", "targetKey": true }
         ],
         "initialLoad": {
           "partitions": 4,
           "selectQuery": "{ $match: { '_id' : { $gte : '0' } } }"
         },
-        "passThroughEnabled" : true
+        "autoConfigColumnsEnabled" : true
       }
     }
   }

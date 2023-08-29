@@ -34,13 +34,13 @@
     "tables": {
       "RedisConnect.emp": {
         "columns": [
-          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true },
+          { "targetColumn": "empno", "sourceColumn": "empno", "targetKey": true },
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE_TIME", "dateFormat": "YYYY-MM-dd'T'HH:mm:ss" }
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }
