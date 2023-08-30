@@ -32,14 +32,14 @@
     "tables": {
       "DB2INST1.EMP": {
         "columns": [
-          { "targetColumn": "EmployeeNumber", "sourceColumn": "EMPNO", "primaryKey": true },
+          { "targetColumn": "EmployeeNumber", "sourceColumn": "EMPNO", "targetKey": true },
           { "targetColumn": "FirstName", "sourceColumn": "FNAME" },
           { "targetColumn": "HireDate", "sourceColumn": "HIREDATE", "type": "DATE" }
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

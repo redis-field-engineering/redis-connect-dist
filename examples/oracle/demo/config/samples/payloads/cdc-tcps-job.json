@@ -34,10 +34,10 @@
     "tables": {
       "C##RCUSER.EMP": {
         "columns": [
-          { "targetColumn": "EMPNO", "sourceColumn": "EMPNO", "primaryKey": true},
+          { "targetColumn": "EMPNO", "sourceColumn": "EMPNO", "targetKey": true},
           { "targetColumn": "HIREDATE", "sourceColumn": "HIREDATE", "type": "DATE"}
         ],
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

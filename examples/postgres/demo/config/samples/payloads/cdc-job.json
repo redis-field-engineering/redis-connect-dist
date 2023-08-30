@@ -33,13 +33,13 @@
     "tables": {
       "public.emp": {
         "columns": [
-          { "targetColumn": "empno", "sourceColumn": "empno", "primaryKey": true},
+          { "targetColumn": "empno", "sourceColumn": "empno", "targetKey": true},
           { "targetColumn": "hiredate", "sourceColumn": "hiredate", "type": "DATE"}
         ],
         "initialLoad": {
           "partitions": 4
         },
-        "passThroughEnabled": true
+        "autoConfigColumnsEnabled": true
       }
     }
   }

@@ -52,12 +52,12 @@
     "tables": {
       "hec_collector": {
         "columns": [
-          { "primaryKey": true, "sourceColumn": "sourcetype", "targetColumn": "sourcetype", "type": "STRING" },
-          { "primaryKey": true, "sourceColumn": "time", "targetColumn": "time", "type": "INTEGER" },
-          { "primaryKey": true, "sourceColumn": "sequenceId", "targetColumn": "sequenceId", "type": "LONG", "passThroughEnabled": false }
+          { "targetKey": true, "sourceColumn": "sourcetype", "targetColumn": "sourcetype", "type": "STRING" },
+          { "targetKey": true, "sourceColumn": "time", "targetColumn": "time", "type": "INTEGER" },
+          { "targetKey": true, "sourceColumn": "sequenceId", "targetColumn": "sequenceId", "type": "LONG", "autoConfigColumnsEnabled": false }
         ],
-        "passThroughEnabled": true,
-        "prependTableNameToKeysEnabled": false
+        "autoConfigColumnsEnabled": true,
+        "prefixTableNameToTargetKeyEnabled": false
       }
     }
   }
