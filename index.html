@@ -2530,19 +2530,15 @@ Measure in milliseconds.</p></td>
 <col style="width: 47%;">
 <col style="width: 10%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property name</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Type</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Default</strong></th>
+</tr>
+</thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property name</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Type</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">amazon.s3.region</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon S3 creates buckets in a Region. To reduce latency, minimize costs, or address regulatory requirements, choose any AWS Region that is geographically close to Redis Connect.	N/A</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">charset</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
@@ -2816,7 +2812,7 @@ Only Splunk is currently supported for MESSAGE_BROKER.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">databaseURL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See Lettuce’s documentation for Redis URI syntax -</p>
 <p class="tableblock"><a href="https://lettuce.io/core/release/api/io/lettuce/core/RedisURI.html" class="bare">https://lettuce.io/core/release/api/io/lettuce/core/RedisURI.html</a></p></td>
@@ -3149,7 +3145,7 @@ Measured in milliseconds.</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.3<br>
-Last updated 2023-08-25 13:53:57 -0600
+Last updated 2023-09-05 15:40:58 -0600
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
