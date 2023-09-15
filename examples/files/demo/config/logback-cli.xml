@@ -49,8 +49,50 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d %p %c{1} [%t] %m%n</pattern>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator name="eval1">
+                <expression>message.contains("polling records...")</expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator name="eval2">
+                <expression>message.contains("no records available yet, sleeping a bit...")</expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator name="eval3">
+                <expression>message.contains("checking for more records...")</expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator name="eval4">
+                <expression>message.contains("No change in the database")</expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator name="eval5">
+                <expression>message.contains("polled no new records")</expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator name="eval6">
+                <expression>message.contains("no records available or batch size not reached yet, sleeping a bit...") </expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
     </appender>
     <appender name="REDIS_CONNECT_PIPELINE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_REDIS_CONNECT_PIPELINE_PATH}-${PROCESS_ID}.log</file>
