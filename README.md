@@ -152,7 +152,7 @@ redis-connect\bin> redisconnect.bat start
 
 ### Swagger UI
 
-Redis Connect Swagger UI is available on port 8282 by default. If you're running locally, you can point your browser to [http://localhost:8282/swagger-ui/index.html]()
+Redis Connect Swagger UI is available on port 8282 by default. If you're running locally, you can point your browser to `http://localhost:8282/swagger-ui/index.html`
 
 <br>_For quick start, use '**cdc_job**' as **jobName**_
 <br><br><img src="/images/quick-start/Redis Connect Swagger Front Page.jpg" style="float: right;" width = 700px height = 425px/>
