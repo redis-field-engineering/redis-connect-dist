@@ -117,9 +117,9 @@ redis-connect/bin$ ./redisconnect.sh
 Redis Connect startup script.
 *******************************
 Please ensure that the value of REDISCONNECT_JOB_MANAGER_CONFIG_PATH points to the correct jobmanager.properties in /home/viragtripathi/qa/vm/redis-connect/bin/redisconnect.conf before executing any of the options below
-Check the value of redis.connection.url and credentials.file.path in jobmanager.properties e.g.
+Check the value of redis.connection.url and credentials.dir.path in jobmanager.properties e.g.
 redis.connection.url=redis://redis-19836.c9.us-east-1-2.ec2.cloud.redislabs.com:19836
-credentials.file.path=/var/secrets/redis
+credentials.dir.path=/var/secrets/redis
 *******************************
 Usage: [-h|cli|start]
 options:
@@ -134,9 +134,9 @@ start: init Redis Connect Instance (Cluster Member)
 redis-connect\bin> redisconnect.bat
 ```
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                |
-|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentials.file.path` and `redis.connection.url` in `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a>    |
+| Prerequisite Configuration :exclamation:                                                                                                                                                            |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentials.dir.path` and `redis.connection.url` in `/config/jobmanager.properties`<br/> Example - <a href="/examples/postgres/demo/config/jobmanager.properties">jobmanager.properties</a> |
 
 ### Starting an instance
 
@@ -161,9 +161,9 @@ Redis Connect Swagger UI is available on port 8282 by default. If you're running
 <br>_For quick start, use a sample job configuration:_ <a href="/examples/db2/demo/config/samples/payloads/cdc-job.json">DB2</a>, <a href="/examples/files/demo/config/samples/payloads/cdc-job.json">Files</a>, <a href="/examples/gemfire/demo/config/samples/payloads/cdc-job.json">Gemfire</a>, <a href="/examples/mongodb/demo/config/samples/payloads/cdc-job.json">MongoDB</a>, <a href="/examples/mysql/demo/config/samples/payloads/cdc-job.json">MySQL</a>, <a href="/examples/oracle/demo/config/samples/payloads/cdc-job.json">Oracle</a>, <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">PostgreSQL</a>, <a href="/examples/mssql/demo/config/samples/payloads/cdc-job.json">SQL Server</a> and <a href="/examples/vertica/demo/config/samples/payloads/cdc-job.json">VERTICA</a>
 <br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 
-| Prerequisite Configuration :exclamation:                                                                                                                                                                                      |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update `credentialsFilePath`, `databaseURL`, `database.dbname` (`database.names` for SQL Server), `database.hostname`, `database.port` and `columns` within sample job configuration for source and target, where applicable. |
+| Prerequisite Configuration :exclamation:                                                                                                                                                                                           |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update `credentialsDirectoryPath`, `databaseURL`, `database.dbname` (`database.names` for SQL Server), `database.hostname`, `database.port` and `columns` within sample job configuration for source and target, where applicable. |
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>_For quick start, use '**stream**' as **jobType**_
