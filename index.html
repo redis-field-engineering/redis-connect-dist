@@ -97,12 +97,12 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Redis Connect is a distributed platform that enables real-time event streaming, transformation, and propagation of
-changed-data events from heterogeneous data platforms (i.e. Oracle, MongoDB, Gemfire, etc.) to Redis Enterprise,
+changed-data events from heterogeneous data platforms (e.g., Oracle, MongoDB, Gemfire, etc.) to Redis Enterprise,
 Redis Cloud, and Azure Cache for Redis Enterprise.</p>
 </div>
 <div class="paragraph">
-<p>In only a few minutes, Redis Connect can be installed, configured, and deployed to keep Redis continuously synced with
-committed operations that were persisted by the <a href="#source">source</a> to it&#8217;s <a href="#log">transactional log</a> typically via a proprietary
+<p>Redis Connect can be easily installed, configured, and deployed to keep Redis continuously synced with
+committed operations persisted by the <a href="#source">source</a> to its <a href="#log">transactional log</a>, typically using a proprietary
 <a href="https://en.wikipedia.org/wiki/Change_data_capture">change data capture</a> process.</p>
 </div>
 <div class="paragraph">
@@ -1421,7 +1421,7 @@ localhost and port of each REST API enabled instance via <a href="http://localho
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/swagger_main.PNG" alt="swagger main">
+<img src="images/swagger_main.png" alt="swagger main">
 </div>
 </div>
 <div class="paragraph">
@@ -1430,7 +1430,7 @@ truth.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/start_job_api.PNG" alt="start job api">
+<img src="images/start_job_api.png" alt="start job api">
 </div>
 </div>
 <div class="paragraph">
@@ -1438,17 +1438,17 @@ truth.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/cluster_management_apis.PNG" alt="cluster management apis">
+<img src="images/cluster_management_apis.png" alt="cluster management apis">
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/job_management_apis.PNG" alt="job management apis">
+<img src="images/job_management_apis.png" alt="job management apis">
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/log_management_apis.PNG" alt="log management apis">
+<img src="images/log_management_apis.png" alt="log management apis">
 </div>
 </div>
 <div class="paragraph">
@@ -1601,7 +1601,7 @@ visualize it is with <a href="https://redis.com/redis-enterprise/redis-insight/"
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/redis_connect_metadata.PNG" alt="redis connect metadata">
+<img src="images/redis_connect_metadata.PNG" alt="redis connect metadata">
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -2068,8 +2068,8 @@ breakers, <a href="#quiesce">quiesce</a> their <a href="#pipeline">data pipeline
 </li>
 </ul>
 </div>
-<div class="sect4">
-<h5 id="compute-resources"><a class="anchor" href="#compute-resources"></a>Compute Resources</h5>
+<div class="sect3">
+<h4 id="compute-resources"><a class="anchor" href="#compute-resources"></a>7.1.1. Compute Resources</h4>
 <div class="paragraph">
 <p>Redis Connect has a cloud-native and shared-nothing architecture which allows any <a href="#cluster">cluster</a> node/member/<a href="#instance">instance</a>
 to perform both <a href="#job-management">Job Management</a> and <a href="#job-execution">Job Execution</a>. Each Redis Connect instance is multi-threaded and segregates
@@ -2125,7 +2125,6 @@ jobs to be executed multi-tenant instead of deploying many JVMs on the same infr
 </tr>
 </table>
 </div>
-</div>
 <div class="sect4">
 <h5 id="memory-resources"><a class="anchor" href="#memory-resources"></a>Memory Resources</h5>
 <div class="paragraph">
@@ -2156,6 +2155,7 @@ will these in-memory buffers.</p>
 2 GB RAM
 20 GB of free disk space
 1 Gbps networking</pre>
+</div>
 </div>
 </div>
 </div>
@@ -2241,7 +2241,7 @@ Redis Connect will also support Open Telemetry as an alternative option.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/dashboard.png" alt="dashboard">
+<img src="images/dashboard.png" alt="dashboard">
 </div>
 </div>
 <div class="paragraph">
@@ -4578,7 +4578,7 @@ Measured in milliseconds.</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.5<br>
-Last updated 2023-10-31 10:22:21 -0600
+Last updated 2023-10-31 11:55:01 -0600
 </div>
 </div>
 </body>
