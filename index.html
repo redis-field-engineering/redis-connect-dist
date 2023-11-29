@@ -45,6 +45,8 @@
 <li><a href="#logging">7.4. Logging</a></li>
 <li><a href="#monitoring">7.5. Monitoring</a></li>
 <li><a href="#security">7.6. Security</a></li>
+<li><a href="#high-availability-2">7.7. High availability</a></li>
+<li><a href="#multi-region-deployment">7.8. Multi-region deployment</a></li>
 </ul>
 </li>
 <li><a href="#configuration-overview">8. Configuration Overview</a>
@@ -2481,6 +2483,357 @@ To use a secrets management framework:</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="high-availability-2"><a class="anchor" href="#high-availability-2"></a>7.7. High availability</h3>
+<div class="paragraph">
+<p>For high-availability, we recommend that you employ <em>n</em>+1 redundancy as part of your Redis Connect cluster.
+In this case, <em>n</em> is defined as the minimum number of Redis Connect instances required to provision all of the
+jobs that you intend to run.</p>
+</div>
+<div class="paragraph">
+<p>We also recommend that you deploy each Redis Connect instance on a separate VM. When running in the cloud,
+you should ensure that your Redis Connect instances are distributed evenly across cloud availability zones.</p>
+</div>
+<div class="sect3">
+<h4 id="instance-failure-behavior"><a class="anchor" href="#instance-failure-behavior"></a>7.7.1. Instance failure behavior</h4>
+<div class="paragraph">
+<p>In the event of a Redis Connect instance (JVM) failure, the heartbeat lease of each job partition owned by that instance
+expires. Once expired, the job reaper will identify each partition without a heartbeat and immediately publish a job claim
+request.</p>
+</div>
+<div class="paragraph">
+<p>Even if a JVM was restarted on the same machine, on which it just failed, it would still need to compete with the other
+instances with available capacity to claim the job partitions.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s important to understand each job’s capacity requirements and related settings to calculate how many instances are needed.
+For example, if a job with 4 partitions and a setting of <code>maxPartitionsPerClusterMember=2</code> is deployed across a 2-instance cluster,
+then even if there are 20 available capacity on each Redis Connect instance, they would be blocked from claiming more of this job’s
+unclaimed partitions in the event of a node failure.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s also important to set the Job Manager property <code>job.claim.max.capacity</code> appropriate to the desired redundancy requirement
+with respect to all job partitions planned for deployment across the cluster.
+For example, if there are 3 cluster nodes each with a goal to deploy a job with 4 partitions, then in order to achieve n+1 redundancy,
+each node would have to configure job.claim.max.capacity=2, or more, since the loss of one node would still allow for all 4 partitions
+to be claimed.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="instance-failures"><a class="anchor" href="#instance-failures"></a>7.7.2. Instance failures</h4>
+<div class="paragraph">
+<p>For high-availability, it is recommended to deploy each Redis Connect instance on a separate VM or cloud availability zone.
+For on-premises deployments, extra care should be taken to ensure that each VM is deployed on different underlying server racks
+to avoid a single point of failure.</p>
+</div>
+<div class="paragraph">
+<p>Each VM / cloud availability zone should have access to each job’s source, job’s target, and the Redis Connect Job Manager database.</p>
+</div>
+<div class="paragraph">
+<p>For deployment on Kubernetes, see the
+<a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/k8s-docs">Redis Connect Kubernetes Docs</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="network-partitions"><a class="anchor" href="#network-partitions"></a>7.7.3. Network partitions</h4>
+<div class="paragraph">
+<p>If a network partition occurs, then one side or the other (or both) of the partition needs to stop responding to requests
+to maintain the consistency guarantee. If both sides continue to respond to reads and writes while they are unable to communicate
+with each other, they will diverge and no longer be consistent. This state where both sides of the partition remain
+available is called "split brain".</p>
+</div>
+<div class="paragraph">
+<p>To avoid "split brain", Redis Connect jobs make a call to the job manager database as the initial stage of their
+producer’s source event-loop to check if their claim is still valid. Here’s why that matters.
+A job cannot be claimed unless the Job Reaper identifies a staged job without a heartbeat, so until that lease expires,
+the claim is intact. Once the heartbeat expires due to the network partition, the Job Reaper will first remove the claim
+from the job manager database before publishing a new job claim request.
+So even if the original Redis Connect instance has not died, it cannot continue to process additional batches once its
+claim is removed nor can it regain its ownership by default when the network partition is remedied.</p>
+</div>
+<div class="paragraph">
+<p>By relying on Redis Enterprise as its source of truth, this cluster architecture is guaranteed to always have a single
+job owner at any one point-in-time. This is because the metadata stored within Redis Enterprise has its own split-brain
+protection.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="source-connection-failures"><a class="anchor" href="#source-connection-failures"></a>7.7.4. Source Connection Failures</h4>
+<div class="paragraph">
+<p>Connections fail for many reasons, both intermittent drop-outs and prolonged outages. Since Redis Connect does not know the
+cause of a connection issue, the cluster will always assume that the connection failure is intermittent and attempt to
+re-establish the connection.</p>
+</div>
+<div class="paragraph">
+<p>For this purpose, it’s important to set the following configurations within the job source:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sourceConnectionMaxRetryAttempts</code></p>
+</li>
+<li>
+<p><code>sourceConnectionMaxRetryDuration</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayInterval</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryMaxDelayInterval</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayFactor</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of their use:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sourceConnectionMaxRetryAttempts=3</code></p>
+</li>
+<li>
+<p><code>sourceConnectionMaxRetryDuration=10</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayInterval=60</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryMaxDelayInterval=600</code></p>
+</li>
+<li>
+<p><code>sourceConnectionRetryDelayFactor=3</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Based on the above, if the first attempt to connect fails, then the process waits 60 seconds before attempting its first retry.</p>
+</div>
+<div class="paragraph">
+<p>If the retry fails, then the process waits 60 * 3 = 180 seconds for its second retry, and so on, up until the max delay interval between retries.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="target-redis-connection-failures"><a class="anchor" href="#target-redis-connection-failures"></a>7.7.5. Target Redis Connection Failures</h4>
+<div class="paragraph">
+<p>Just like sources, Redis target connections have a retry mechanism.
+However, these retries are built into the underlying Redis client (a.k.a., <a href="https://lettuce.io/">Lettuce</a>).
+For production environments, we recommend using the default Redis connection settings.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="target-redis-slow-consumer-2"><a class="anchor" href="#target-redis-slow-consumer-2"></a>7.7.6. Target Redis Slow Consumer</h4>
+<div class="paragraph">
+<p>It’s possible that the rate of incoming changed-data events and outgoing sink commits becomes unbalanced due to a slowdown
+on the target database, usually because of network congestion. To avoid overwhelming the job pipeline queue, the combination of the
+following settings helps to provide back-pressure support:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>slowConsumerMaxRetryAttempts</p>
+</li>
+<li>
+<p>intermittentEventSleepDuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Once the pipeline queue becomes full, a circuit breaker will be triggered to disable the producer’s polling event-loop
+until the requisite pipeline capacity becomes available.
+While the pipeline is iterating through its queued events,
+the job’s producer will periodically attempt to publish the remainder of its current batch.</p>
+</div>
+<div class="paragraph">
+<p>In between each attempt, the producer will sleep (based on intermittentEventSleepDuration), which allows the pipeline
+time to catch up.
+This loop will continue until either the required capacity becomes available or the <code>slowConsumerMaxRetryAttempts</code> limit
+is reached. Once reached, the job will stop.</p>
+</div>
+<div class="paragraph">
+<p>In production, we recommend that you set <code>slowConsumerMaxRetryAttempts</code> to a reasonable setting instead of making
+it unlimited or disabling it.
+This is where proper capacity estimation and partitioning will become critical since you don’t want to stop the job
+unnecessarily due to a network disruption nor large spike in volume.
+In other words, even if a single partition can handle the entire throughput on a regular basis,
+it might be worthwhile to partition the deployment so that a sudden spike in throughput or a slow consumer does not
+bring down the job.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="recovery-time-considerations-2"><a class="anchor" href="#recovery-time-considerations-2"></a>7.7.7. Recovery Time Considerations</h4>
+<div class="paragraph">
+<p>Redis Connect’s job management processes are scheduled threads that periodically wake up to perform their service.
+While it’s not critical to understand the internals of the cluster architecture, it is relevant to be aware of the balance
+between job claim heartbeats and the Job Reaper service.</p>
+</div>
+<div class="paragraph">
+<p>As mentioned previously, when a job partition is claimed it begins a heartbeat lease which has a
+TTL set by <code>job.claim.heartbeat.lease.renewal.ttl</code>. If the lease cannot be renewed before expiry, the Job Reaper
+service will remove the current owner’s claim based on the assumption that its Redis Connect instance is no longer alive.</p>
+</div>
+<div class="paragraph">
+<p>This service is performed based on a fixed interval set by job.reap.attempt.interval. Once the job claim is removed,
+each eligible Redis Connect instance will attempt to claim the job partition.
+This Job Claim service is also based on a fixed interval set by job.claim.attempt.interval.</p>
+</div>
+<div class="paragraph">
+<p>Since each interval is started at a different point-in-time (and some services have more work to do than others),
+it’s impossible to synchronize all the moving parts. However, it is critical to avoid scenarios that can cause unexpected
+behavior by giving enough buffer between associated services. For example, <code>job.reap.attempt.interval</code> must be at least
+2 seconds more than <code>job.claim.attempt.interval</code> to avoid sending multiple job claim requests for the same partition.
+This relates to recovery because each default interval can potentially add up to over a minute in recovery time inclusive
+of the actual start job process. Therefore, if instant recovery is critical to production SLAs, our recommendation is to
+consider the balance between separate services and as well as the stability of your network.
+If these settings are set too low, it’s possible that a network disruption can unnecessarily
+start the recovery process on a healthy job.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#Cluster Configuration">Cluster Configuration</a> for details on setting these properties.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="multi-region-deployment"><a class="anchor" href="#multi-region-deployment"></a>7.8. Multi-region deployment</h3>
+<div class="paragraph">
+<p>Redis Enterprise lets you replicate databases across regions using
+<a href="https://docs.redis.com/latest/rs/databases/active-active/develop/">active-active</a> and
+<a href="https://docs.redis.com/latest/rs/databases/import-export/replica-of/">active-passive</a> deployment topologies.</p>
+</div>
+<div class="paragraph">
+<p>If you deploy your Redis Enterprise databases across regions, you also need to consider how you will deploy Redis Connect
+and how you will recover if you lose a region. Let&#8217;s consider a real-world scenario.</p>
+</div>
+<div class="paragraph">
+<p>Suppose your data infrastructure is divided between two regions: West and East.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Your primary data center resides in the West.</p>
+</li>
+<li>
+<p>You source database for CDC is Postgres, and this database is hosted in the West.</p>
+</li>
+<li>
+<p>Your target database is a Redis Enterprise active-active or active-passive database with replicas in both West and East data centers. Because
+the target database stores checkpoints for CDC, Redis Connect will be able to recover from where it stopped in the event of a failover.</p>
+</li>
+<li>
+<p>Your Redis Connect job manager database is a Redis Enterprise database deployed in the West region. You have also provisioned
+a job manager database in the East region. This East database will not contain any configuration until you fail over.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In a scenario like this one, we recommend running a Redis Connect cluster in the West and maintaining a cold standby cluster
+in the East. Running Redis Connect entirely in one region ensure a low-latency CDC pipeline.</p>
+</div>
+<div class="paragraph">
+<p>As usual, we also recommend deploying at least two Redis Connect instances in each region, which will provide
+high availability within that region.</p>
+</div>
+<div class="sect3">
+<h4 id="disaster-recovery"><a class="anchor" href="#disaster-recovery"></a>7.8.1. Disaster recovery</h4>
+<div class="paragraph">
+<p>Redis Connect provides high availability within a single region; however, failover to a secondary region requires some
+planning and manual intervention. Continuing with the example above, you need a plan to fail over to the East data center and
+start a cold standby Redis Connect cluster.</p>
+</div>
+<div class="paragraph">
+<p>First, ensure that you can start an equivalent Redis Connect cluster in the East.
+The means deploying the same number of Redis Connect instances you have in the West. Let&#8217;s call this the "cold standby cluster".</p>
+</div>
+<div class="paragraph">
+<p>The cold standby cluster instances in the East should maintain a local configuration nearly identical to the instances
+in the West, with a few important caveats:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Instances in the East will need to connect to a job manager database in the East. This means that you will need to
+pre-provision a job manager database in your Redis Enterprise East cluster.</p>
+</li>
+<li>
+<p>Instances in the East will use the East target database for CDC. This means that all job configurations running
+in the East should point to the Redis Enterprise as the target database in the East.</p>
+</li>
+<li>
+<p>You need to determine how Redis Connect jobs will connect their source, in this case Postgres. Will you have a
+secondary Postgres server in the East that your instances can connect to? If so, your CDC jobs will need to be configured
+to point to this database. In addition, this database must have equivalent transaction logs to the database in the West
+so that Redis Connect can continue reading from the same offset checkpoints.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a summary of the configuration differences between the live Redis Connect cluster in the West and the cold
+standby in the East:</p>
+</div>
+<table id="properties" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Cluster properties</caption>
+<colgroup>
+<col style="width: 11.7647%;">
+<col style="width: 17.647%;">
+<col style="width: 23.5294%;">
+<col style="width: 23.5294%;">
+<col style="width: 23.5295%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Region</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Instances deployed</strong></th>
+<th class="tableblock halign-left valign-top"><strong>jobmanager.properties</strong></th>
+<th class="tableblock halign-left valign-top"><strong>CDC source</strong></th>
+<th class="tableblock halign-left valign-top"><strong>CDC target</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>West</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&gt;= 2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>redis.connection.url</code> points to <strong>West</strong> jobmanager database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job configuration JSON points to CDC source in <strong>West</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job configuration JSON points to <strong>West</strong> target database</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>East</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&gt;= 2 (and equal to West)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>redis.connection.url</code> points to <strong>East</strong> jobmanager database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job configuration JSON points to CDC source in <strong>East</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Job configuration JSON points to <strong>East</strong> target database</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="failover-procedure"><a class="anchor" href="#failover-procedure"></a>7.8.2. Failover procedure</h4>
+<div class="paragraph">
+<p>If your West region becomes unavailable, and you decide to manually fail over, you can fail over to East as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Stop all Redis Connect instances in the West (if they&#8217;re still running).</p>
+</li>
+<li>
+<p>Ensure that source, target, and job configuration databases are accessible in the East.</p>
+</li>
+<li>
+<p>Verify that transaction logs for the source are still available in the East.</p>
+</li>
+<li>
+<p>Start your cold standby Redis Connect instances in the East.</p>
+</li>
+<li>
+<p>Start your CDC jobs by submitting your CDC JSON configuration files using Redis Connect&#8217;s REST API.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2711,7 +3064,7 @@ subsection.</p>
 <div class="sect2">
 <h3 id="cluster-configurations"><a class="anchor" href="#cluster-configurations"></a>9.1. Cluster Configurations</h3>
 <table id="properties" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Cluster properties</caption>
+<caption class="title">Table 3. Cluster properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -2760,7 +3113,7 @@ Runs on each Redis Connect Instance (JVM) when <code class="lime">job.manager.se
 <div class="sect2">
 <h3 id="job-manager-services-properties"><a class="anchor" href="#job-manager-services-properties"></a>9.2. Job manager services properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Job manager services properties</caption>
+<caption class="title">Table 4. Job manager services properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -2845,7 +3198,7 @@ If a sparse topology across many Redis Connect instances is desired, then loweri
 <div class="sect2">
 <h3 id="rest-api-properties"><a class="anchor" href="#rest-api-properties"></a>9.3. REST API Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. REST API properties</caption>
+<caption class="title">Table 5. REST API properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -2881,7 +3234,7 @@ for its REST API.</p></td>
 <div class="sect2">
 <h3 id="job-manager-database-properties"><a class="anchor" href="#job-manager-database-properties"></a>9.4. Job Manager Database Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Job Manager Database Properties</caption>
+<caption class="title">Table 6. Job Manager Database Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -2952,7 +3305,7 @@ If this flag is set to <code class="lime">false</code>, TrustStore and KeyStore 
 <div class="sect2">
 <h3 id="job-manager-credentials-properties"><a class="anchor" href="#job-manager-credentials-properties"></a>9.5. Job Manager Credentials Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Job Manager Credentials Properties</caption>
+<caption class="title">Table 7. Job Manager Credentials Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3013,7 +3366,7 @@ is scanned for changes.</p>
 <div class="sect2">
 <h3 id="email-alerting-properties"><a class="anchor" href="#email-alerting-properties"></a>9.6. Email Alerting Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Email Alerting Properties</caption>
+<caption class="title">Table 8. Email Alerting Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3087,7 +3440,7 @@ Multiple recipients can be added by delimiting them with a comma.</p></td>
 <div class="sect2">
 <h3 id="job-properties"><a class="anchor" href="#job-properties"></a>10.1. Job properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Job properties</caption>
+<caption class="title">Table 9. Job properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3150,7 +3503,7 @@ start nor migrate
 <div class="sect2">
 <h3 id="job-pipeline-properties"><a class="anchor" href="#job-pipeline-properties"></a>10.2. Job Pipeline Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Job Pipeline Properties</caption>
+<caption class="title">Table 10. Job Pipeline Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3202,7 +3555,7 @@ Stage[]</p></td>
 <div class="sect2">
 <h3 id="job-pipeline-stage-properties"><a class="anchor" href="#job-pipeline-stage-properties"></a>10.3. Job Pipeline Stage Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Job Pipeline Stage Properties</caption>
+<caption class="title">Table 11. Job Pipeline Stage Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3303,7 +3656,7 @@ This is required only if Redis is not the target destination (which is only supp
 <div class="sect2">
 <h3 id="job-source-properties"><a class="anchor" href="#job-source-properties"></a>10.4. Job Source Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Job Source Properties</caption>
+<caption class="title">Table 12. Job Source Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3419,7 +3772,7 @@ Measured in milliseconds, minimum is 0.</p></td>
 <div class="sect3">
 <h4 id="job-source-table-properties"><a class="anchor" href="#job-source-table-properties"></a>10.5.1. Job Source Table Properties</h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Job Source Table Properties</caption>
+<caption class="title">Table 13. Job Source Table Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3499,7 +3852,7 @@ Column[]</p></td>
 <div class="sect2">
 <h3 id="job-source-table-column-properties"><a class="anchor" href="#job-source-table-column-properties"></a>10.6. Job Source Table Column Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Job Source Table Column Properties</caption>
+<caption class="title">Table 14. Job Source Table Column Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3587,7 +3940,7 @@ generate a "_id" key which can be used as a targetKey but has no value as a fiel
 <div class="sect2">
 <h3 id="job-source-table-initial-load-properties"><a class="anchor" href="#job-source-table-initial-load-properties"></a>10.7. Job Source Table Initial Load Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Job Source Table Column Properties</caption>
+<caption class="title">Table 15. Job Source Table Column Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3656,7 +4009,7 @@ You will find database configuration objects in a job configuration&#8217;s sour
 pipeline, which specified the target database.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. Database Properties</caption>
+<caption class="title">Table 16. Database Properties</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3729,7 +4082,7 @@ Measured in milliseconds; minimum is 60000.</p></td>
 <div class="sect2">
 <h3 id="rdbms-properties"><a class="anchor" href="#rdbms-properties"></a>12.1. RDBMS Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. Stream Job Type Custom Configurations</caption>
+<caption class="title">Table 17. Stream Job Type Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3792,7 +4145,7 @@ MySQL, Postgres default to 'never'; Oracle, SQL Server default to 'schema_only'
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. Initial Load Job Type Custom Configurations</caption>
+<caption class="title">Table 18. Initial Load Job Type Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3872,7 +4225,7 @@ keystore.type	JKS	String	Depending on what entries the keystore can store and ho
 <div class="sect2">
 <h3 id="mongodb-properties"><a class="anchor" href="#mongodb-properties"></a>12.2. MongoDB Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 18. Stream Job Type Custom Configurations</caption>
+<caption class="title">Table 19. Stream Job Type Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -3955,7 +4308,7 @@ Measure in milliseconds.</p></td>
 <div class="sect2">
 <h3 id="files-connector-properties"><a class="anchor" href="#files-connector-properties"></a>12.3. Files Connector Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 19. Initial Load Job Type Custom Configurations</caption>
+<caption class="title">Table 20. Initial Load Job Type Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -4056,7 +4409,7 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <div class="sect2">
 <h3 id="gemfire-properties"><a class="anchor" href="#gemfire-properties"></a>12.4. Gemfire Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 20. Custom Configurations</caption>
+<caption class="title">Table 21. Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -4211,7 +4564,7 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <div class="sect2">
 <h3 id="redis-target-properties"><a class="anchor" href="#redis-target-properties"></a>12.5. Redis Target Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. Event Handler Custom Configurations</caption>
+<caption class="title">Table 22. Event Handler Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -4335,7 +4688,7 @@ lost if the primary shard fails.</p></td>
 <div class="sect2">
 <h3 id="redis-message-broker-properties"><a class="anchor" href="#redis-message-broker-properties"></a>12.6. Redis Message Broker Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. Stream Job Type Custom Configurations</caption>
+<caption class="title">Table 23. Stream Job Type Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -4393,7 +4746,7 @@ then (redis.broker.max.queue.depth * 7) / 10;</p></td>
 <div class="sect2">
 <h3 id="splunk-stream-properties"><a class="anchor" href="#splunk-stream-properties"></a>12.7. Splunk Stream Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 23. Job Type Custom Configurations</caption>
+<caption class="title">Table 24. Job Type Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -4475,7 +4828,7 @@ then (redis.broker.max.queue.depth * 7) / 10;</p></td>
 <div class="sect2">
 <h3 id="in-memory-queue-properties"><a class="anchor" href="#in-memory-queue-properties"></a>12.8. In-Memory Queue Properties</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 24. Change Event Queue Custom Configurations</caption>
+<caption class="title">Table 25. Change Event Queue Custom Configurations</caption>
 <colgroup>
 <col style="width: 33%;">
 <col style="width: 10%;">
@@ -4575,7 +4928,7 @@ Measured in milliseconds.</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.10.5<br>
-Last updated 2023-10-31 12:37:20 -0600
+Last updated 2023-11-28 18:46:25 -0700
 </div>
 </div>
 </body>
