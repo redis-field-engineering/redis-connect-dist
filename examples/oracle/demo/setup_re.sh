@@ -123,9 +123,10 @@ docker run -d \
  -e "GF_SECURITY_ADMIN_USER=redisconnect" \
  -e "GF_SECURITY_ADMIN_PASSWORD=Redis@123" \
  -e "GF_PATHS_PROVISIONING=/etc/grafana/provisioning" \
- -v $(pwd)/config/samples/dashboard/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml \
- -v $(pwd)/config/samples/dashboard/redis-connnnect-dashboard.json:/etc/grafana/provisioning/dashboards/redis-connnnect-dashboard.json \
- grafana/grafana
+ -v $(pwd)/config/samples/dashboard/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml \
+ -v $(pwd)/config/samples/dashboard/default.yaml:/etc/grafana/provisioning/dashboards/default.yaml \
+ -v $(pwd)/config/samples/dashboard/redis-connnnect-dashboard.json:/var/lib/grafana/dashboards/redis-connnnect-dashboard.json \
+ grafana/grafana:9.3.2
 sleep 10
 echo ""
 echo "You can open a browser and access Redis Enterprise Admin UI at https://127.0.0.1:18443 (replace localhost with your ip/host) with username=demo@redis.com and password=redislabs."

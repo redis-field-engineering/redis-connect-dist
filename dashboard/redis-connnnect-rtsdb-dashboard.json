@@ -1,0 +1,1412 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_JOBMANAGER",
+      "label": "JobManager",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "redis-datasource",
+      "pluginName": "Redis"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.3"
+    },
+    {
+      "type": "datasource",
+      "id": "redis-datasource",
+      "name": "Redis",
+      "version": "2.2.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Monitoring Dashboard for Redis Connect",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Redis Connect",
+      "tooltip": "Redis Connect",
+      "type": "link",
+      "url": "https://redis-field-engineering.github.io/redis-connect-dist"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 94,
+      "panels": [],
+      "repeat": "jobId",
+      "repeatDirection": "h",
+      "title": "JobManager",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 0,
+        "y": 1
+      },
+      "id": 129,
+      "links": [],
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Redis Connect has following monitoring and metric types:\n\n* Cluster status\n\n* Job status\n\n* Job history\n\n* Target throughput\n\n* Source lag\n\n* Pipeline latency\n\nFor more detailed information about the metrics please visit Redis Connect documentation page\n\n[Click here to visit](https://redis-field-engineering.github.io/redis-connect-dist/#monitoring)\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.0.3",
+      "title": "General Info",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "Redis Connect cluster leader represented by <PID>@<hostname>",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 9
+      },
+      "id": 123,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "{connect}:cluster:jobs:staged"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "get",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "{connect}:cluster:leader:heartbeat",
+          "query": "",
+          "refId": "A",
+          "type": "command"
+        }
+      ],
+      "title": "Cluster Leader",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "{connect}:cluster:jobs:stopped"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "List of all configured job partition(s)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 9
+      },
+      "id": 121,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "{connect}:cluster:jobs:staged"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "smembers",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "{connect}:cluster:jobs:staged",
+          "query": "",
+          "refId": "A",
+          "type": "command"
+        }
+      ],
+      "title": "Staged Jobs",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "{connect}:cluster:jobs:staged"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "List of stopped job partition(s)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 4,
+        "x": 8,
+        "y": 9
+      },
+      "id": 122,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "smembers",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "{connect}:cluster:jobs:stopped",
+          "query": "",
+          "refId": "A",
+          "type": "command"
+        }
+      ],
+      "title": "Stopped Jobs",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "{connect}:cluster:jobs:stopped"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "Job Claim Status as of the latest heartbeat lease. If the heartbeat is no longer active, the status will be updated upon the next job claim",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "mode": "basic",
+              "type": "color-background"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "CLAIMED": {
+                  "color": "#73BF69",
+                  "index": 0,
+                  "text": "RUNNING"
+                },
+                "REAPED": {
+                  "color": "orange",
+                  "index": 2
+                },
+                "STOPPED": {
+                  "color": "red",
+                  "index": 1
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              },
+              {
+                "color": "text",
+                "value": ""
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 120,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "hgetall",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "${jobId}",
+          "query": "",
+          "refId": "A",
+          "type": "command"
+        }
+      ],
+      "title": "Job Claim Status",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "Redis Connect cluster member(s)",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "connect"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cluster"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "member"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 14
+      },
+      "id": 124,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "query": "KEYS {connect}:cluster:member:config:*",
+          "refId": "A",
+          "type": "cli"
+        }
+      ],
+      "title": "Cluster Members",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Value"
+              ]
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "Value"
+              }
+            ]
+          }
+        },
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "auto",
+            "keepTime": false,
+            "replace": true,
+            "source": "Value"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "Heartbeats for currently active job partition(s)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 14
+      },
+      "id": 127,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "{connect}:cluster:jobs:staged"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "${jobCountWithHeartbeat}",
+          "query": "KEYS {connect}:heartbeat:job:${jobName}*",
+          "refId": "A",
+          "type": "cli"
+        }
+      ],
+      "title": "Job Heartbeats",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 16,
+        "x": 0,
+        "y": 19
+      },
+      "id": 108,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "aggregation": "",
+          "command": "ts.mrange",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "filter": "schema=${schema} jobId=${jobId}",
+          "query": "",
+          "refId": "A",
+          "streaming": false,
+          "type": "timeSeries"
+        }
+      ],
+      "title": "Target Throughput",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "Measured time between the commit at the source and entry into Redis Connect's pipeline, in seconds",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 16,
+        "y": 19
+      },
+      "id": 125,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "aggregation": "",
+          "bucket": 1,
+          "command": "ts.range",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "${lagKey}",
+          "query": "",
+          "refId": "A",
+          "section": "stats",
+          "type": "timeSeries"
+        }
+      ],
+      "title": "Source Lag",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Value"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "description": "Measured time between entry into Redis Connect's pipeline and commit to the target database, in milliseconds",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 20,
+        "y": 19
+      },
+      "id": 126,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "aggregation": "",
+          "command": "ts.range",
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "keyName": "${latencyKey}",
+          "query": "",
+          "refId": "A",
+          "section": "stats",
+          "type": "timeSeries"
+        }
+      ],
+      "title": "Pipeline Latency",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Value"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 114,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "$streamId"
+          }
+        ]
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "xrevrange",
+          "count": 1000,
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "end": "+",
+          "keyName": "{connect}:cluster:stream:jobClaimTransitions",
+          "query": "",
+          "refId": "A",
+          "start": "-",
+          "type": "command"
+        }
+      ],
+      "title": "Stream Job Claim Transition History",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "$time",
+                "instanceName",
+                "jobId",
+                "jobType",
+                "transitionEvent",
+                "isActionable"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${DS_JOBMANAGER}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "instanceName"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 190
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jobId"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 376
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 116,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "command": "xrevrange",
+          "count": 1000,
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${DS_JOBMANAGER}"
+          },
+          "end": "+",
+          "keyName": "{connect}:cluster:stream:taskClaimTransitions",
+          "query": "",
+          "refId": "A",
+          "start": "-",
+          "type": "command"
+        }
+      ],
+      "title": "Load Job Claim Transition History",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "$time",
+                "instanceName",
+                "jobId",
+                "jobType",
+                "transitionEvent",
+                "isActionable"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [
+    "redis",
+    "stream",
+    "batch",
+    "etl",
+    "cdc",
+    "redis connect",
+    "event-streaming"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "SMEMBERS {connect}:cluster:jobs:staged",
+        "hide": 0,
+        "includeAll": false,
+        "label": "JobId",
+        "multi": false,
+        "name": "jobId",
+        "options": [],
+        "query": "SMEMBERS {connect}:cluster:jobs:staged",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "Hide = empty",
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "eval \"return redis.call('ts.info', KEYS[1])\" 1 ${latencyKey}",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Schema",
+        "multi": false,
+        "name": "schema",
+        "options": [],
+        "query": "eval \"return redis.call('ts.info', KEYS[1])\" 1 ${latencyKey}",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "all = table",
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "TS.INFO ${latencyKey}",
+        "hide": 2,
+        "includeAll": false,
+        "label": "Table",
+        "multi": false,
+        "name": "table",
+        "options": [],
+        "query": "TS.INFO ${latencyKey}",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "keys {connect}:job:metric:${jobName}*latency",
+        "hide": 0,
+        "includeAll": false,
+        "label": "LatencyKey",
+        "multi": false,
+        "name": "latencyKey",
+        "options": [],
+        "query": "keys {connect}:job:metric:${jobName}*latency",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 5,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "keys {connect}:job:metric:${jobName}*lag",
+        "hide": 0,
+        "includeAll": false,
+        "label": "LagKey",
+        "multi": false,
+        "name": "lagKey",
+        "options": [],
+        "query": "keys {connect}:job:metric:${jobName}*lag",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 5,
+        "type": "query"
+      },
+      {
+        "allValue": "Hide = (empty array)",
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "eval \"return #redis.call('keys', KEYS[1])\" 1 {connect}:heartbeat:job:*",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "jobCountWithHeartbeat",
+        "options": [],
+        "query": "eval \"return #redis.call('keys', KEYS[1])\" 1 {connect}:heartbeat:job:*",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "HGET ${jobId} jobName",
+        "hide": 2,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "jobName",
+        "options": [],
+        "query": "HGET ${jobId} jobName",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "redis-datasource",
+          "uid": "${DS_JOBMANAGER}"
+        },
+        "definition": "keys {connect}:cluster:member:config:*",
+        "hide": 2,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "clusterMembers",
+        "options": [],
+        "query": "keys {connect}:cluster:member:config:*",
+        "refresh": 1,
+        "regex": "/.*:.(.*).*/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Redis Connect Dashboard",
+  "uid": "f12f82fe-f7bc-4f67-bbf0-f444d21e6a32",
+  "version": 2,
+  "weekStart": ""
+}

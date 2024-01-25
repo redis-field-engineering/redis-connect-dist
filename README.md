@@ -1,7 +1,7 @@
 <p align="center"><img src="/images/icons/Redis Connect Banner.png" alt="Redis Connect" width = "100%" title="Redis Connect"></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
-changed-data events from heterogeneous data platforms to [Redis Stack](https://redis.io/docs/stack/), [Redis Cloud](https://redis.com/redis-enterprise-cloud/overview/), and [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/).
+changed-data events from heterogeneous data platforms to [Azure Cache for Redis](https://azure.microsoft.com/en-us/products/cache/), [Redis Cloud](https://redis.com/redis-enterprise-cloud/overview/), and [Redis Enterprise](https://redis.com/redis-enterprise-software/overview/).
 <br><br> :white_check_mark: No Code :white_check_mark: Seamless Integration :white_check_mark: Multi-Tenancy :white_check_mark: Linear-Scalability :white_check_mark: High-Availability :white_check_mark: Support
 <br><br>
 
@@ -86,7 +86,7 @@ changed-data events from heterogeneous data platforms to [Redis Stack](https://r
 
 ### Runtime requirements
 
-* JRE 11+ e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
+* JRE 11+ (JRE 17+ version 0.10.7 onwards) e.g. [Azul OpenJDK](https://www.azul.com/downloads/?package=jdk#download-openjdk)
 
 ## Quick Start
 

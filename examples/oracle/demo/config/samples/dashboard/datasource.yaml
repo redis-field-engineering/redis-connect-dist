@@ -1,0 +1,47 @@
+apiVersion: 1
+
+datasources:
+  - name: JobManager
+    type: redis-datasource
+    url: redis://host.docker.internal:14001
+    jsonData:
+      client: standalone
+      poolSize: 5
+      timeout: 10
+      pingInterval: 0
+      pipelineWindow: 0
+      acl: true
+      user: redisconnect
+    editable: true
+    secureJsonData:
+      password: Redis123
+    access: proxy
+    orgId: 1
+    isDefault: false
+    version: 1
+  - name: Target
+    type: redis-datasource
+    url: redis://host.docker.internal:14000
+    jsonData:
+      client: standalone
+      poolSize: 5
+      timeout: 10
+      pingInterval: 0
+      pipelineWindow: 0
+      acl: true
+      user: redisconnect
+    editable: true
+    secureJsonData:
+      password: Redis123
+    access: proxy
+    orgId: 1
+    isDefault: true
+    version: 1
+#  - name: Prometheus
+#    type: prometheus
+#    url: http://localhost:9090
+#    access: proxy
+#    isDefault: false
+#    editable: true
+#    version: 1
+#    orgId: 1

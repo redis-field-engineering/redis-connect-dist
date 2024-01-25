@@ -35,7 +35,7 @@
       "C##RCUSER.EMP": {
         "columns": [
           { "targetColumn": "EMPNO", "sourceColumn": "EMPNO", "targetKey": true},
-          { "targetColumn": "HIREDATE", "sourceColumn": "HIREDATE", "type": "DATE"}
+          { "targetColumn": "HIREDATE", "sourceColumn": "HIREDATE", "type": "DATE_TIME"}
         ],
         "autoConfigColumnsEnabled": true
       }

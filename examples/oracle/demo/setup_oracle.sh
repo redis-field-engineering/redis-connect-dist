@@ -30,7 +30,7 @@ sudo docker run --name $container_name \
 	-p $db_port:1521 \
 	-e ORACLE_PWD=$db_pwd \
 	-v $(pwd)/$version/oradata:/opt/oracle/oradata \
-        -d virag/oracle-$version
+  -d virag/oracle-$version
 #	oracle/database:$version
 
 #sudo docker wait $container_name
@@ -63,7 +63,7 @@ if [ $# -eq 3 ] && [ "$3" = "logminer" ]; then
 	sudo docker cp emp.ctl $container_name:/tmp/emp.ctl
 	sudo docker cp load_sql.sh $container_name:/tmp/load_sql.sh
 	sudo docker cp load_c##rcuser_schema.sh $container_name:/tmp/load_c##rcuser_schema.sh
-        sudo docker exec -it $container_name bash -c "/tmp/load_c##rcuser_schema.sh"
+  sudo docker exec -it $container_name bash -c "/tmp/load_c##rcuser_schema.sh"
 	sudo docker cp employees1k_insert.sql $container_name:/tmp/employees1k_insert.sql
 	sudo docker cp employees10k_insert.sql $container_name:/tmp/employees10k_insert.sql
 	sudo docker cp update.sql $container_name:/tmp/update.sql
