@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <title>Redis Connect</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -15,7 +15,7 @@
 <div id="header">
 <h1>Redis Connect</h1>
 <div class="details">
-<span id="revnumber">version 0.10.6</span>
+<span id="revnumber">version 0.11.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -2207,6 +2207,18 @@ REDISCONNECT_LOGBACK_CLI_CONFIG=&quot;$REDISCONNECT_HOME/config/logback-cli.xml&
 </div>
 </div>
 <div class="paragraph">
+<p>Redis Connect has been designed to provide descriptive logs to make troubleshooting easier.</p>
+</div>
+<div class="paragraph">
+<p>If you need to change your application log level at runtime, you can do this using the <a href="#REST API">REST API</a>.
+See the <a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/LOG%20MANAGEMENT/listLogLevelUsingGET">loglevel REST endpoint
+documentation</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>Note that log level changes are not global; they apply only to the instance whose REST API you are connected to.
+To change the log level for a given instance, connect directly to that instance&#8217;s REST API.</p>
+</div>
+<div class="paragraph">
 <p>If you need to change your application log level at runtime, you can so with the <a href="#rest-api-swagger-ui">REST API &amp; SWAGGER UI</a> or <a href="#cli">CLI</a>.
 See the <a href="https://redis-field-engineering.github.io/redis-connect-api-docs/#/LOG%20MANAGEMENT/listLogLevelUsingGET">REST endpoint documentation</a>
 for details.</p>
@@ -2227,23 +2239,172 @@ Log levels are instance specific. To change them globally would require performi
 <div class="sect2">
 <h3 id="monitoring"><a class="anchor" href="#monitoring"></a>7.5. Monitoring</h3>
 <div class="paragraph">
-<p>Redis Connect propagates metrics to the <a href="#job-management-database">Job Management Database</a> from which they can be queried. This currently
-requires the use of the <a href="https://redis.io/docs/data-types/timeseries/">Redis Timeseries</a> module. In future releases,
-Redis Connect will also support Open Telemetry as an alternative option.</p>
+<p>Metrics are enabled by default, but can be disabled by setting <strong>cluster.metrics.enabled</strong> to False.</p>
 </div>
 <div class="paragraph">
-<p>Metrics can be viewed with the <a href="https://grafana.com/grafana/plugins/redis-datasource/">Redis Datasource for Grafana</a>.</p>
+<p>Prometheus metrics are enabled by setting the type of metric (<strong>cluster.metrics.type</strong>) to ‘OTEL’. This is the default, the other option being ‘REDIS’,
+which will log metrics as Redis’ TimeSeries objects in the connect configuration database, thus taking advantage of
+<a href="https://redis.io/docs/data-types/timeseries/">Redis' time series capabilities</a>, in which case additional data about keys and TTL are available.</p>
+</div>
+<div class="paragraph">
+<p>The port used by OTEL metrics is set by <strong>prometheus.port</strong>, it is set to 19090 by default.</p>
+</div>
+<div class="paragraph">
+<p>The OpenTelemetry metrics are reported for Create/Update/Delete operations for every table configured in the payload file. The metrics generated are
+the overall throughput, as well as the lag and latency for each operation, which are reported as histograms. They are tagged so that table and
+operation information can be used to report individual operations or operations on a specific table, or they can be aggregated.</p>
+</div>
+<div class="paragraph">
+<p>Tags: job, database, table, partition, operation, stage</p>
+</div>
+<div class="paragraph">
+<p>The sample otel/grafana dashboard looks like this:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/dashboard-otel.png" alt="dashboard otel">
+</div>
+</div>
+<div class="paragraph">
+<p>Redis Connect exports OpenTelemetry metrics via a Prometheus endpoint. A simple Prometheus configuration would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="cmd">- job_name: &quot;connect&quot;
+  scrape_interval: 5s
+  scrape_timeout: 5s
+  metrics_path: /
+  scheme: http
+  static_configs:
+  - targets: [&quot;localhost:19090&quot;]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Redis Connect provides a dashboard for monitoring the system. After installing Grafana and connecting it to Prometheus, i.e., adding a datasource, you can install the Redis Connect dashboard by navigating to the Grafana dashboard page and clicking New &#8594; Import.</p>
+</div>
+<div class="paragraph">
+<p>The Redis Connect dashboard reports the following metrics:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metric</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_job_starts_total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job starts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of times job has been started</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_job_stops_total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job stops</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of times job has been stopped</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_input_buffer_histogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buffer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of events received</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_input_buffer_count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buffer count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_input_buffer_sum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buffer total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_lag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time it took connect to receive event</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_lag_milliseconds_count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lag count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_lag_milliseconds_sum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lag total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_latency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">latency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time it took to process the event</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_latency_milliseconds_count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">latency count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_latency_milliseconds_sum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">latency total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_elapsed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">elapsed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time it took to write event to redis</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_elapsed_milliseconds_count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">elapsed count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_elapsed_milliseconds_sum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">elapsed sum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_job_operation_throughput_total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">throughput</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total number of events processed</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>With regards to Redis’ TimeSeries metrics, you can view these metrics in Grafana using
+the <a href="https://grafana.com/grafana/plugins/redis-datasource/">Redis Datasource for Grafana</a>.</p>
 </div>
 <div class="paragraph">
 <p>The Redis Connect distribution includes a pre-configured grafana dashboard for viewing key operational metrics in the
 ../config/samples/dashboard subdirectory. It can be modified to fit the user&#8217;s monitoring requirements/preferences.</p>
 </div>
 <div class="paragraph">
-<p>The sample dashboard looks like this:</p>
+<p>The sample redis/grafana dashboard looks like this:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/dashboard.png" alt="dashboard">
+<img src="images/dashboard-redis.png" alt="dashboard redis">
 </div>
 </div>
 <div class="paragraph">
@@ -3473,7 +3634,8 @@ They add-on a namespace to the jobName to identify the jobType and partitionId (
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indicates how many partitions to create during startJob process.
 This attribute is ONLY used to partition a job with jobType=PARTITIONED_STREAM. Not jobType=LOAD.</p>
-<p class="tableblock"><code class="red"><strong>CAUTION: Once a job has started, and job claims are created, a job cannot be repartitioned without deleting all job claims and existing checkpoints. Please reach out to Support to assist with the migration of checkpoints to avoid undesired outcomes.</strong></code></p></td>
+<p class="tableblock"><code class="red"><strong>CAUTION: Once a job has started, and job claims are created, a job cannot be repartitioned without deleting all job claims and existing
+checkpoints. Please reach out to Support to assist with the migration of checkpoints to avoid undesired outcomes.</strong></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 <tr>
@@ -3682,13 +3844,15 @@ Measured in milliseconds; minimum is 5</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">batchSize <a id="batchSize"></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum # of events to dequeue from the source-event-queue AND maximum # of events to query from the source transaction log/table/queue upon each interval of the producer’s polling event loop. Minimum is 1.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum # of events to dequeue from the source-event-queue AND maximum # of events to query from the source transaction log/table/queue upon each
+interval of the producer’s polling event loop. Minimum is 1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceTransactionTimeSequenceEnabled <a id="sourceTransactionTimeSequenceEnabled"></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the source commit/transaction timestamp (and sequence# if the timestamp is the same) will be used to calculate latency metrics and passed along as metadata for Redis Streams sink(s).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the source commit/transaction timestamp (and sequence# if the timestamp is the same) will be used to calculate latency metrics and
+passed along as metadata for Redis Streams sink(s).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -3720,7 +3884,8 @@ Measured in milliseconds, minimum is 0.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionMaxRetryDuration <a id="sourceConnectionMaxRetryDuration"></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">In addition to sourceConnectionMaxRetryAttempts, you can also add a max duration, after which retries will stop if the max attempts haven’t already been reached.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In addition to sourceConnectionMaxRetryAttempts, you can also add a max duration, after which retries will stop if the max attempts haven’t already
+been reached.</p>
 <p class="tableblock">Measured in minutes; minimum is 1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 </tr>
@@ -3819,14 +3984,17 @@ This is currently only supported for MongoDB, Redis Streams Broker, and Files.</
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, if the primary key is changed at the source, then an additional operation to DELETE the existing target
 key will accompany the UPDATE event.</p>
 <p class="tableblock">This is only supported for RDBMS sources since primary key changes require a delete and insert of a new row.</p>
-<p class="tableblock">The DELETE event shares an offset with the UPDATE event both at the source and checkpoint. Redis Connect will handle them within a single pipeline iteration.</p></td>
+<p class="tableblock">The DELETE event shares an offset with the UPDATE event both at the source and checkpoint. Redis Connect will handle them within a single pipeline
+iteration.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">changedColumnsOnlyEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, only allows changed (delta) column values to be replicated to the target. This does not include targetKey column(s) which cannot be bypassed.
-When disabled, all column values will be replicated to the target unless they are individually bypassed at the column-level using changedColumnOnlyEnabled. (See Section 4.2.2)
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, only allows changed (delta) column values to be replicated to the target. This does not include targetKey column(s) which cannot be
+bypassed.
+When disabled, all column values will be replicated to the target unless they are individually bypassed at the column-level using
+changedColumnOnlyEnabled. (See Section 4.2.2)
 <sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
@@ -3891,8 +4059,11 @@ When more than one column is designated, the order in which they are listed will
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Identifies the source column’s data type which is used to transform the column value to a properly formatted String within the target.
-Supported types include: [STRING, VARCHAR, TEXT, INT, DATE, DATE_TIME, BYTE, DEC, NUMERIC, DECIMAL, DOUBLE, FLOAT, LONG, SHORT, RAW, BLOB, CLOB, HASHMAP, CUSTOM]</p>
-<p class="tableblock">CUSTOM data type is unique in that it bypasses column value transformation to a String which allows it to be converted manually within a Custom Stage. An example would be converting to a proprietary Oracle Timestamp format. Failure to convert this data type manually will cause errors in Redis-based sinks.</p></td>
+Supported types include: [STRING, VARCHAR, TEXT, INT, DATE, DATE_TIME, BYTE, DEC, NUMERIC, DECIMAL, DOUBLE, FLOAT, LONG, SHORT, RAW, BLOB, CLOB,
+HASHMAP, CUSTOM]</p>
+<p class="tableblock">CUSTOM data type is unique in that it bypasses column value transformation to a String which allows it to be converted manually within a Custom
+Stage. An example would be converting to a proprietary Oracle Timestamp format. Failure to convert this data type manually will cause errors in
+Redis-based sinks.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">STRING</p></td>
 </tr>
 <tr>
@@ -3973,7 +4144,8 @@ all but partition:1 will be stopped so all the rows are loaded from a single par
 <td class="tableblock halign-left valign-top"><p class="tableblock">maxPartitionsPerClusterMember</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Limits how many task partitions can be claimed, and executed, multi-tenant on the same Redis Connect instance (JVM).</p>
-<p class="tableblock">If the limit forces partitions to span more nodes than are currently deployed, then the initial load will queue the instantiation of tasks until capacity is reallocated (e.g. earlier tasks complete their load partition).</p>
+<p class="tableblock">If the limit forces partitions to span more nodes than are currently deployed, then the initial load will queue the instantiation of tasks until
+capacity is reallocated (e.g. earlier tasks complete their load partition).</p>
 <p class="tableblock">This is not a job-level limit; it is only specific at the table level.
 0 represents no limit. Minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
@@ -4099,8 +4271,11 @@ Measured in milliseconds; minimum is 60000.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">column.exclude.list</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An optional, comma-separated list of regular expressions that match the fully-qualified names of columns to exclude from change event record values. Fully-qualified names for columns are of the form <code class="aqua"><em>databaseName.tableName.columnName</em></code>.
-To match the name of a column, Debezium applies the regular expression that you specify as an anchored regular expression. That is, the specified expression is matched against the entire name string of the column; it does not match substrings that might be present in a column name. If you include this property in the configuration, do not also set the column.include.list property.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An optional, comma-separated list of regular expressions that match the fully-qualified names of columns to exclude from change event record values.
+Fully-qualified names for columns are of the form <code class="aqua"><em>databaseName.tableName.columnName</em></code>.
+To match the name of a column, Debezium applies the regular expression that you specify as an anchored regular expression. That is, the specified
+expression is matched against the entire name string of the column; it does not match substrings that might be present in a column name. If you
+include this property in the configuration, do not also set the column.include.list property.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">[]</p></td>
 </tr>
 <tr>
@@ -4116,7 +4291,8 @@ To match the name of a column, Debezium applies the regular expression that you 
 <td class="tableblock halign-left valign-top"><p class="tableblock">heartbeat.interval.ms</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Controls how frequently the connector sends heartbeat messages.
-Heartbeat messages are useful for ensuring the source transaction/redo logs and checkpoint are updated on a predictable basis. This can avoid a long period without updates which may cause a gap between the latest checkpoint and an archived transaction log that has been deleted.
+Heartbeat messages are useful for ensuring the source transaction/redo logs and checkpoint are updated on a predictable basis. This can avoid a long
+period without updates which may cause a gap between the latest checkpoint and an archived transaction log that has been deleted.
 Default (0) does not send heartbeat messages.
 Measured in milliseconds; minimum is 0.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
@@ -4124,13 +4300,18 @@ Measured in milliseconds; minimum is 0.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">max.batch.size</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the maximum size of each batch of events that should be processed during each iteration of the producer’s polling event loop; minimum is 1.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the maximum size of each batch of events that should be processed during each iteration of the producer’s polling event loop; minimum is
+1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2048</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">max.queue.size</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer value that specifies the maximum number of records that the blocking queue can hold. When Debezium reads events streamed from the database, it places the events in the blocking queue before it writes them to Kafka. The blocking queue can provide backpressure for reading change events from the database in cases where the connector ingests messages faster than it can write them to Kafka, or when Kafka becomes unavailable. Events that are held in the queue are disregarded when the connector periodically records offsets. Always set the value of max.queue.size to be larger than the value of max.batch.size.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer value that specifies the maximum number of records that the blocking queue can hold. When Debezium reads events streamed from the
+database, it places the events in the blocking queue before it writes them to Kafka. The blocking queue can provide backpressure for reading change
+events from the database in cases where the connector ingests messages faster than it can write them to Kafka, or when Kafka becomes unavailable.
+Events that are held in the queue are disregarded when the connector periodically records offsets. Always set the value of max.queue.size to be
+larger than the value of max.batch.size.</p>
 <p class="tableblock"><code class="red"><strong>Note: max.queue.size &gt; max.batch.size</strong></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8192</p></td>
 </tr>
@@ -4179,7 +4360,8 @@ Measured in milliseconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.idle.timeout</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Takes effect only when the jdbc.min.idle is less than jdbc.max.pool.size, and is removed when the number of idle connections exceeds the jdbc.min.idle and the idle time exceeds jdbc.idle.timeout.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Takes effect only when the jdbc.min.idle is less than jdbc.max.pool.size, and is removed when the number of idle connections exceeds the
+jdbc.min.idle and the idle time exceeds jdbc.idle.timeout.
 If (jdbc.idle.timeout + 1 second) &gt; jdbc.max.lifetime and jdbc.max.lifetime &gt; 0, it will be reset to 0.
 If jdbc.idle.timeout != 0 and less than 10 seconds, it will be reset to 10 seconds.
 If jdbc.idle.timeout=0, idle connections will never be removed from the connection pool.
@@ -4189,7 +4371,8 @@ Measured in milliseconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.max.lifetime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration a connection is allowed to remain open. When this timeout is exceeded, the next time the connection is released to the pool it is closed, and a new connection is opened to replace it.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration a connection is allowed to remain open. When this timeout is exceeded, the next time the connection is released to the pool it is
+closed, and a new connection is opened to replace it.
 Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1800000</p></td>
 </tr>
@@ -4202,21 +4385,24 @@ Measured in milliseconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">jdbc.min.idle</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Controls the minimum number of connection pool idle connections. When the connection pool idle connections are less than jdbc.min.idle and the total number of connections is not more than jdbc.max.pool.size, it will try its best to supplement new connections.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls the minimum number of connection pool idle connections. When the connection pool idle connections are less than jdbc.min.idle and the total
+number of connections is not more than jdbc.max.pool.size, it will try its best to supplement new connections.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">#partitions</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">truststore.file.path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Holds onto certificates that identify 3rd parties.
-truststore.type	JKS	String	For Java keystore file format, this property has the value jks (or JKS). You do not normally specify this property, because its default value is already jks.</p></td>
+truststore.type	JKS	String	For Java keystore file format, this property has the value jks (or JKS). You do not normally specify this property,
+because its default value is already jks.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">keystore.file.path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Stores private key entries, certificates with public keys, or just secret keys that we may use for various cryptographic purposes.
-keystore.type	JKS	String	Depending on what entries the keystore can store and how the keystore can store the entries, there are a few different types of keystores in Java: JKS, JCEKS, PKCS12, PKCS11 and DKS.</p></td>
+keystore.type	JKS	String	Depending on what entries the keystore can store and how the keystore can store the entries, there are a few
+different types of keystores in Java: JKS, JCEKS, PKCS12, PKCS11 and DKS.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
 </tr>
 </tbody>
@@ -4262,7 +4448,8 @@ Measured in milliseconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mongodb.authsource</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database (authentication source) containing MongoDB credentials. This is required only when MongoDB is configured to use authentication with another authentication database than admin.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database (authentication source) containing MongoDB credentials. This is required only when MongoDB is configured to use authentication with another
+authentication database than admin.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
@@ -4280,14 +4467,17 @@ Measured in milliseconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">connection.timeout</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration to establish a connection before an error is thrown. Depending on network infrastructure and load on the server, the client may have to wait for a connection establishment. Possible scenarios where connection timeout can happen – the server gets shut down, network issues, wrong IP/DNS, port number etc.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum duration to establish a connection before an error is thrown. Depending on network infrastructure and load on the server, the client may
+have to wait for a connection establishment. Possible scenarios where connection timeout can happen – the server gets shut down, network issues,
+wrong IP/DNS, port number etc.
 Measure in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mongodb.ssl.invalid.hostname.allowed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When SSL is enabled, this setting controls whether strict hostname checking is disabled during connection phase. If true, the connection will not prevent man-in-the-middle attacks.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When SSL is enabled, this setting controls whether strict hostname checking is disabled during connection phase. If true, the connection will not
+prevent man-in-the-middle attacks.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
 </tr>
 <tr>
@@ -4464,7 +4654,9 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pool.max.connections</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections that the pool can create. If all connections are in use, an operation requiring a client-to server-connection is blocked until a connection is available or the free-connection-timeout is reached. If set to -1, there is no maximum. The setting must indicate a cap greater than min-connections
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections that the pool can create. If all connections are in use, an operation requiring a client-to server-connection is
+blocked until a connection is available or the free-connection-timeout is reached. If set to -1, there is no maximum. The setting must indicate a cap
+greater than min-connections
 <sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
 </tr>
@@ -4483,13 +4675,15 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pool.ping.interval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between pinging the server to show the client is alive, set in milliseconds. Pings are only sent when the ping-interval elapses between normal client messages. This must be set lower than the server’s maximum-time-between-pings.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between pinging the server to show the client is alive, set in milliseconds. Pings are only sent when the ping-interval elapses between
+normal client messages. This must be set lower than the server’s maximum-time-between-pings.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pool.pr.single.hop.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Setting used for single-hop access to partitioned region data in the servers for some data operations. See PartitionResolver. See note in thread-local-connections below.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting used for single-hop access to partitioned region data in the servers for some data operations. See PartitionResolver. See note in
+thread-local-connections below.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
 </tr>
 <tr>
@@ -4501,7 +4695,8 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pool.retry.attempts</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times to retry an operation after a time-out or exception for high availability. If set to -1, the pool tries every available server once until it succeeds or has tried all servers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times to retry an operation after a time-out or exception for high availability. If set to -1, the pool tries every available server once
+until it succeeds or has tried all servers.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
 </tr>
 <tr>
@@ -4525,7 +4720,8 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pool.statistic.interval</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default frequency, in milliseconds, with which the client statistics are sent to the server. A value of -1 indicates that the statistics are not sent to the server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default frequency, in milliseconds, with which the client statistics are sent to the server. A value of -1 indicates that the statistics are not
+sent to the server.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
 </tr>
 <tr>
@@ -4543,7 +4739,8 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pool.subscription.redundancy</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Redundancy for servers that contain subscriptions established by the client. A value of -1 causes all available servers in the specified group to be made redundant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redundancy for servers that contain subscriptions established by the client. A value of -1 causes all available servers in the specified group to be
+made redundant.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
@@ -4608,7 +4805,8 @@ Only Splunk is currently supported for MESSAGE_BROKER.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Passed to Lettuce’s RedisURI.verifyPeer.
 If true then verifyMode=FULL, else if false then verifyMode=NONE.
-When peer verification is disabled, Lettuce uses Netty&#8217;s InsecureTrustManagerFactory.INSTANCE as the trust manager factory. It’s javadoc notes that it should never be used in production and that it is purely for testing purposes."	FALSE
+When peer verification is disabled, Lettuce uses Netty&#8217;s InsecureTrustManagerFactory.INSTANCE as the trust manager factory. It’s javadoc notes that
+it should never be used in production and that it is purely for testing purposes."	FALSE
 redis.connection.timeout.duration	Integer	"Command timeout begins:
 When the command is sent successfully to the transport.</p>
 <p class="tableblock">Queued while the connection was inactive.</p>
@@ -4619,15 +4817,18 @@ Measured in seconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.auto.reconnect</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-reconnect behavior on connections. As soon as a connection gets closed/reset without the intention to close it, the client will try to reconnect, activate the connection and re-issue any queued commands.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-reconnect behavior on connections. As soon as a connection gets closed/reset without the intention to close it, the client will try to
+reconnect, activate the connection and re-issue any queued commands.
 This flag also has the effect that disconnected connections will refuse commands and cancel these with an exception.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.connection.suspend.reconnect.on.protocol.failure</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If this flag is true the reconnect will be suspended on protocol errors. The reconnect itself has two phases: Socket connection and protocol/connection activation.
-In case a connection timeout occurs, a connection reset, host lookup fails, this does not affect the cancellation of commands. In contrast, where the protocol/connection activation fails due to SSL errors or PING before activating connection failure, queued commands are canceled.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If this flag is true the reconnect will be suspended on protocol errors. The reconnect itself has two phases: Socket connection and
+protocol/connection activation.
+In case a connection timeout occurs, a connection reset, host lookup fails, this does not affect the cancellation of commands. In contrast, where the
+protocol/connection activation fails due to SSL errors or PING before activating connection failure, queued commands are canceled.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
 </tr>
 <tr>
@@ -4639,13 +4840,15 @@ In case a connection timeout occurs, a connection reset, host lookup fails, this
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.streams.max.length</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Redis will trim the stream from the oldest entries when it reaches the number of entries specified in redis.streams.max.length. The stream could have more entries than specified in the command before Redis starts deleting entries.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis will trim the stream from the oldest entries when it reaches the number of entries specified in redis.streams.max.length. The stream could
+have more entries than specified in the command before Redis starts deleting entries.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">redis.streams.passthrough.source.tx.time.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Redis Stream IDs are specified by two numbers separated by a - character. The first part is the Unix time in milliseconds of the Redis instance generating the ID. The second part is just a sequence number and is used in order to distinguish IDs generated in the same millisecond.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis Stream IDs are specified by two numbers separated by a - character. The first part is the Unix time in milliseconds of the Redis instance
+generating the ID. The second part is just a sequence number and is used in order to distinguish IDs generated in the same millisecond.
 When enabled, the source commit timestamp can be used to manually set the first part of the Redis Stream ID.
 Caution - time order is strictly enforced.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
@@ -4656,7 +4859,8 @@ Caution - time order is strictly enforced.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">REDIS_STREAMS_SINK can partition the Redis Streams keys to which it will commit.
 This is complementary to job-level partitioning and does not replace it.
 If only the sink is partitioned a partition Id would be appended to the end of the Redis Streams key (e.g. key:2).
-If the sink is partitioned and the job was partitioned then first the job partition id would be appended to the Redis Streams key followed by the sink partition id (e.g. key:2:4).</p></td>
+If the sink is partitioned and the job was partitioned then first the job partition id would be appended to the Redis Streams key followed by the
+sink partition id (e.g. key:2:4).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
@@ -4847,7 +5051,8 @@ then (redis.broker.max.queue.depth * 7) / 10;</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="poll.interval.ms"></a> poll.interval.ms</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate interval that specifies the number of milliseconds the connector should wait for new changed-data events to appear before it starts processing a batch of events.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed rate interval that specifies the number of milliseconds the connector should wait for new changed-data events to appear before it starts
+processing a batch of events.
 Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
 </tr>
@@ -4867,7 +5072,8 @@ Measured in milliseconds.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">queue.persistence.enabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, batches of changed-data events are persisted to Redis Stream, before they are enqueued within the in-memory queue, which effectively mimics a change-data-capture (CDC) process within Redis Connect.
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, batches of changed-data events are persisted to Redis Stream, before they are enqueued within the in-memory queue, which effectively
+mimics a change-data-capture (CDC) process within Redis Connect.
 <sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
 </tr>
@@ -4927,8 +5133,8 @@ Measured in milliseconds.</p></td>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.10.6<br>
-Last updated 2023-12-05 10:19:07 -0700
+Version 0.11.0<br>
+Last updated 2024-05-14 14:15:27 -0600
 </div>
 </div>
 </body>
