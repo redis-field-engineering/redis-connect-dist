@@ -88,17 +88,16 @@ for i in modules:
 modulelist.close()'
 EOF
 
-docker cp list_modules.sh "${container_name}":/opt/list_modules.sh
-docker exec --user root "${container_name}" bash -c "chmod 777 /opt/list_modules.sh"
-docker exec --user root "${container_name}" bash -c "/opt/list_modules.sh"
-docker cp "${container_name}":/opt/module_list.txt .
+# Get the module info to be used for database creation
+while [[ "$(curl -o ./modules -w ''%{http_code}'' -u demo@redis.com:redislabs -k https://localhost:19443/v1/modules)" != "200" ]]; do sleep 5; done
+echo "Modules.." && cat ./modules
 
-json_module_name=$(grep -i json ./module_list.txt | cut -d ' ' -f 2)
-json_semantic_version=$(grep -i json ./module_list.txt | cut -d ' ' -f 4)
-search_module_name=$(grep -i search ./module_list.txt | cut -d ' ' -f 3)
-search_semantic_version=$(grep -i search ./module_list.txt | cut -d ' ' -f 5)
-timeseries_module_name=$(grep -i timeseries ./module_list.txt | cut -d ' ' -f 2)
-timeseries_semantic_version=$(grep -i timeseries ./module_list.txt | cut -d ' ' -f 4)
+json_module_name=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 json | cut -d '"' -f 4 | head -1)
+json_semantic_version=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 json | cut -d '"' -f 4 | tail -1)
+search_module_name=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 search | cut -d '"' -f 4 | head -1)
+search_semantic_version=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 search | cut -d '"' -f 4 | tail -1)
+timeseries_module_name=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 timeseries | cut -d '"' -f 4 | head -1)
+timeseries_semantic_version=$(cat ./modules | grep -oE '"module_name":"[^"]*|"semantic_version":"[^"]*' | grep -iA1 timeseries | cut -d '"' -f 4 | tail -1)
 
 echo "Creating databases..."
 echo Creating Redis Target database with "${search_module_name}" version "${search_semantic_version}" and "${json_module_name}" version "${json_semantic_version}"
