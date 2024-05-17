@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="${1:-1.12.9}"
+version="${1:-1.15.1}"
 jmx_port="${2:-1099}"
 rest_port="${3:-8080}"
 pulse_port="${4:-7070}"
