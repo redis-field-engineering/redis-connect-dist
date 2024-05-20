@@ -14,10 +14,10 @@ i.e.</br>
 wget -c https://github.com/redis-field-engineering/redis-connect-dist/archive/main.zip && \
 mkdir -p redis-connect/demo && \
 unzip main.zip "redis-connect-dist-main/examples/gemfire/*" -d redis-connect && \
-cp -R redis-connect-dist-main/examples/gemfire/demo/* redis-connect/demo && \
-rm -rf main.zip redis-connect/redis-connect-dist-main && \
 cd redis-connect && \
+cp -R redis-connect-dist-main/examples/gemfire/demo/* ./demo && \
 chmod a+x demo/*.sh && \
+rm -rf ./redis-connect-dist-main && rm ../main.zip  && \
 cd demo
 ```
 
@@ -365,3 +365,156 @@ demo$
 
 </p>
 </details>
+
+### More Complex Data Types
+
+This demo also includes an example of using more complex Java types within Gemfire. The `extlib` folder contains 2 jar files:
+1. `gemfire-pojo-1.0.jar`
+2. `redis-connect-custom-stage-sample-*.jar`
+
+The first contains the code for a `redis.gemfire.Customer` class, which is a very simple POJO containing a name and age, and the later is a build of [redis-connect-custom-stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-sample) containing some custom staging code to transform whatever arbitrary data type (in this case a `Customer`) into a type redis-connect can serialize to `JSON`.
+
+#### Configure Job
+
+On [http://localhost:8282/swagger-ui/index.html]() go to:
+
+**Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
+<br>_For the customer pojo, use the sample `customer-pojo-job.json` configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">Gemfire</a>
+<br>Use '**customer-pojo-job**' as the _**jobName**_
+<br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
+<br>
+
+Or use `curl` to create the `customer-pojo-job` configuration 
+
+`$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/customer-pojo-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/customer-pojo-job.json;type=application/json"`
+
+#### Start Load Job
+
+<details>
+<summary>INSERT customer records into gemfire</summary>
+<p>
+
+```bash
+$ ./load_customers.sh 
+Inserting records in session region..
+
+(1) Executing - connect --locator localhost[10334]
+
+Connecting to Locator at [host=localhost, port=10334] ..
+Connecting to Manager at [host=749a3ef94bf8, port=1099] ..
+Successfully connected to: [host=749a3ef94bf8, port=1099]
+
+You are connected to a cluster of version: 1.15.1
+
+
+(2) Executing - put --key="customer1" --value=("name":"Jack","age":35) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer1
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(3) Executing - put --key="customer2" --value=("name":"Alice","age":36) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer2
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(4) Executing - put --key="customer3" --value=("name":"Bob","age":37) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer3
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(5) Executing - put --key="customer4" --value=("name":"Carol","age":38) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer4
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(6) Executing - put --key="customer5" --value=("name":"David","age":39) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer5
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(7) Executing - put --key="customer6" --value=("name":"Eva","age":40) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer6
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(8) Executing - put --key="customer7" --value=("name":"Frank","age":41) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer7
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(9) Executing - put --key="customer8" --value=("name":"Grace","age":42) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer8
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(10) Executing - put --key="customer9" --value=("name":"Henry","age":43) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer9
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+
+(11) Executing - put --key="customer10" --value=("name":"Ivy","age":44) --region=customer --value-class=redis.gemfire.Customer
+
+Result      : true
+Key Class   : java.lang.String
+Key         : customer10
+Value Class : redis.gemfire.Customer
+Old Value   : null
+
+done
+```
+
+</p>
+</details>
+
+**Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
+<br>Use '**load**' as _**jobType**_ and '**customer-pojo-job**' as the _**jobName**_
+<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+
+**Or Use `curl` to start the initial load for `cdc-job`** <br>
+`$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/customer-pojo-job/load" -H "accept: */*"`
+
+#### Query Data in Redis
+
+Your data is now available in Redis at the keys `{gemfireRegionName}:{gemfireKeyName}`, and be queried in redis using the redis-cli:
+
+
+```bash
+$ redis-cli -p 14000 JSON.GET customer:customer1 $
+"[{\"name\":\"Jack\",\"age\":35}]"
+```
