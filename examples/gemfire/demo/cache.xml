@@ -36,4 +36,10 @@
             <value-constraint>redis.gemfire.Customer</value-constraint>
         </region-attributes>
     </region>
+    <region name="hash">
+        <region-attributes refid="PARTITION">
+            <key-constraint>java.lang.String</key-constraint>
+            <value-constraint>java.util.HashMap</value-constraint>
+        </region-attributes>
+    </region>
 </cache>
