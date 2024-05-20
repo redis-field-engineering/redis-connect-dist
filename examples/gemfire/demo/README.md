@@ -366,7 +366,9 @@ demo$
 </p>
 </details>
 
-### More Complex Data Types
+-------------------------------
+
+## More Complex Data Types
 
 This demo also includes an example of using more complex Java types within Gemfire. The `extlib` folder contains 2 jar files:
 1. `gemfire-pojo-1.0.jar`
@@ -374,7 +376,7 @@ This demo also includes an example of using more complex Java types within Gemfi
 
 The first contains the code for a `redis.gemfire.Customer` class, which is a very simple POJO containing a name and age, and the later is a build of [redis-connect-custom-stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-sample) containing some custom staging code to transform whatever arbitrary data type (in this case a `Customer`) into a type redis-connect can serialize to `JSON`.
 
-#### Configure Job
+### Configure Job
 
 On [http://localhost:8282/swagger-ui/index.html]() go to:
 
@@ -388,7 +390,7 @@ Or use `curl` to create the `customer-pojo-job` configuration
 
 `$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/customer-pojo-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/customer-pojo-job.json;type=application/json"`
 
-#### Start Load Job
+### Start Load Job
 
 <details>
 <summary>INSERT customer records into gemfire</summary>
@@ -509,7 +511,7 @@ done
 **Or Use `curl` to start the initial load for `cdc-job`** <br>
 `$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/customer-pojo-job/load" -H "accept: */*"`
 
-#### Query Data in Redis
+### Query Data in Redis
 
 Your data is now available in Redis at the keys `{gemfireRegionName}:{gemfireKeyName}`, and be queried in redis using the redis-cli:
 
