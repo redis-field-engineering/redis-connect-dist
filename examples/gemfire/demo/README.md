@@ -2,7 +2,8 @@
 :white_check_mark: Setup and start Gemfire database (Source)<br>
 :white_check_mark: Setup and start Redis Enterprise database (Target)<br>
 :white_check_mark: Setup and start Redis Connect<br>
-:white_check_mark: Perform Initial load and CDC with Redis Connect<br>
+:white_check_mark: Perform Initial load and CDC with Redis Connect on Strings<br>
+:white_check_mark: Perform Initial load with Redis Connect on complex data types<br>
 
 # Prerequisites
 Docker compatible [*nix OS](https://en.wikipedia.org/wiki/Unix-like) and [Docker](https://docs.docker.com/get-docker) installed.
