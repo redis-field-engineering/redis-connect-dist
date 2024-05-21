@@ -375,7 +375,7 @@ This demo also includes an example of using more complex Java types within Gemfi
 1. `gemfire-pojo-1.0.jar`
 2. `redis-connect-custom-stage-sample-*.jar`
 
-The first contains the code for a `redis.gemfire.Customer` class, which is a very simple POJO containing a name and age, and the later is a build of [redis-connect-custom-stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-sample) containing some custom staging code to transform whatever arbitrary data type (in this case a `Customer`) into a type redis-connect can serialize to `JSON`.
+The first jar contains the code for a `redis.gemfire.Customer` class, which is a very simple POJO containing a name and age. The second jar is a build of [redis-connect-custom-stage](https://github.com/redis-field-engineering/redis-connect-custom-stage-sample) containing some custom staging code to transform arbitrary data types (in this case a `Customer`) into a type that redis-connect can serialize to `JSON`.
 
 ### Configure Job
 
