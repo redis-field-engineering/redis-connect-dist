@@ -102,6 +102,14 @@ Successfully connected to: [host=fe-dev.c.central-beach-194106.internal, port=10
 You are connected to a cluster of version: 9.15.1
 ````
 
+#### Load redis-connect-query Function
+
+Redis Connect depends on the `redis-connect-query` function to perform load jobs. The jar containing this function must be deployed to GemFire prior to starting the load job. You can get this jar either by building the [redis-connect-gemfire-function](https://github.com/redis-field-engineering/redis-connect-gemfire-function?tab=readme-ov-file#building-the-project) project, or simply by using the [gemfire-initial-load-function-0.10.1.jar](/examples/gemfire/demo/gemfire-initial-load-function-0.10.1.jar) file in the `demo` folder. Once you have that file, from a `gfsh` shell connected to your locator, execute the following command.
+
+```sh
+deploy --jar=./gemfire-initial-load-function-0.10.1.jar
+```
+
 ## Setting up Redis Enterprise Databases (Target)
 
 Before using Redis Connect to capture the changes committed on Gemfire into Redis Enterprise Databases, first create a database for the metadata management and metrics provided by Redis Connect by creating a database with [RedisTimeSeries](https://redis.com/modules/redis-timeseries/) module enabled, see [Create Redis Enterprise Database](https://docs.redis.com/latest/rs/administering/creating-databases/#creating-a-new-redis-database) for reference. Then, create (or use an existing) another Redis Enterprise database (Target) to store the changes coming from PostgreSQL. Additionally, you can enable [RediSearch 2.0](https://redis.com/blog/introducing-redisearch-2-0/) module on the target database to enable secondary index with full-text search capabilities on the existing hashes where PostgreSQL changed events are being written at then [create an index, and start querying](https://oss.redis.com/redisearch/Commands/) the document in hashes.
