@@ -509,7 +509,7 @@ done
 <br>Use '**load**' as _**jobType**_ and '**customer-pojo-job**' as the _**jobName**_
 <br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
 
-**Or Use `curl` to start the initial load for `cdc-job`** <br>
+**Or Use `curl` to start the initial load for `customer-pojo-job`** <br>
 `$ curl -X POST "http://localhost:8282/connect/api/v1/job/transition/start/customer-pojo-job/load" -H "accept: */*"`
 
 ### Query Data in Redis
