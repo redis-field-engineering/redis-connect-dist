@@ -1,0 +1,48 @@
+{
+    "partitions": 1,
+    "maxPartitionsPerClusterMember": 1,
+    "pipeline": {
+      "stages": [
+        {
+            "index": 1,
+            "stageName": "GEMFIRE_HASH_PREP_STAGE",
+            "userDefinedType": "CUSTOM",
+            "metricsEnabled": false
+        },
+        {
+          "database": {
+            "credentialsDirectoryPath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+            "databaseURL": "redis://127.0.0.1:14000",
+            "databaseType": "REDIS",
+            "customConfiguration": {
+              "redis.connection.sslEnabled": false,
+              "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/client-truststore.jks"
+            }
+          },
+          "index": 2,
+          "stageName": "REDIS_HASH_SINK",
+          "checkpointStageIndicator": true,
+          "metricsEnabled" : true
+        }
+      ]
+    },
+    "source": {
+      "database": {
+        "credentialsDirectoryPath": "/opt/redislabs/redis-connect/config/samples/credentials",
+        "databaseType": "GEMFIRE",
+        "customConfiguration": {
+          "pool.locator.host": "localhost",
+          "pool.locator.port": "10334"
+        }
+      },
+      "tables": {
+        "hash": {
+          "initialLoad": {
+            "partitions": 4,
+            "maxPartitionsPerClusterMember": 1
+          },
+          "autoConfigColumnsEnabled": true
+        }
+      }
+    }
+  }

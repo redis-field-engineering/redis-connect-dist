@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="${1:-1.12.9}"
+version="${1:-1.15.9}"
 
 container_name="gemfire-$version-$(hostname)"
 

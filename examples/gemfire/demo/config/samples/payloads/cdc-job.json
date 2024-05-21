@@ -5,7 +5,7 @@
     "stages": [
       {
         "database": {
-          "credentialsFilePath" : "/opt/redislabs/redis-connect/config/samples/credentials",
+          "credentialsDirectoryPath" : "/opt/redislabs/redis-connect/config/samples/credentials",
           "databaseURL": "redis://127.0.0.1:14000",
           "databaseType": "REDIS",
           "customConfiguration": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "database": {
-      "credentialsFilePath": "/opt/redislabs/redis-connect/config/samples/credentials",
+      "credentialsDirectoryPath": "/opt/redislabs/redis-connect/config/samples/credentials",
       "databaseType": "GEMFIRE",
       "customConfiguration": {
         "pool.locator.host": "localhost",

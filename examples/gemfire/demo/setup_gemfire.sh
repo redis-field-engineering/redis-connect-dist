@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="${1:-1.12.9}"
+version="${1:-1.15.1}"
 jmx_port="${2:-1099}"
 rest_port="${3:-8080}"
 pulse_port="${4:-7070}"
@@ -42,8 +42,9 @@ sleep 60
 
 docker cp cache.xml "${container_name}":cache.xml
 docker cp gemfire-initial-load-function-0.10.1.jar "${container_name}":gemfire-initial-load-function-0.10.1.jar
+docker cp extlib/gemfire-pojo-1.0.jar "${container_name}":gemfire-pojo-1.0.jar
 
 echo "Starting locator1, server1 and deploying client function for the load job.."
-docker exec --user root "${container_name}" sh -c "gfsh -e 'start locator --name=locator1 --hostname-for-clients=localhost' -e 'start server --name=server1 --cache-xml-file=./cache.xml --hostname-for-clients=localhost' -e 'deploy --jar=./gemfire-initial-load-function-0.10.1.jar' -e 'list functions'"
+docker exec --user root "${container_name}" sh -c "gfsh -e 'start locator --name=locator1 --hostname-for-clients=localhost' -e 'deploy --jar=./gemfire-pojo-1.0.jar' -e 'deploy --jar=./gemfire-initial-load-function-0.10.1.jar' -e 'start server --name=server1 --cache-xml-file=./cache.xml --hostname-for-clients=localhost' -e 'list functions'"
 
 echo "done"
