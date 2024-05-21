@@ -371,7 +371,7 @@ demo$
 
 ## More Complex Data Types
 
-This demo also includes an example of using more complex Java types within Gemfire. The `extlib` folder contains 2 jar files:
+This demo also includes an example of using more complex Java types within Gemfire. The `extlib` folder contains two jar files:
 1. `gemfire-pojo-1.0.jar`
 2. `redis-connect-custom-stage-sample-*.jar`
 
@@ -382,12 +382,12 @@ The first jar contains the code for a `redis.gemfire.Customer` class, which is a
 On [http://localhost:8282/swagger-ui/index.html]() go to:
 
 **Create Job Configuration** - `/connect/api/vi/job/config/{jobName}`
-<br>_For the customer pojo, use the sample `customer-pojo-job.json` configuration:_ <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">Gemfire</a>
+<br>_For the customer POJO, use the sample `customer-pojo-job.json` configuration: <a href="/examples/postgres/demo/config/samples/payloads/cdc-job.json">Gemfire</a>
 <br>Use '**customer-pojo-job**' as the _**jobName**_
 <br><br><img src="/images/quick-start/Redis Connect Save Job Config.png" style="float: right;" width = 700px height = 375px/>
 <br>
 
-Or use `curl` to create the `customer-pojo-job` configuration 
+Or use `curl` to create the `customer-pojo-job` configuration:
 
 `$ curl -v -X POST "http://localhost:8282/connect/api/v1/job/config/customer-pojo-job" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "file=@config/samples/payloads/customer-pojo-job.json;type=application/json"`
 
@@ -514,7 +514,7 @@ done
 
 ### Query Data in Redis
 
-Your data is now available in Redis at the keys `{gemfireRegionName}:{gemfireKeyName}`, and be queried in redis using the redis-cli:
+Your data is now available in Redis at the keys `{gemfireRegionName}:{gemfireKeyName}` and can be queried in Redis using the redis-cli:
 
 
 ```bash
