@@ -167,13 +167,54 @@ Redis Connect Swagger UI is available on port 8282 by default. If you're running
 
 **Start Job -** `/connect/api/vi/job/transition/start/{jobName}/{jobType}`
 <br>_For quick start, use '**stream**' as **jobType**_
-<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/>
+<br><br><img src="/images/quick-start/Redis Connect Start Job.png" style="float: right;" width = 700px height = 375px/><br>
 
 **Confirm Job Claim -** `/connect/api/vi/jobs/claim/{jobStatus}`
 <br>_For quick start, use '**all**' as **jobStatus**_
-<br><br><img src="/images/quick-start/Redis Connect Get Claims.png" style="float: right;" width = 700px height = 250px/>
+<br><br><img src="/images/quick-start/Redis Connect Get Claims.png" style="float: right;" width = 700px height = 250px/><br>
 
+<br>
 Once you've configured a job, try inserting some records into the source database. Then confirm that they have arrived in Redis.
+
+
+
+
+### Monitoring the System
+
+Redis Connect exports OpenTelemetry metrics via a Prometheus endpoint. A simple Prometheus configuration would look like this:
+
+```cmd  
+- job_name: "connect"
+  scrape_interval: 5s
+  scrape_timeout: 5s
+  metrics_path: /
+  scheme: http
+  static_configs:
+  - targets: ["localhost:19090"]
+```
+
+Redis Connect provides a dashboard for monitoring the system. After installing Grafana and connecting it to Prometheus, ie. adding a datasource, you can install the Redis Connect dashboard by navigating to the Grafana dashboard page and clicking New -> Import.
+
+The Redis Connect dashboard reports the following metrics:
+
+| metric                                     | label         | type      | description                           |
+|--------------------------------------------|---------------|-----------|---------------------------------------|
+| event_job_starts_total                     | job starts    | count     | number of times job has been started  |
+| event_job_stops_total                      | job stops     | count     | number of times job has been stopped  |
+| event_input_buffer_histogram               | buffer        | histogram | number of events received             |
+| event_input_buffer_count                   | buffer count  | count     | number of measurements                |
+| event_input_buffer_sum                     | buffer total  | count     | sum of all measured quantities        |
+| event_operation_lag                        | elapsed       | histogram | time it took connect to receive event |
+| event_operation_lag_milliseconds_count     | elapsed count | count     | number of times lag was recorded      |
+| event_operation_lag_milliseconds_sum       | elapsed sum   | count     | sum total of all lag recordings       |
+| event_operation_latency                    | elapsed       | histogram | time it took to process the event     |
+| event_operation_latency_milliseconds_count | elapsed count | count     | number of times latency was recorded  |
+| event_operation_latency_milliseconds_sum   | elapsed sum   | count     | sum of all latency recordings         |
+| event_operation_elapsed                    | elapsed       | histogram | time it took to write event to redis  |
+| event_operation_elapsed_milliseconds_count | elapsed count | count     | number of time duration was recorded  |
+| event_operation_elapsed_milliseconds_sum   | elapsed sum   | count     | sum of all duration recordings        |
+| event_job_operation_throughput_total       | throughput    | count     | total number of events processed      |
+
 
 ## Copyright
 
