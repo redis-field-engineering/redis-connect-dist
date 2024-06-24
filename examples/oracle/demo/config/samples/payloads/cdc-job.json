@@ -28,7 +28,8 @@
         "database.dbname": "ORCLCDB",
         "database.hostname" : "172.17.0.1",
         "database.port": 1521,
-        "database.pdb.name": "ORCLPDB1"
+        "database.pdb.name": "ORCLPDB1",
+        "connector.class" : "io.debezium.connector.oracle.OracleConnector"
       }
     },
     "tables": {
