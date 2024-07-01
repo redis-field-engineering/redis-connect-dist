@@ -193,7 +193,7 @@ Redis Connect exports OpenTelemetry metrics via a Prometheus endpoint. A simple 
   - targets: ["localhost:19090"]
 ```
 
-Redis Connect provides a dashboard for monitoring the system. After installing Grafana and connecting it to Prometheus (i.e., adding a datasource), you can install the Redis Connect dashboard by navigating to the Grafana dashboard page and clicking New -> Import.
+Redis Connect provides a dashboard for monitoring the system. After installing Grafana and connecting it to Prometheus (i.e., adding a data source), you can install the Redis Connect dashboard by navigating to the Grafana dashboard page and clicking New -> Import.
 
 The Redis Connect dashboard reports the following metrics:
 
