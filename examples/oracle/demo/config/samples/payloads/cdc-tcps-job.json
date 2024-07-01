@@ -28,7 +28,8 @@
         "database.dbname" : "ORCLCDB",
         "database.url" : "jdbc:oracle:thin:@(DESCRIPTION= (ADDRESS= (PROTOCOL=TCPS)(PORT=2484)(HOST=172.17.0.1)) (CONNECT_DATA=(SERVICE_NAME=ORCLPDB1)) (SECURITY=(ssl_server_cert_dn=\"CN=localhost\")))",
         "database.pdb.name": "ORCLPDB1",
-        "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/OracleTrustStore.jks"
+        "truststore": "/opt/redislabs/redis-connect/config/samples/credentials/OracleTrustStore.jks",
+        "connector.class" : "io.debezium.connector.oracle.OracleConnector"
       }
     },
     "tables": {

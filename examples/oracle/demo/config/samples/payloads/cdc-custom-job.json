@@ -35,7 +35,8 @@
         "database.hostname" : "172.17.0.1",
         "database.port" : 1521,
         "database.pdb.name": "ORCLPDB1",
-        "lob.enabled": true
+        "lob.enabled": true,
+        "connector.class" : "io.debezium.connector.oracle.OracleConnector"
       }
     },
     "tables": {
