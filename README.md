@@ -210,8 +210,8 @@ The Redis Connect dashboard reports the following metrics:
 | event_operation_latency                    | elapsed       | histogram | time it took to process the event     |
 | event_operation_latency_milliseconds_count | elapsed count | count     | number of times latency was recorded  |
 | event_operation_latency_milliseconds_sum   | elapsed sum   | count     | sum of all latency recordings         |
-| event_operation_elapsed                    | elapsed       | histogram | time it took to write event to redis  |
-| event_operation_elapsed_milliseconds_count | elapsed count | count     | number of time duration was recorded  |
+| event_operation_elapsed                    | elapsed       | histogram | time it took to write event to Redis  |
+| event_operation_elapsed_milliseconds_count | elapsed count | count     | number of times duration was recorded |
 | event_operation_elapsed_milliseconds_sum   | elapsed sum   | count     | sum of all duration recordings        |
 | event_job_operation_throughput_total       | throughput    | count     | total number of events processed      |
 
