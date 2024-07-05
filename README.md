@@ -26,15 +26,6 @@ changed-data events from heterogeneous data platforms to [Azure Cache for Redis]
     </tr>
 </table>
 
-## Video Tutorials
-
-<table>
-    <tr>
-        <td><a href="https://www.youtube.com/watch?v=hQWhPU7y0OU"><img src="/images/video-tutorials/Redis Connect Webinar.png" style="float: right;" width="500" height="200"/></a></td> 
-        <td width="50%"><a href="https://asciinema.org/a/492521"><img src="/images/video-tutorials/Redis Connect CLI.png" style="float: right;" width="500" height="200"/></a></td> 
-    </tr>
-</table>
-
 ## Table of Contents
 
 * [Background](#background)
