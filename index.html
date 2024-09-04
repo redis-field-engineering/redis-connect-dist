@@ -15,7 +15,7 @@
 <div id="header">
 <h1>Redis Connect</h1>
 <div class="details">
-<span id="revnumber">version 0.11.0</span>
+<span id="revnumber">version 0.11.2</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -533,7 +533,7 @@ including a pre-installed source data platform, sample configuration, and data.<
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://developer.redis.com/riot/#_files">RIOT docs</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/gemfire">Gemfire</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/redis-field-engineering/redis-connect-dist/tree/main/examples/gemfire">Gemfire</a> <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">LOAD &amp; STREAM</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://geode.apache.org/docs/guide/115/about_geode.html">Apache Geode Docs</a></p></td>
 </tr>
@@ -2244,18 +2244,24 @@ Log levels are instance specific. To change them globally would require performi
 <div class="paragraph">
 <p>Prometheus metrics are enabled by setting the type of metric (<strong>cluster.metrics.type</strong>) to ‘OTEL’. This is the default, the other option being ‘REDIS’,
 which will log metrics as Redis’ TimeSeries objects in the connect configuration database, thus taking advantage of
-<a href="https://redis.io/docs/data-types/timeseries/">Redis' time series capabilities</a>, in which case additional data about keys and TTL are available.</p>
+<a href="https://redis.io/docs/data-types/timeseries/">Redis' time series capabilities</a>, in which case additional data about keys and TTL will be available.</p>
 </div>
+<div class="sect3">
+<h4 id="otel"><a class="anchor" href="#otel"></a>7.5.1. OTEL</h4>
 <div class="paragraph">
 <p>The port used by OTEL metrics is set by <strong>prometheus.port</strong>, it is set to 19090 by default.</p>
 </div>
 <div class="paragraph">
-<p>The OpenTelemetry metrics are reported for Create/Update/Delete operations for every table configured in the payload file. The metrics generated are
-the overall throughput, as well as the lag and latency for each operation, which are reported as histograms. They are tagged so that table and
-operation information can be used to report individual operations or operations on a specific table, or they can be aggregated.</p>
+<p>OpenTelemetry metrics are reported for Create/Update/Delete operations for every table configured in the payload file.</p>
 </div>
 <div class="paragraph">
-<p>Tags: job, database, table, partition, operation, stage</p>
+<p>The operational metrics generated are lag and latency for each operation, which are reported as histograms.
+They are tagged so that table and operation information can be used to report individual operations or operations on a
+specific table, or so they can be aggregated.</p>
+</div>
+<div class="paragraph">
+<p>Statistical metrics include total throughput and average elapsed time.
+Lastly, metrics are reported for job starts and stops, as well as errors encountered during processing.</p>
 </div>
 <div class="paragraph">
 <p>The sample otel/grafana dashboard looks like this:</p>
@@ -2280,117 +2286,205 @@ operation information can be used to report individual operations or operations 
 </div>
 </div>
 <div class="paragraph">
-<p>Redis Connect provides a dashboard for monitoring the system. After installing Grafana and connecting it to Prometheus, i.e., adding a datasource, you can install the Redis Connect dashboard by navigating to the Grafana dashboard page and clicking New &#8594; Import.</p>
+<p>Redis Connect provides a dashboard for monitoring the system. After installing Grafana and connecting it to Prometheus,
+i.e., adding a datasource, you can install the Redis Connect dashboard by navigating to the Grafana dashboard page,
+clicking New &#8594; Import, and then importing the redis-connect-grafana-dashboard.json file found in the
+../config/samples/dashboard subdirectory.</p>
 </div>
 <div class="paragraph">
 <p>The Redis Connect dashboard reports the following metrics:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 37.5%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
-<col style="width: 37.5%;">
+<col style="width: 45.4545%;">
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 27.2727%;">
+<col style="width: 9.091%;">
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">metric</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Metric</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Label</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Metadata</strong> (see below)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_job_starts_total</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">job starts</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of times job has been started</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host, job</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_job_stops_total</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">job stops</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of times job has been stopped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host, job</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_job_errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of exceptions that have occurred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job, operation, schema/table, exception, message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event_job_invalid_events</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">invalid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of events that were rejected</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_input_buffer_histogram</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">buffer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of events received</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job, database</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_input_buffer_count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">buffer count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job, database</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_input_buffer_sum</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">buffer total</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job, database</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_lag</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lag</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">time it took connect to receive event</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_lag_milliseconds_count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lag count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_lag_milliseconds_sum</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lag total</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_latency</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">latency</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">time it took to process the event</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_latency_milliseconds_count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">latency count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_latency_milliseconds_sum</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">latency total</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_elapsed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">elapsed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">histogram</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">time it took to write event to redis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_elapsed_milliseconds_count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">elapsed count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number of measurements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_operation_elapsed_milliseconds_sum</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">elapsed sum</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sum of all measured quantities</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">event_job_operation_throughput_total</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">throughput</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">total number of events processed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[partition], job, database, stage, operation, schema/table</p></td>
 </tr>
 </tbody>
 </table>
+<div class="sect4">
+<h5 id="metadata-tags"><a class="anchor" href="#metadata-tags"></a>Metadata Tags</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Tag</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">job</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job source database</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">schema/table</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job source table</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">partition</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job partition - only reported when there are multiple partitions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">operation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job operation: C(reate) / U(pdate) / D(elete)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job stage name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job host</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job exception class&#8201;&#8212;&#8201;in the case of an error</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the job error message&#8201;&#8212;&#8201;if reported</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="redis-timeseries"><a class="anchor" href="#redis-timeseries"></a>7.5.2. Redis TimeSeries</h4>
 <div class="paragraph">
 <p>With regards to Redis’ TimeSeries metrics, you can view these metrics in Grafana using
 the <a href="https://grafana.com/grafana/plugins/redis-datasource/">Redis Datasource for Grafana</a>.</p>
@@ -2449,6 +2543,7 @@ must be enabled.
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -3500,7 +3595,7 @@ or any other secret keys used for various cryptographic purposes.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The name of the directory containing the Redis Connect credentials file.
 This directory path must include a properties file named <code class="lime">redisconnect_credentials_jobmanager.properties</code>
-<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">../config/
 samples/
 credentials</p></td>
@@ -3564,7 +3659,7 @@ is scanned for changes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mail.smtp.start.tls.enable</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set or disable STARTTLS encryption<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set or disable STARTTLS encryption<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
@@ -3626,7 +3721,7 @@ Multiple recipients can be added by delimiting them with a comma.</p></td>
 In other words, jobName does not appear in the job configuration payload.</p>
 <p class="tableblock">Note: jobName should not be confused with jobId. jobIds are created as part of a job claim.
 They add-on a namespace to the jobName to identify the jobType and partitionId (if jobType=PARTITIONED_STREAM)
-<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
@@ -3644,7 +3739,7 @@ checkpoints. Please reach out to Support to assist with the migration of checkpo
 <td class="tableblock halign-left valign-top"><p class="tableblock">The number of job partitions that can be claimed, and executed, on the same Redis Connect instance (JVM).</p>
 <p class="tableblock">If the limit forces partitions to span more instances than are currently deployed, then the job will not be able to
 start nor migrate
-<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 </tr>
 <tr>
@@ -3686,7 +3781,7 @@ start nor migrate
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Redis Connect’s pipeline is powered by the LMAX Disruptor library (High Performance Inter-Thread Messaging).</p>
 <p class="tableblock">Must be a power of 2, minimum 1024
-<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup></p></td>
+<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
 </tr>
 <tr>
@@ -3777,7 +3872,7 @@ checkpointTransactionsEnabled <a id="checkpointTransactionsEnabled"></a></p></td
 <td class="tableblock halign-left valign-top"><p class="tableblock">Although the producer’s polling event loop enqueues changed-data events in batches, each event is processed
 individually through the pipeline. This is because Redis Connect updates the checkpoint at the changed-data event level
 and not the batch
-<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -3893,7 +3988,7 @@ been reached.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceConnectionRetryDelayInterval <a id="sourceConnectionRetryDelayInterval"></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fixed delay in between sourceConnectionMaxRetryAttempts.</p>
-<p class="tableblock">Measured in seconds; minimum is 0<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>.</p></td>
+<p class="tableblock">Measured in seconds; minimum is 0<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnotedef_10" title="View footnote.">10</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
 </tr>
 <tr>
@@ -3995,7 +4090,7 @@ iteration.</p></td>
 bypassed.
 When disabled, all column values will be replicated to the target unless they are individually bypassed at the column-level using
 changedColumnOnlyEnabled. (See Section 4.2.2)
-<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -4234,7 +4329,7 @@ redisconnect_credentials_{source_type | target_type}_{job_name}.properties</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">credentialsRotationEventListenerEnabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the credentialsDirectoryPath will be periodically scanned for changes that are specific to the
-property file associated with this database<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>.</p></td>
+property file associated with this database<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnotedef_12" title="View footnote.">12</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -4320,7 +4415,7 @@ larger than the value of max.batch.size.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the criteria for running a snapshot when the connector starts. It is not recommended to use this debezium capability for initial load in Production. See <a href="#production-readiness">Production Readiness</a> for more information.
 MySQL, Postgres default to 'never'; Oracle, SQL Server default to 'schema_only'
-<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnotedef_10" title="View footnote.">10</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 </tbody>
@@ -4657,7 +4752,7 @@ Supported for delimited types. CSV, PSV, TSV</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections that the pool can create. If all connections are in use, an operation requiring a client-to server-connection is
 blocked until a connection is available or the free-connection-timeout is reached. If set to -1, there is no maximum. The setting must indicate a cap
 greater than min-connections
-<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnotedef_14" title="View footnote.">14</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
 </tr>
 <tr>
@@ -5066,7 +5161,7 @@ Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">max.queue.size</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the maximum number of records that the blocking queue can hold.
-<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnotedef_12" title="View footnote.">12</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_15" class="footnote" href="#_footnotedef_15" title="View footnote.">15</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">32768</p></td>
 </tr>
 <tr>
@@ -5074,7 +5169,7 @@ Measured in milliseconds.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, batches of changed-data events are persisted to Redis Stream, before they are enqueued within the in-memory queue, which effectively
 mimics a change-data-capture (CDC) process within Redis Connect.
-<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>.</p></td>
+<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnotedef_16" title="View footnote.">16</a>]</sup>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
 </tr>
 <tr>
@@ -5092,49 +5187,58 @@ mimics a change-data-capture (CDC) process within Redis Connect.
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. Redis Connect never caches or persists credentials. Therefore, on each connection with the source, target, or job manager database, the credentials are read from a file. This enhances security and allows for seamless credential rotations and integration with secret management frameworks such as HashiCorp Vault.
+<a href="#_footnoteref_1">1</a>. The Gemfire Connector leverages the Apache Geode Client, consequentially Redis Connect supports only one Gemfire Job per Redis Connect Instance.
 </div>
 <div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. StartTLS is an extension of the SMTP protocol that tells the email server that the email client wants to use a secure connection using TLS or SSL.
+<a href="#_footnoteref_2">2</a>. Stream jobs in the GemFire connector leverages <a href="https://geode.apache.org/docs/guide/114/developing/events/chapter_overview.html">Durable Events</a> in GemFire. This means that streaming is durable across fail-overs of Redis Connect, subject to the <a href="https://docs.vmware.com/en/VMware-GemFire/10.1/gf/developing-events-limit_server_subscription_queue_size.html">eviction policy and capacity of the GemFire Subscriber Queue</a>.
 </div>
 <div class="footnote" id="_footnotedef_3">
-<a href="#_footnoteref_3">3</a>. When jobName is used in logging or administrative processes (i.e., stopJob), the jobName represents ALL job partitions. Must be between 4 and 50 characters.
+<a href="#_footnoteref_3">3</a>. The Gemfire connector only support a single partition per job.
 </div>
 <div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. For example, if maxPartitionsPerClusterMember=1 and partitions=3, then the Redis Connect cluster will require at least 3 instances (JVMs) each with at least 1 available capacity to claim a job partition.  This is not a global limit; it is only specific at the job level 0 represents no limit
+<a href="#_footnoteref_4">4</a>. Redis Connect never caches or persists credentials. Therefore, on each connection with the source, target, or job manager database, the credentials are read from a file. This enhances security and allows for seamless credential rotations and integration with secret management frameworks such as HashiCorp Vault.
 </div>
 <div class="footnote" id="_footnotedef_5">
-<a href="#_footnoteref_5">5</a>. The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".  Increasing the buffer size will impact the JVM heap space required to store all transient changed data events within the queue. For most cases, this can be left as default.
+<a href="#_footnoteref_5">5</a>. StartTLS is an extension of the SMTP protocol that tells the email server that the email client wants to use a secure connection using TLS or SSL.
 </div>
 <div class="footnote" id="_footnotedef_6">
-<a href="#_footnoteref_6">6</a>. When enabled, the checkpoint will be committed as part of an atomic Redis transaction. This eliminates consistency issues and improves performance. Rollback capability is built in to handle any failure scenarios during the transaction so that no data will be lost.  When disabled, the checkpoint will be committed after the the changed-data events are written. This adds another network round trip for each changed-data event.  While distributed checkpoints have distinct advantages, there is a small tradeoff. Because Redis keys are bound by their hash-slots, distributed checkpoints require that we store one checkpoint per hash slot.  When enabled, each job partition will have its own 16384 checkpoint keys created in the target database. With ~250 bytes per checkpoint, each partition’s estimated overhead is ~4MB. When disabled, there is only a single checkpoint key in the target per partition. Distributed checkpoints require RediSearch. We use RediSearch to index checkpoint keys so that recovery from the latest checkpoint is immediate
+<a href="#_footnoteref_6">6</a>. When jobName is used in logging or administrative processes (i.e., stopJob), the jobName represents ALL job partitions. Must be between 4 and 50 characters.
 </div>
 <div class="footnote" id="_footnotedef_7">
-<a href="#_footnoteref_7">7</a>. sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayInterval
+<a href="#_footnoteref_7">7</a>. For example, if maxPartitionsPerClusterMember=1 and partitions=3, then the Redis Connect cluster will require at least 3 instances (JVMs) each with at least 1 available capacity to claim a job partition.  This is not a global limit; it is only specific at the job level 0 represents no limit
 </div>
 <div class="footnote" id="_footnotedef_8">
-<a href="#_footnoteref_8">8</a>. When enabled, the column-level changedColumnOnlyEnabled flag will be overridden for all columns other than those designated as targetKey(s).  This is currently only supported for RDBMS sources
+<a href="#_footnoteref_8">8</a>. The buffer size sets the number of slots allocated within the Disruptor’s internal ring buffer "queue".  Increasing the buffer size will impact the JVM heap space required to store all transient changed data events within the queue. For most cases, this can be left as default.
 </div>
 <div class="footnote" id="_footnotedef_9">
-<a href="#_footnoteref_9">9</a>. If a change is identified, the listener will create a new connection without bringing down the Redis Connect instance nor stopping the job. There might be a momentary pause in pipeline processing while the connection is being reestablished. No data will be lost in this process.  Disclaimer: if the new credentials cannot be used to create a connection, the job will be stopped for manual intervention.
+<a href="#_footnoteref_9">9</a>. When enabled, the checkpoint will be committed as part of an atomic Redis transaction. This eliminates consistency issues and improves performance. Rollback capability is built in to handle any failure scenarios during the transaction so that no data will be lost.  When disabled, the checkpoint will be committed after the the changed-data events are written. This adds another network round trip for each changed-data event.  While distributed checkpoints have distinct advantages, there is a small tradeoff. Because Redis keys are bound by their hash-slots, distributed checkpoints require that we store one checkpoint per hash slot.  When enabled, each job partition will have its own 16384 checkpoint keys created in the target database. With ~250 bytes per checkpoint, each partition’s estimated overhead is ~4MB. When disabled, there is only a single checkpoint key in the target per partition. Distributed checkpoints require RediSearch. We use RediSearch to index checkpoint keys so that recovery from the latest checkpoint is immediate
 </div>
 <div class="footnote" id="_footnotedef_10">
-<a href="#_footnoteref_10">10</a>. Possible settings are:  initial - the connector runs a snapshot only when no offsets have been recorded for the logical server name.  initial_only - the connector runs a snapshot only when no offsets have been recorded for the logical server name and then stops; i.e. it will not read change events from the binlog.  when_needed - the connector runs a snapshot upon startup whenever it deems it necessary. That is, when no offsets are available, or when a previously recorded offset specifies a binlog location or GTID that is not available in the server.  never - the connector never uses snapshots. Upon first startup with a logical server name, the connector reads from the beginning of the binlog. Configure this behavior with care. It is valid only when the binlog is guaranteed to contain the entire history of the database.  schema_only - the connector runs a snapshot of the schemas and not the data. This setting is useful when you do not need the topics to contain a consistent snapshot of the data but need them to have only the changes since the connector was started.  schema_only_recovery - this is a recovery setting for a connector that has already been capturing changes. When you restart the connector, this setting enables recovery of a corrupted or lost database schema history topic. You might set it periodically to "clean up" a database schema history topic that has been growing unexpectedly. Database schema history topics require infinite retention
+<a href="#_footnoteref_10">10</a>. sourceConnectionRetryDelayInterval must be &lt; than sourceConnectionRetryDelayInterval
 </div>
 <div class="footnote" id="_footnotedef_11">
-<a href="#_footnoteref_11">11</a>. If you use this setting to cap your pool connections, deactivate the pool attribute pr-single-hop-enabled. Leaving single hop activated can increase thrashing and lower performance.
+<a href="#_footnoteref_11">11</a>. When enabled, the column-level changedColumnOnlyEnabled flag will be overridden for all columns other than those designated as targetKey(s).  This is currently only supported for RDBMS sources
 </div>
 <div class="footnote" id="_footnotedef_12">
-<a href="#_footnoteref_12">12</a>. The blocking queue provides backpressure for reading changed data events from the source in cases where the connector ingests messages faster than they are consumed. Events that are held in the queue are disregarded when the connector periodically records offsets. Always set the value of maxQueueSize to be larger than the value of maxBatchSize
+<a href="#_footnoteref_12">12</a>. If a change is identified, the listener will create a new connection without bringing down the Redis Connect instance nor stopping the job. There might be a momentary pause in pipeline processing while the connection is being reestablished. No data will be lost in this process.  Disclaimer: if the new credentials cannot be used to create a connection, the job will be stopped for manual intervention.
 </div>
 <div class="footnote" id="_footnotedef_13">
-<a href="#_footnoteref_13">13</a>. Persistence allows for recovery of transient changed-data events which is critical for sources like Splunk that do not implement their own change-data-capture (CDC) process. Only supported by Gemfire and Splunk
+<a href="#_footnoteref_13">13</a>. Possible settings are:  initial - the connector runs a snapshot only when no offsets have been recorded for the logical server name.  initial_only - the connector runs a snapshot only when no offsets have been recorded for the logical server name and then stops; i.e. it will not read change events from the binlog.  when_needed - the connector runs a snapshot upon startup whenever it deems it necessary. That is, when no offsets are available, or when a previously recorded offset specifies a binlog location or GTID that is not available in the server.  never - the connector never uses snapshots. Upon first startup with a logical server name, the connector reads from the beginning of the binlog. Configure this behavior with care. It is valid only when the binlog is guaranteed to contain the entire history of the database.  schema_only - the connector runs a snapshot of the schemas and not the data. This setting is useful when you do not need the topics to contain a consistent snapshot of the data but need them to have only the changes since the connector was started.  schema_only_recovery - this is a recovery setting for a connector that has already been capturing changes. When you restart the connector, this setting enables recovery of a corrupted or lost database schema history topic. You might set it periodically to "clean up" a database schema history topic that has been growing unexpectedly. Database schema history topics require infinite retention
+</div>
+<div class="footnote" id="_footnotedef_14">
+<a href="#_footnoteref_14">14</a>. If you use this setting to cap your pool connections, deactivate the pool attribute pr-single-hop-enabled. Leaving single hop activated can increase thrashing and lower performance.
+</div>
+<div class="footnote" id="_footnotedef_15">
+<a href="#_footnoteref_15">15</a>. The blocking queue provides backpressure for reading changed data events from the source in cases where the connector ingests messages faster than they are consumed. Events that are held in the queue are disregarded when the connector periodically records offsets. Always set the value of maxQueueSize to be larger than the value of maxBatchSize
+</div>
+<div class="footnote" id="_footnotedef_16">
+<a href="#_footnoteref_16">16</a>. Persistence allows for recovery of transient changed-data events which is critical for sources like Splunk that do not implement their own change-data-capture (CDC) process. Only supported by Gemfire and Splunk
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.11.0<br>
-Last updated 2024-05-14 14:15:27 -0600
+Version 0.11.2<br>
+Last updated 2024-09-04 12:06:12 -0400
 </div>
 </div>
 </body>
