@@ -1,3 +1,22 @@
+<div role="alert"
+     style="margin:1rem 0;padding:0.9rem 1rem;border:1px solid #e6b800;border-left-width:8px;border-radius:6px;background:#fff8c5;color:#24292f;font:500 14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji';">
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
+    <span aria-hidden="true" style="font-size:1.1rem">⚠️</span>
+    <span style="font-weight:700;letter-spacing:.2px">End of Life</span>
+  </div>
+  <div style="font-weight:500">
+    Redis Connect is now <strong>end-of-life</strong>. Critical bug fixes will be provided until <strong>2026-05-31</strong>.
+    No bug fixes, security updates, or support will be provided beyond that date.
+  </div>
+  <!-- Optional: point to a successor or archive -->
+  <div style="margin-top:.35rem">
+    For Redis change-data-capture, see
+    <a href="https://redis.io/docs/latest/integrate/redis-data-integration/" style="color:inherit;text-decoration:underline">
+      Redis Data Integration (RDI)
+    </a>.
+  </div>
+</div>
+
 <p align="center"><img src="/images/icons/Redis Connect Banner.png" alt="Redis Connect" width = "100%" title="Redis Connect"></p>
 
 **Redis Connect** :rocket: is a distributed platform that enables real-time event streaming, transformation, and propagation of 
