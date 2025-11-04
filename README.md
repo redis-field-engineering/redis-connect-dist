@@ -10,10 +10,10 @@
   </div>
   <!-- Optional: point to a successor or archive -->
   <div style="margin-top:.35rem">
-    For Redis change-data-capture, see
+    <br/>For Redis change-data-capture, see
     <a href="https://redis.io/docs/latest/integrate/redis-data-integration/" style="color:inherit;text-decoration:underline">
       Redis Data Integration (RDI)
-    </a>.
+    </a>.<br/>
   </div>
 </div>
 
