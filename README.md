@@ -4,9 +4,9 @@
     <span aria-hidden="true" style="font-size:1.1rem">⚠️</span>
     <span style="font-weight:700;letter-spacing:.2px">End of Life</span>
   </div>
-  <div style="font-weight:500">
+  <div style="font-weight:500"> <br/>
     Redis Connect is now <strong>end-of-life</strong>. Critical bug fixes will be provided until <strong>2026-05-31</strong>.
-    No bug fixes, security updates, or support will be provided beyond that date.
+    No bug fixes, security updates, or support will be provided beyond that date.<br/>
   </div>
   <!-- Optional: point to a successor or archive -->
   <div style="margin-top:.35rem">
